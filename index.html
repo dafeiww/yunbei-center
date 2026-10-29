@@ -119,6 +119,13 @@
     @media(max-width:1100px){.platform-brand,.platform-brand img{width:206px}.platform-nav{gap:5px}.platform-item{font-size:15px;padding:0 9px}.topbar{gap:14px}.topbar .top-actions{gap:12px}.topbar .feedback-link{font-size:0;gap:0}.topbar .feedback-link .icon{width:19px;height:19px}.topbar .project-link{font-size:13px;padding:0 8px}.sidebar{padding-top:18px}}
     @media(max-width:820px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:60px 46px;height:106px;padding:0 16px;gap:0 12px}.platform-brand,.platform-brand img{width:206px}.platform-brand{height:60px}.platform-nav{grid-column:1/-1;grid-row:2;margin:0;justify-content:center;gap:32px;border-top:1px solid #ffffff12}.platform-item{padding:0 10px;font-size:14px}.topbar .top-actions{grid-column:2;grid-row:1;gap:10px}.topbar .feedback-link,.topbar .project-link{display:none}.topbar .top-signin{font-size:13px;gap:5px}.topbar .mini-avatar{width:32px;height:32px}.topbar .profile-button{min-width:36px}.signin-badge{width:21px;height:23px;font-size:14px}.sidebar{top:106px}.main{padding-top:106px}}
     @media(max-width:360px){.platform-brand,.platform-brand img{width:182px}.topbar{padding:0 12px;column-gap:8px}.topbar .top-actions{gap:6px}.platform-nav{gap:22px}}
+    #order-filters .category{display:inline-flex;align-items:center;gap:7px}
+    #order-filters .order-filter-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:5px;background:#e8eef2;color:#5e7585;font-size:11px;font-variant-numeric:tabular-nums}
+    #order-filters .category.active{background:#fff0df;color:#a74d18}
+    #order-filters .category.active .order-filter-count{background:#f9dfc0;color:#9a4a1b}
+    #panel-orders .list-card{scroll-margin-top:90px}
+    @media(max-width:820px){#panel-orders .list-card{scroll-margin-top:124px}}
+    @media(max-width:760px){#orders-total{flex-basis:100%}}
 </style>
 </head>
 <body>
@@ -178,7 +185,7 @@
         <div class="product-grid" id="products"></div>
         <div class="bundle"><div class="bundle-icon"><svg class="icon"><use href="#i-gift"></use></svg></div><div class="bundle-copy"><h3>不知道怎么选？试试「绘图进阶组合」</h3><p>高级图表 30 天 + 50 GB 空间 365 天，按单品合计，无需分开兑换。</p></div><div class="bundle-cost num">1,000<small>云贝</small></div><button class="btn" data-action="bundle">兑换组合<svg class="icon"><use href="#i-arrow"></use></svg></button></div>
       </section>
-      <section class="page-panel" id="panel-orders" role="tabpanel" aria-labelledby="tab-orders" hidden><div class="list-tools"><div class="categories" id="order-filters"><button class="category active" data-order-status="all">全部兑换</button><button class="category" data-order-status="active">生效中</button><button class="category" data-order-status="expired">已到期</button></div><label class="search"><svg class="icon"><use href="#i-search"></use></svg><input id="order-search" type="search" placeholder="搜索权益名称或订单号" aria-label="搜索兑换记录"></label></div><div class="list-card"><div class="list-head"><h2>我的兑换</h2><small>每一份权益，都有迹可循</small><button class="btn" data-action="export-orders"><svg class="icon"><use href="#i-download"></use></svg>导出记录</button></div><div class="table-wrap"><table><thead><tr><th>兑换权益 / 订单编号</th><th>消耗云贝</th><th>兑换时间</th><th>权益状态</th><th>操作</th></tr></thead><tbody id="order-rows"></tbody></table></div><div class="pagination"><span id="orders-total"></span><span class="page-number">1</span></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>兑换成功后权益自动生效；按次权益使用后扣减次数，时长权益重复兑换将顺延有效期。</p></section>
+      <section class="page-panel" id="panel-orders" role="tabpanel" aria-labelledby="tab-orders" hidden><div class="list-tools"><div class="categories" id="order-filters"><button class="category active" data-order-status="all" aria-pressed="true">全部兑换<span class="order-filter-count" id="all-order-count">30</span></button><button class="category" data-order-status="active" aria-pressed="false">生效中<span class="order-filter-count" id="active-order-count">16</span></button><button class="category" data-order-status="expired" aria-pressed="false">已到期<span class="order-filter-count" id="expired-order-count">14</span></button></div><label class="search"><svg class="icon"><use href="#i-search"></use></svg><input id="order-search" type="search" placeholder="搜索权益名称或订单号" aria-label="搜索兑换记录"></label></div><div class="list-card"><div class="list-head"><h2>我的兑换</h2><small>每一份权益，都有迹可循</small><button class="btn" data-action="export-orders"><svg class="icon"><use href="#i-download"></use></svg>导出记录</button></div><div class="table-wrap"><table><thead><tr><th>兑换权益 / 订单编号</th><th>消耗云贝</th><th>兑换时间</th><th>权益状态</th><th>操作</th></tr></thead><tbody id="order-rows"></tbody></table></div><div class="invoice-pagination"><span id="orders-total" role="status"></span><nav id="order-pagination" aria-label="兑换记录分页"></nav></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>兑换成功后权益自动生效；按次权益使用后扣减次数，时长权益重复兑换将顺延有效期。</p></section>
       <section class="page-panel" id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger" hidden><div class="records-summary"><div class="record-stat balance-stat"><span>当前可用云贝</span><strong class="num" id="ledger-balance">3,000</strong></div><div class="record-stat earned-stat"><span>累计获得</span><strong class="num positive" id="ledger-earned">4,000</strong></div><div class="record-stat spent-stat"><span>累计使用</span><strong class="num" id="ledger-spent">1,000</strong></div></div><div class="list-tools"><div class="categories" id="ledger-filters"><button class="category active" data-ledger-filter="all">全部明细</button><button class="category" data-ledger-filter="income">云贝收入</button><button class="category" data-ledger-filter="expense">云贝支出</button></div><button class="btn" data-action="export-ledger"><svg class="icon"><use href="#i-download"></use></svg>导出明细</button></div><div class="list-card"><div class="table-wrap"><table><thead><tr><th>变动说明</th><th>发生时间</th><th>云贝变动</th><th>变动后余额</th><th>关联单号</th></tr></thead><tbody id="ledger-rows"></tbody></table></div><div class="pagination"><span id="ledger-total"></span><span class="page-number">1</span></div></div></section>
       <section class="page-panel" id="panel-invoices" role="tabpanel" aria-labelledby="tab-invoices" hidden><div class="invoice-banner"><svg class="icon"><use href="#i-file"></use></svg><div><h2>云贝支付，也能轻松申请发票</h2><p>筛选开票状态，支持单笔及批量申请；各状态已准备历史示例。</p></div><button class="btn" data-action="invoice-rules">开票说明<svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="list-tools"><div class="categories" id="invoice-filters"><button class="category active" data-invoice-filter="all">全部订单<span class="invoice-filter-count" id="all-invoice-count">30</span></button><button class="category" data-invoice-filter="available">待开票<span class="invoice-filter-count" id="available-invoice-count">2</span></button><button class="category" data-invoice-filter="pending">申请中<span class="invoice-filter-count" id="pending-invoice-count">10</span></button><button class="category" data-invoice-filter="issued">已开票<span class="invoice-filter-count" id="issued-invoice-count">10</span></button></div></div><div class="list-card"><label class="select-all-mobile"><input type="checkbox" id="select-all-invoices-mobile">选择本页可开票订单</label><div class="table-wrap"><table><thead><tr><th class="check-cell"><input type="checkbox" id="select-all-invoices" aria-label="选择本页可开票订单"></th><th>兑换订单</th><th>支付云贝</th><th>可开票金额</th><th>开票状态</th><th>操作</th></tr></thead><tbody id="invoice-rows"></tbody></table></div><div class="invoice-pagination"><span id="invoice-record-total" role="status"></span><nav id="invoice-pagination" aria-label="发票列表分页"></nav></div><div class="invoice-summary"><span>已选 <span id="invoice-selected">0</span> 笔</span><span>合计 <b class="num" id="invoice-total">¥0.00</b></span><button class="btn primary" id="batch-invoice" disabled>申请开票</button></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>可开票金额随订单展示，申请后可在此查看处理状态。此页面演示申请流程，不生成真实税务发票。</p></section>
       <footer class="footer"><span><svg class="icon"><use href="#i-shield"></use></svg>安全兑换，安心科研</span><i></i><span>兑换价格与权益为方案示例</span><i></i><button data-action="rules">使用规则</button><button data-action="contact">联系我们</button></footer>
@@ -218,8 +225,8 @@
     ]});
     let state;
     try { const saved = JSON.parse(localStorage.getItem(STORE)); state = saved?.version===1 && Array.isArray(saved.orders) && Array.isArray(saved.ledger) && Number.isFinite(saved.balance) && saved.balance>=0 ? saved : seed(); } catch { state = seed(); }
-    let activeTab = 'shop', category = '全部权益', sortMode = 0, orderStatus = 'all', ledgerFilter = 'all', invoiceFilter = 'all', invoicePage = 1;
-    const INVOICE_PAGE_SIZE=10;
+    let activeTab = 'shop', category = '全部权益', sortMode = 0, orderStatus = 'all', orderPage = 1, ledgerFilter = 'all', invoiceFilter = 'all', invoicePage = 1;
+    const INVOICE_PAGE_SIZE=10, ORDER_PAGE_SIZE=10;
     let selectedInvoices = new Set(), activeExchange = null, invoiceTargets = [], invoiceType = 'company', previousFocus = null, toastTimer;
     let invoiceDraft={type:'company',companyTitle:'',personalTitle:'',taxId:'',email:'',note:''};
     const persist = () => { try { localStorage.setItem(STORE,JSON.stringify(state)); } catch { toast('浏览器未能保存，请保持页面开启以继续体验。'); } };
@@ -229,7 +236,8 @@
     const addDays = (date, days) => new Date(new Date(date).getTime()+days*86400000).toISOString();
     const isActive = order => new Date(order.expires) > new Date();
     const getInvoiceState = order => order.invoice?.status || 'available';
-    const invoiceOrders = () => [...state.orders,...(state.invoiceExamples||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));
+    const exchangeOrders = () => [...state.orders,...(state.invoiceExamples||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));
+    const invoiceOrders = exchangeOrders;
     const orderById = id => invoiceOrders().find(o => o.id===id);
     const dateKey = date => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
     function weekStart(key=today()){const d=new Date(key+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10);}
@@ -264,6 +272,23 @@
       persist();
     }
     prepareInvoiceExamples();
+    function prepareRedemptionExamples(){
+      if(state.redemptionDemoVersion===1)return;
+      // Reuse the historical invoice examples so details and invoices share one order.
+      // These samples remain separate from earned points and purchased entitlements.
+      for(const [index,order] of (state.invoiceExamples||[]).entries()){
+        if(!order.demo)continue;
+        const product=productsById[order.productId];if(!product)continue;
+        const age=index%2===0?4+index%6:product.days+7+index;
+        order.created=addDays(nowIso(),-age);order.expires=addDays(order.created,product.days);
+        if(order.invoice?.id.startsWith('DEMOFP')){
+          order.invoice.created=addDays(order.created,1);
+          if(order.invoice.status==='issued')order.invoice.issuedAt=addDays(order.created,3);
+        }
+      }
+      state.redemptionDemoVersion=1;persist();
+    }
+    prepareRedemptionExamples();
     function checkinWeek(){
       const start=weekStart(),end=addDays(start+'T00:00:00Z',6).slice(0,10);
       const days=[...new Map(state.checkins.filter(c=>c.day>=start&&c.day<=end).sort((a,b)=>a.day.localeCompare(b.day)).map(c=>[c.day,c])).values()].slice(0,7);
@@ -290,10 +315,15 @@
       $('#product-count').textContent=category==='全部权益'&&!$('#product-search').value?'为你的绘图与分析提效':`共 ${items.length} 项可兑权益`;
       $('#products').innerHTML=items.map(p=>`<article class="product-card"><div class="product-art" style="--art-bg:${{charts:'#eef3ea',storage:'#edf2f5',ai:'#f0edf5',export:'#f6f0e6',compute:'#eaf2ed',team:'#f5eeea'}[p.id]};--art-color:${{charts:'#668451',storage:'#628492',ai:'#9377ad',export:'#a58850',compute:'#61866c',team:'#9f7b63'}[p.id]}"><div class="mobile-art">${icon(p.icon)}</div><span class="product-badge ${p.id==='charts'?'gold':''}">${p.badge}</span>${visual(p.id)}</div><div class="product-body"><h3>${p.name}${p.id==='ai'?'<small>AI</small>':''}</h3><p class="product-desc">${p.desc}</p><div class="product-meta">${icon('clock')}<span>${p.duration}</span><i></i><span>${p.unit}</span></div><div class="product-footer"><div class="price"><strong class="num">${fmt(p.price)}</strong><span>云贝</span></div><button class="exchange-btn ${state.balance<p.price?'needs-more':''}" data-exchange="${p.id}" aria-label="${p.name}，${state.balance<p.price?'还差 '+fmt(p.price-state.balance)+' 云贝，查看获取方式':'兑换需 '+fmt(p.price)+' 云贝'}">${state.balance<p.price?'还差 '+fmt(p.price-state.balance):'立即兑换'}</button></div></div></article>`).join('')||`<div class="no-results">${icon('search')}<div>暂未找到相关权益</div><p>换个关键词试试，或查看全部权益。</p><button class="table-action" data-action="clear-search">查看全部</button></div>`;
     }
-    function currentOrders() { const q=$('#order-search').value.trim().toLowerCase(); return state.orders.filter(o=>(orderStatus==='all'||(orderStatus==='active')===isActive(o))&&(o.name+o.id).toLowerCase().includes(q)); }
+    function currentOrders() { const q=$('#order-search').value.trim().toLowerCase(); return exchangeOrders().filter(o=>(orderStatus==='all'||(orderStatus==='active')===isActive(o))&&(o.name+o.id).toLowerCase().includes(q)); }
     function renderOrders() {
-      const items=currentOrders(); $('#orders-total').textContent=`共 ${items.length} 条兑换记录`;
-      $('#order-rows').innerHTML=items.map(o=>`<tr><td class="record-title"><div class="order-cell"><div class="order-mini">${icon(productsById[o.productId]?.icon||'gift')}</div><div><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}</div></div></div></td><td data-label="消耗云贝" class="num" style="color:#5b7588;font-size:15px">${fmt(o.price)}</td><td data-label="兑换时间">${displayDate(o.created,true)}<span class="subtext">${o.productId==='charts'||o.productId==='team'?'有效期至':'本包到期'} ${displayDate(o.expires)}</span></td><td data-label="权益状态"><span class="tag ${isActive(o)?'':'pending'}">${isActive(o)?'生效中':'已到期'}</span></td><td class="record-actions"><button class="table-action" data-order-detail="${o.id}">查看详情</button><button class="table-action ${getInvoiceState(o)==='available'?'invoice-apply':''}" data-invoice-order="${o.id}">${getInvoiceState(o)==='available'?'申请开票':'查看发票'}</button></td></tr>`).join('')||`<tr><td colspan="5" style="text-align:center;padding:48px">暂无符合条件的兑换记录<button class="table-action" style="display:block;margin:8px auto 0" data-action="reset-orders">清除筛选</button></td></tr>`;
+      const all=exchangeOrders(),items=currentOrders(),pages=Math.max(1,Math.ceil(items.length/ORDER_PAGE_SIZE));
+      orderPage=Math.max(1,Math.min(orderPage,pages));
+      $('#all-order-count').textContent=all.length;$('#active-order-count').textContent=all.filter(isActive).length;$('#expired-order-count').textContent=all.filter(o=>!isActive(o)).length;
+      $$('[data-order-status]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.orderStatus===orderStatus)));
+      $('#orders-total').textContent=items.length?`共 ${items.length} 条兑换记录 · 第 ${(orderPage-1)*ORDER_PAGE_SIZE+1}–${Math.min(orderPage*ORDER_PAGE_SIZE,items.length)} 条`:'暂无记录';
+      $('#order-rows').innerHTML=items.slice((orderPage-1)*ORDER_PAGE_SIZE,orderPage*ORDER_PAGE_SIZE).map(o=>`<tr><td class="record-title"><div class="order-cell"><div class="order-mini">${icon(productsById[o.productId]?.icon||'gift')}</div><div><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}</div></div></div></td><td data-label="消耗云贝" class="num" style="color:#5b7588;font-size:15px">${fmt(o.price)}</td><td data-label="兑换时间">${displayDate(o.created,true)}<span class="subtext">${o.productId==='charts'||o.productId==='team'?'有效期至':'本包到期'} ${displayDate(o.expires)}</span></td><td data-label="权益状态"><span class="tag ${isActive(o)?'':'pending'}">${isActive(o)?'生效中':'已到期'}</span></td><td class="record-actions"><button class="table-action" data-order-detail="${o.id}">查看详情</button><button class="table-action ${getInvoiceState(o)==='available'?'invoice-apply':''}" data-invoice-order="${o.id}">${getInvoiceState(o)==='available'?'申请开票':'查看发票'}</button></td></tr>`).join('')||`<tr><td colspan="5" style="text-align:center;padding:48px">暂无符合条件的兑换记录<button class="table-action" style="display:block;margin:8px auto 0" data-action="reset-orders">清除筛选</button></td></tr>`;
+      $('#order-pagination').innerHTML=`<button class="invoice-page-btn" data-order-page="${orderPage-1}" ${orderPage===1?'disabled':''} aria-label="上一页">上一页</button>${Array.from({length:pages},(_,i)=>`<button class="invoice-page-btn ${i+1===orderPage?'current':''}" data-order-page="${i+1}" ${i+1===orderPage?'aria-current="page"':''}>${i+1}</button>`).join('')}<button class="invoice-page-btn" data-order-page="${orderPage+1}" ${orderPage===pages?'disabled':''} aria-label="下一页">下一页</button>`;
     }
     function ledgerItems(){return state.ledger.filter(r=>ledgerFilter==='all'||(ledgerFilter==='income'?r.delta>0:r.delta<0));}
     function renderLedger() {
@@ -318,7 +348,7 @@
       const mobile=$('#select-all-invoices-mobile');mobile.checked=$('#select-all-invoices').checked;mobile.indeterminate=$('#select-all-invoices').indeterminate;mobile.disabled=available.length===0;
     }
     function renderOverview(){
-      $('#balance').textContent=fmt(state.balance);$('#earned').textContent=fmt(state.earned);$('#spent').textContent=fmt(state.spent);$('#order-count').textContent=state.orders.length;
+      $('#balance').textContent=fmt(state.balance);$('#earned').textContent=fmt(state.earned);$('#spent').textContent=fmt(state.spent);$('#order-count').textContent=exchangeOrders().length;
       const week=checkinWeek(),checkedIn=week.checkedIn;$('#wallet-checkin').disabled=false;$('#wallet-checkin').classList.toggle('is-signed',checkedIn);$('#wallet-checkin-label').textContent=checkedIn?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin-bonus').hidden=checkedIn;$('#wallet-checkin-bonus').textContent='+'+week.nextReward;$('#wallet-checkin').setAttribute('aria-label',checkedIn?'今日已签到，查看本周累计':'每日签到领取 '+week.nextReward+' 云贝');$('#wallet-checkin use').setAttribute('href',checkedIn?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+week.count+'/7 天 · 已获 '+week.earned+' 云贝';
       $('#ledger-balance').textContent=fmt(state.balance);$('#ledger-earned').textContent=fmt(state.earned);$('#ledger-spent').textContent=fmt(state.spent);
       const storage=20+state.orders.filter(o=>isActive(o)&&o.productId==='storage').length*50;
@@ -459,21 +489,22 @@
       'view-orders':()=>{closeModal();setTab('orders');},'continue-shopping':()=>{closeModal();setTab('shop');},
       discover:()=>{setTab('shop');category='全部权益';$('#product-search').value='';$$('[data-category]').forEach(b=>{b.classList.toggle('active',b.dataset.category===category);b.setAttribute('aria-pressed',String(b.dataset.category===category));});renderProducts();toast('已为你展示全部科研权益。');},
       'clear-search':()=>{category='全部权益';$('#product-search').value='';$$('[data-category]').forEach(b=>{b.classList.toggle('active',b.dataset.category===category);b.setAttribute('aria-pressed',String(b.dataset.category===category));});renderProducts();},
-      'reset-orders':()=>{orderStatus='all';$('#order-search').value='';$$('[data-order-status]').forEach(b=>b.classList.toggle('active',b.dataset.orderStatus==='all'));renderOrders();},
+      'reset-orders':()=>{orderStatus='all';orderPage=1;$('#order-search').value='';$$('[data-order-status]').forEach(b=>b.classList.toggle('active',b.dataset.orderStatus==='all'));renderOrders();},
       'export-orders':()=>exportCsv('云贝兑换记录.csv',[['订单编号','兑换权益','支付云贝','兑换时间','权益到期时间','权益状态'],...currentOrders().map(o=>[o.id,o.name,o.price,displayDate(o.created,true),displayDate(o.expires,true),isActive(o)?'生效中':'已到期'])]),
       'export-ledger':()=>exportCsv('云贝收支明细.csv',[['变动说明','发生时间','云贝变动','变动后余额','关联单号'],...ledgerItems().map(r=>[r.label,displayDate(r.created,true),r.delta,r.balance,r.orderId])]),
       'invoice-rules':()=>openModal('开票说明',`<div class="rule"><h3>支持云贝订单开票</h3><p>选择“待开票”的兑换订单，可逐笔申请或合并开票；开票金额以每笔订单展示的金额为准。</p></div><div class="rule"><h3>需要哪些资料？</h3><p>企业或单位需填写完整抬头、纳税人识别号和接收邮箱；个人需填写姓名和接收邮箱。</p></div><div class="rule"><h3>申请后在哪里查看？</h3><p>提交后状态变为“申请中”，可随时查看申请详情。原型不对接税务开票服务，不发送邮件；正式到账金额、开票资格与处理时限需配置后接入。</p></div><div class="privacy-note">方案演示暂按 100 云贝 = ¥1 计算；不是正式结算规则。</div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`),
       contact:()=>openModal('帮助中心',`<div class="rule"><h3>兑换后在哪里找？</h3><p>进入“我的兑换”查看已获得权益、订单编号与有效期，进入“云贝明细”核对余额变化。</p></div><div class="rule"><h3>如何申请发票？</h3><p>在“发票管理”选择待开票订单，填写单位或个人资料后提交。</p></div><div class="rule"><h3>需要进一步帮助？</h3><p>正式产品可在这里接入在线客服和问题反馈；当前原型已开放完整的兑换与申请体验。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">我知道了</button></div>`),
       notifications:()=>openModal('账户通知',`<div class="exchange-preview">${icon('gift')}<div><h3>欢迎来到云贝中心</h3><p>当前可用余额为 ${fmt(state.balance)} 云贝，本周签到已获 ${checkinWeek().earned} 云贝。</p></div></div><div class="rule"><h3>兑换记录随时可查</h3><p>每次兑换会生成独立订单，并同步更新云贝明细。你也可以为订单提交开票申请。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`),
       workspace:()=>openModal('科研工作台',`<div class="exchange-preview">${icon('chart')}<div><h3>为绘图与分析准备更多可能</h3><p>这是云贝兑换中心的独立页面原型。</p></div></div><div class="rule"><p>绘图、云分析与项目空间入口预留在导航中；当前可体验权益兑换、余额明细、记录查询与开票申请。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">返回云贝中心</button></div>`),
-      profile:()=>openModal('个人中心',`<div class="exchange-preview">${icon('user')}<div><h3>科研探索者</h3><p>个人工作空间 · 体验账户</p></div></div><div class="detail-line"><span>当前云贝</span><strong>${fmt(state.balance)} 云贝</strong></div><div class="detail-line"><span>已兑换权益</span><strong>${state.orders.length} 项</strong></div><div class="modal-actions"><button class="btn primary" data-action="close">返回云贝中心</button></div>`)
+      profile:()=>openModal('个人中心',`<div class="exchange-preview">${icon('user')}<div><h3>科研探索者</h3><p>个人工作空间 · 体验账户</p></div></div><div class="detail-line"><span>当前云贝</span><strong>${fmt(state.balance)} 云贝</strong></div><div class="detail-line"><span>已兑换权益</span><strong>${exchangeOrders().length} 项</strong></div><div class="modal-actions"><button class="btn primary" data-action="close">返回云贝中心</button></div>`)
     };
     document.addEventListener('click',event=>{
       const button=event.target.closest('button');if(!button||button.disabled)return;
       if(button.dataset.tab){setTab(button.dataset.tab);return;}
       if(button.dataset.exchange){exchange([button.dataset.exchange]);return;}
       if(button.dataset.category){category=button.dataset.category;$$('[data-category]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});renderProducts();return;}
-      if(button.dataset.orderStatus){orderStatus=button.dataset.orderStatus;$$('[data-order-status]').forEach(b=>b.classList.toggle('active',b===button));renderOrders();return;}
+      if(button.dataset.orderStatus){orderStatus=button.dataset.orderStatus;orderPage=1;$$('[data-order-status]').forEach(b=>b.classList.toggle('active',b===button));renderOrders();return;}
+      if(button.dataset.orderPage){orderPage=Number(button.dataset.orderPage);renderOrders();$('#panel-orders .list-card').scrollIntoView({block:'start'});$('#order-pagination [data-order-page="'+orderPage+'"]')?.focus({preventScroll:true});return;}
       if(button.dataset.ledgerFilter){ledgerFilter=button.dataset.ledgerFilter;$$('[data-ledger-filter]').forEach(b=>b.classList.toggle('active',b===button));renderLedger();return;}
       if(button.dataset.invoiceFilter){invoiceFilter=button.dataset.invoiceFilter;invoicePage=1;selectedInvoices.clear();$$('[data-invoice-filter]').forEach(b=>b.classList.toggle('active',b===button));renderInvoices();return;}
       if(button.dataset.invoicePage){invoicePage=Number(button.dataset.invoicePage);renderInvoices();$('#panel-invoices .list-card').scrollIntoView({block:'start'});$('#invoice-pagination [data-invoice-page="'+invoicePage+'"]')?.focus({preventScroll:true});return;}
@@ -487,7 +518,7 @@
       if(button.dataset.action&&actions[button.dataset.action])actions[button.dataset.action]();
     });
     document.addEventListener('submit',event=>{if(event.target.id==='invoice-form')submitInvoice(event);});
-    $('#product-search').addEventListener('input',renderProducts);$('#order-search').addEventListener('input',renderOrders);
+    $('#product-search').addEventListener('input',renderProducts);$('#order-search').addEventListener('input',()=>{orderPage=1;renderOrders();});
     $('#sort-select').addEventListener('change',event=>{sortMode=Number(event.target.value);renderProducts();});
     document.addEventListener('input',event=>{if(event.target.closest('#invoice-form')&&event.target.id!=='invoice-note'){fieldError(event.target.id,'');}});
     document.addEventListener('change',event=>{if(event.target.dataset.invoiceCheck){const id=event.target.dataset.invoiceCheck;if(event.target.checked)selectedInvoices.add(id);else selectedInvoices.delete(id);updateInvoiceSelection();}if(['select-all-invoices','select-all-invoices-mobile'].includes(event.target.id)){invoicePageItems().filter(o=>getInvoiceState(o)==='available').forEach(o=>{if(event.target.checked)selectedInvoices.add(o.id);else selectedInvoices.delete(o.id);});renderInvoices();}});
