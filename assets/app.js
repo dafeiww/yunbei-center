@@ -52,7 +52,7 @@ function updateInvoiceSelection(){
     }
 
 function renderOverview(){
-      $('#balance').textContent=fmt(state.balance);$('#earned').textContent=fmt(state.earned);$('#spent').textContent=fmt(state.spent);$('#order-count').textContent=exchangeOrders().length;
+      $('#balance').textContent=fmt(state.balance);$('#page-balance-value').textContent=fmt(state.balance);$('#earned').textContent=fmt(state.earned);$('#spent').textContent=fmt(state.spent);$('#order-count').textContent=exchangeOrders().length;
       $('#wallet-paid').textContent=fmt(state.wallet.paid);$('#wallet-reward').textContent=fmt(state.wallet.reward);const week=checkinWeek(),checkedIn=week.checkedIn;$('#wallet-checkin').disabled=false;$('#wallet-checkin').classList.toggle('is-signed',checkedIn);$('#wallet-checkin-label').textContent=checkedIn?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin-bonus').hidden=checkedIn;$('#wallet-checkin-bonus').textContent='+'+week.nextReward;$('#wallet-checkin').setAttribute('aria-label',checkedIn?'今日已签到，查看本周累计':'每日签到领取 '+week.nextReward+' 云贝');$('#wallet-checkin use').setAttribute('href',checkedIn?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+week.count+'/7 天 · 已获 '+week.earned+' 云贝';
       $('#ledger-balance').textContent=fmt(state.balance);$('#ledger-earned').textContent=fmt(state.earned);$('#ledger-spent').textContent=fmt(state.spent);
       const storage=20+state.orders.filter(o=>isActive(o)&&o.productId==='storage').length*50;

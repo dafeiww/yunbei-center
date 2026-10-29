@@ -61,12 +61,28 @@ function checkin(){const week=checkinWeek();if(week.checkedIn||week.count>=7){ea
 function showRules(){openModal('云贝使用规则',`<div class="rule"><h3>如何获得云贝？</h3><p>充值按 ¥1 = 10 云贝到账；首笔充值实付八折，云贝仍按原价发放，可叠加档位赠送。签到每周最多 70 云贝。首次成功邀请好友注册得 100 云贝，之后每位 50 云贝，好友得 20 云贝；每月最多奖励 20 位好友。</p></div><div class="rule"><h3>充值与奖励余额</h3><p>余额分为充值云贝和奖励云贝；签到、充值赠送与邀请所得计入奖励余额。使用时优先扣减奖励云贝，再扣减充值云贝，已有历史余额保留在奖励余额中。</p></div><div class="rule"><h3>只有充值订单可以开票</h3><p>按充值实付金额开票。首充优惠减免与赠送云贝不计入金额；权益兑换、签到与邀请奖励均不支持开票，避免重复申请。</p></div><div class="rule"><h3>使用记录与演示</h3><p>看板按北京时间统计最近一周、一月、三月或自定义日期，可查看趋势和逐笔明细。当前为前端体验，支付与好友注册为模拟操作，数据保存在当前浏览器，未接入真实支付、注册和开票服务。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
 function invoiceRules(){openModal('充值开票说明',`<div class="rule"><h3>哪些订单可以开票？</h3><p>仅限已支付的充值订单；可单笔申请或合并开票。权益兑换、签到奖励、邀请奖励和充值赠送均不可开票。</p></div><div class="rule"><h3>发票金额怎么算？</h3><p>发票金额等于订单实付金额。例如首次充值 ¥100，享八折实付 ¥80，即可申请 ¥80 发票；到账 1,000 充值云贝及 50 赠送云贝不改变开票金额。</p></div><div class="rule"><h3>如何查询和下载？</h3><p>待开票订单填写抬头和邮箱后提交；申请中不可重复提交，已开票可下载 PDF。当前为示例演示，不产生真实税务发票。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
 function renderAll(){renderOverview();renderProducts();renderOrders();renderLedger();renderInvoices();renderRecharge();renderInvites();renderDashboard();}
+const pageInfo={
+ home:['云贝中心','管理你的云贝，开启更多绘图与分析可能。'],
+ recharge:['云贝充值','选择适合你的充值档位，云贝与赠送奖励一次到账。'],
+ ledger:['云贝明细','查询每一笔收入与支出，清楚掌握账户变动。'],
+ dashboard:['使用看板','按时间查看云贝消耗，了解绘图与分析的使用投入。'],
+ shop:['兑换商城','用云贝兑换高级图表、存储空间与分析权益。'],
+ orders:['我的兑换','查询兑换记录，管理当前生效中的科研权益。'],
+ invite:['邀请好友','分享专属邀请码，和研究伙伴一起获得云贝。'],
+ invoices:['发票管理','管理充值订单发票，按实付金额申请与下载。']
+};
 function setTab(tab,updateHash=true){
- if(!['dashboard','recharge','shop','orders','ledger','invite','invoices'].includes(tab))tab='dashboard';activeTab=tab;
- $$('.page-panel').forEach(el=>el.hidden=el.id!=='panel-'+tab);$$('.tabs .tab').forEach(el=>{const match=el.dataset.tab===tab;el.classList.toggle('active',match);el.setAttribute('aria-selected',String(match));el.tabIndex=match?0:-1;});
- $$('.sidebar .nav-item').forEach(el=>{const match=tab==='invoices'?el.dataset.tab==='invoices':el.dataset.tab==='dashboard';el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+ if(!Object.hasOwn(pageInfo,tab))tab='home';
+ const changed=activeTab!==tab;activeTab=tab;
+ $$('.page-panel').forEach(el=>el.hidden=el.id!=='panel-'+tab);
+ $$('.sidebar [data-tab]').forEach(el=>{const match=el.dataset.tab===tab;el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+ $('#tab-home').classList.toggle('group-active',tab!=='invoices');
+ $('#page-title').textContent=pageInfo[tab][0];$('#page-description').textContent=pageInfo[tab][1];
+ $('#breadcrumb-current').textContent=tab==='home'?'账户概览':pageInfo[tab][0];
+ $('#breadcrumb-current').hidden=tab==='home';$('#breadcrumb-divider').hidden=tab==='home';
+ $('#page-balance').hidden=tab==='home'||tab==='invoices';document.title=pageInfo[tab][0]+' · 派森诺基因云';
  if(updateHash&&location.hash!=='#'+tab)history.pushState(null,'','#'+tab);
- const selected=$('#tab-'+tab);if(selected&&innerWidth<820)selected.scrollIntoView({block:'nearest',inline:'center'});
+ if(changed){window.scrollTo(0,0);if(updateHash)$('#page-title').focus({preventScroll:true});}
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
 }
 const actions={
@@ -121,7 +137,7 @@ function invoiceItems(){return invoiceOrders().filter(o=>invoiceFilter==='all'||
 function invoicePageItems(){return invoiceItems().slice((invoicePage-1)*10,invoicePage*10);}
 $('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal();});
 document.addEventListener('keydown',event=>{if(!$('#overlay').hidden){if(event.key==='Escape'){closeModal();return;}if(event.key==='Tab'){const focusable=$$('button:not(:disabled),input:not(:disabled),select:not(:disabled),[tabindex="0"]',$('#modal')).filter(e=>e.getClientRects().length),first=focusable[0],last=focusable.at(-1);if(event.shiftKey&&(document.activeElement===first||document.activeElement===$('#modal'))){event.preventDefault();last?.focus();}else if(!event.shiftKey&&(document.activeElement===last||document.activeElement===$('#modal'))){event.preventDefault();first?.focus();}}}else if(event.target.matches('.tabs .tab')&&['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const tabs=$$('.tabs .tab'),i=tabs.indexOf(event.target),next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(i+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;setTab(tabs[next].dataset.tab);tabs[next].focus();}});
-window.addEventListener('hashchange',()=>setTab(location.hash.slice(1)||'dashboard',false));window.addEventListener('popstate',()=>setTab(location.hash.slice(1)||'dashboard',false));window.addEventListener('resize',()=>trendChart?.resize());
+window.addEventListener('hashchange',()=>setTab(location.hash.slice(1)||'home',false));window.addEventListener('popstate',()=>setTab(location.hash.slice(1)||'home',false));window.addEventListener('resize',()=>trendChart?.resize());
 window.addEventListener('storage',e=>{if(e.key===STORE){try{const next=JSON.parse(e.newValue);if(next?.walletVersion===2&&Array.isArray(next.orders)&&Array.isArray(next.ledger)){state=next;renderAll();}}catch{}}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderOverview();if($('#modal').classList.contains('checkin-modal'))earn();}});
-renderAll();setTab(location.hash.slice(1)||'dashboard',false);
+renderAll();setTab(location.hash.slice(1)||'home',false);
