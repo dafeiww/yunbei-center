@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<defs>
+ <linearGradient id="paper" x1="60" y1="85" x2="178" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#fffdf4"/><stop offset="1" stop-color="#fff4da"/></linearGradient>
+ <linearGradient id="orange" x1="80" y1="160" x2="164" y2="214" gradientUnits="userSpaceOnUse"><stop stop-color="#f5b66a"/><stop offset="1" stop-color="#e9a055"/></linearGradient>
+ <linearGradient id="envelope" x1="61" y1="164" x2="164" y2="224" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd49a"/><stop offset="1" stop-color="#f3b977"/></linearGradient>
+ <filter id="soft" x="-30%" y="-25%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#a86928" flood-opacity=".12"/></filter>
+ <g id="brand-coin"><defs>
+    <linearGradient id="rim" x1="27" y1="2" x2="82" y2="102" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1bd"/><stop offset=".48" stop-color="#ffe5a0"/><stop offset="1" stop-color="#f7c66c"/></linearGradient>
+    <linearGradient id="bevel" x1="58" y1="13" x2="58" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#f5c66e"/><stop offset="1" stop-color="#ffd784"/></linearGradient>
+    <linearGradient id="face" x1="36" y1="20" x2="76" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe9aa"/><stop offset="1" stop-color="#ffdc88"/></linearGradient>
+    <linearGradient id="tick" x1="45" y1="48" x2="76" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#f6b365"/><stop offset="1" stop-color="#ee9642"/></linearGradient>
+  </defs>
+  <path d="M58 4C29 4 7 28 3 52c-2 12 2 19 13 26l31 21c7 5 15 5 22 0l31-21c11-7 15-14 13-26C109 28 87 4 58 4Z" fill="#eab15b"/>
+  <path d="M58 2C29 2 7 26 3 50c-2 12 2 19 13 26l31 21c7 5 15 5 22 0l31-21c11-7 15-14 13-26C109 26 87 2 58 2Z" fill="url(#rim)" stroke="#fff0b9" stroke-width="1.4"/>
+  <path d="M58 12c-24 0-43 20-47 40-2 10 2 15 10 21l29 19c5 4 11 4 16 0l29-19c8-6 12-11 10-21-4-20-23-40-47-40Z" fill="url(#bevel)"/>
+  <path d="M58 20c-20 0-36 17-40 34-2 7 1 11 7 15l27 18c4 3 8 3 12 0l27-18c6-4 9-8 7-15-4-17-20-34-40-34Z" fill="url(#face)"/>
+  <path d="M20 63c-3-4-3-8-1-14 5-16 20-29 39-29" stroke="#fff3cb" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="m45 50 10 10 20-21" stroke="url(#tick)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</defs>
+<circle cx="133" cy="118" r="92" fill="#fff8e9" fill-opacity=".45"/>
+<path d="M37 136c-23-51 5-95 55-99m91 40c30 16 43 54 26 82" stroke="#dca56a" stroke-width="1.2" stroke-dasharray="3 5" stroke-linecap="round" opacity=".65"/>
+<ellipse cx="126" cy="222" rx="79" ry="8" fill="#c68c4f" opacity=".12"/>
+<g filter="url(#soft)" transform="rotate(8 138 150)">
+ <rect x="78" y="90" width="117" height="100" rx="10" fill="url(#paper)" stroke="#e8c796"/>
+ <path d="M94 108h41m-41 9h26" stroke="#e1c598" stroke-width="3" stroke-linecap="round"/>
+ <path d="m99 154 17-12 17 5 19-20 24 5" stroke="#b6bcab" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="152" cy="127" r="4" fill="#aab69c"/>
+</g>
+<path d="m56 158 56-43c5-4 11-4 16 0l56 43v44c0 8-5 13-13 13H69c-8 0-13-5-13-13v-44Z" fill="url(#orange)" stroke="#e6aa67"/>
+<g transform="translate(69 42) rotate(-10 58 52)" filter="url(#soft)"><use href="#brand-coin"/></g>
+<path d="m57 158 54 36c6 4 12 4 18 0l54-36v44c0 8-5 13-13 13H70c-8 0-13-5-13-13v-44Z" fill="url(#envelope)"/>
+<path d="m59 211 42-30m80 30-42-30" stroke="#e9ae6e" stroke-width="1.2"/>
+<path d="m58 159 53 35c6 4 12 4 18 0l53-35" stroke="#ffdfaf" stroke-width="1.6"/>
+<g filter="url(#soft)">
+ <circle cx="39" cy="160" r="24" fill="#fffaf0" stroke="#f0d4b2"/>
+ <path d="M25 177c1-10 6-15 14-15s13 5 14 15" fill="#c2976d"/>
+ <circle cx="39" cy="152" r="8" fill="#ecc7a0"/>
+ <path d="M31 151c-1-7 4-11 9-10 6 1 8 5 7 10-3-1-6-4-7-6-2 4-6 6-9 6Z" fill="#977451"/>
+ <circle cx="199" cy="137" r="25" fill="#f7f9ed" stroke="#d3d6b7"/>
+ <path d="M184 155c1-11 6-16 15-16s14 5 15 16" fill="#9daa8b"/>
+ <circle cx="199" cy="130" r="8" fill="#edc7a1"/>
+ <path d="M191 131c-2-8 2-13 9-12 6 1 9 5 7 13l-4-8c-2 4-6 6-12 7Z" fill="#787759"/>
+</g>
+<path d="m196 39 2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6Z" fill="#dfaa69"/>
+<path d="m48 87 1.5 4.5L54 93l-4.5 1.5L48 99l-1.5-4.5L42 93l4.5-1.5L48 87Z" fill="#e6bd83"/>
+<circle cx="176" cy="24" r="3" fill="#ecc58f"/>
+</svg>

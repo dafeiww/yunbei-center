@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 104" fill="none">
+  <defs>
+    <linearGradient id="rim" x1="27" y1="2" x2="82" y2="102" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1bd"/><stop offset=".48" stop-color="#ffe5a0"/><stop offset="1" stop-color="#f7c66c"/></linearGradient>
+    <linearGradient id="bevel" x1="58" y1="13" x2="58" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#f5c66e"/><stop offset="1" stop-color="#ffd784"/></linearGradient>
+    <linearGradient id="face" x1="36" y1="20" x2="76" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe9aa"/><stop offset="1" stop-color="#ffdc88"/></linearGradient>
+    <linearGradient id="tick" x1="45" y1="48" x2="76" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#f6b365"/><stop offset="1" stop-color="#ee9642"/></linearGradient>
+  </defs>
+  <path d="M58 4C29 4 7 28 3 52c-2 12 2 19 13 26l31 21c7 5 15 5 22 0l31-21c11-7 15-14 13-26C109 28 87 4 58 4Z" fill="#eab15b"/>
+  <path d="M58 2C29 2 7 26 3 50c-2 12 2 19 13 26l31 21c7 5 15 5 22 0l31-21c11-7 15-14 13-26C109 26 87 2 58 2Z" fill="url(#rim)" stroke="#fff0b9" stroke-width="1.4"/>
+  <path d="M58 12c-24 0-43 20-47 40-2 10 2 15 10 21l29 19c5 4 11 4 16 0l29-19c8-6 12-11 10-21-4-20-23-40-47-40Z" fill="url(#bevel)"/>
+  <path d="M58 20c-20 0-36 17-40 34-2 7 1 11 7 15l27 18c4 3 8 3 12 0l27-18c6-4 9-8 7-15-4-17-20-34-40-34Z" fill="url(#face)"/>
+  <path d="M20 63c-3-4-3-8-1-14 5-16 20-29 39-29" stroke="#fff3cb" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="m45 50 10 10 20-21" stroke="url(#tick)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
