@@ -529,6 +529,8 @@ body{background:#f6f8fb!important}
 .admin-category-modal-overlay{z-index:95}
 .required-mark{color:#e2664a;font-style:normal;margin-left:2px;font-weight:700}
 .admin-invalid{border-color:#e2664a !important;box-shadow:0 0 0 3px rgba(226,102,74,.12)}
+.admin-product-price span{display:block}
+.admin-product-price small{display:block;margin-left:0;margin-top:2px}
 
   </style>
   <style>
@@ -1133,7 +1135,7 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
             <form id="admin-product-form" class="admin-add-form" novalidate>
               <label class="admin-line-field product-name-field"><span class="admin-line-label">商品名称</span><span class="admin-line-input wide"><input id="product-name" type="text" maxlength="60" placeholder="如：科研分析体验券、活动礼品包" required></span><small>作为商城卡片的商品标题</small></label>
               <label class="admin-line-field"><span class="admin-line-label">权益分类</span><span class="admin-line-input admin-category-input"><select id="product-category"><option value="存储空间">存储空间</option><option value="项目分享">项目分享</option></select><button type="button" class="btn" id="admin-category-add">新增分类</button></span><small>选择已有分类，或点击“新增分类”创建分类</small></label>
-              <label class="admin-line-field"><span class="admin-line-label">所需云贝</span><span class="admin-line-input"><input id="product-price" type="number" min="1" step="1" placeholder="请输入云贝数量" required><i>云贝</i></span><small>每兑换一个所选单位需要支付的云贝</small></label>
+              <label class="admin-line-field"><span class="admin-line-label">所需云贝</span><span class="admin-line-input"><input id="product-price" type="number" min="1" step="1" placeholder="请输入云贝数量" required><i>云贝</i></span><small id="product-price-binding">每兑换一个所选单位需要支付的云贝；金额按 10 云贝 = ¥1 自动计算</small></label>
               <div class="admin-line-field product-unit-field"><label class="admin-line-label" for="product-unit">兑换单位<em class="required-mark">*</em></label><div class="unit-select" id="product-unit-select"><div class="admin-line-input"><input id="product-unit" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="product-unit-options" aria-describedby="product-unit-help" maxlength="20" value="份" placeholder="搜索或输入单位" autocomplete="off" required><button type="button" class="unit-toggle" aria-label="展开兑换单位选项" tabindex="-1"><svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="unit-options" id="product-unit-options" role="listbox" aria-label="兑换单位" hidden></div></div><small id="product-unit-help">必填。支持搜索常用单位，也可直接输入自定义单位</small></div>
               <div class="admin-line-field product-cover-field"><span class="admin-line-label">封面图片</span><div class="admin-cover-editor"><img id="admin-shop-cover-preview" alt="封面预览" hidden><button type="button" class="btn" id="admin-shop-cover-button">上传封面</button><input id="admin-shop-cover" type="file" accept="image/*" hidden><span id="admin-shop-cover-state">未上传，使用默认封面；建议比例 320 × 128</span></div></div>
               <p class="admin-form-alert" id="admin-product-alert" hidden></p>
@@ -2873,7 +2875,7 @@ function confirmAdminPublish(kind,id){
  closeProductUnitMenu();
  const product=kind==='product',item=(product?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);if(!item)return;
  const quote=product?null:rechargeQuote(id);
- const content=product?`<div class="detail-line"><span>商品名称</span><strong>${esc(item.name)}</strong></div><div class="detail-line"><span>兑换单位</span><strong>${esc(item.unit)}</strong></div><div class="detail-line"><span>所需云贝</span><strong>${fmt(item.price)} 云贝</strong></div>`:`<div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div>`;
+ const content=product?`<div class="detail-line"><span>商品名称</span><strong>${esc(item.name)}</strong></div><div class="detail-line"><span>兑换单位</span><strong>${esc(item.unit)}</strong></div><div class="detail-line"><span>所需云贝</span><strong>${fmt(item.price)} 云贝</strong></div><div class="detail-line"><span>对应金额</span><strong>${money(productAmountCents(item.price))}</strong></div>`:`<div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div>`;
  openModal(product?'确认上架商品':'确认启用充值档位',`<p class="modal-intro">${product?'上架后，用户可以在兑换商城看到并兑换该商品。':'启用后，用户可以在充值页面选择并购买该档位。'}</p>${content}<div class="modal-actions"><button type="button" class="btn" data-action="close">取消</button><button type="button" class="btn primary" id="confirm-admin-publish">${product?'确认上架':'确认启用'}</button></div>`);
  pendingAdminPublish={kind,id};
 }
@@ -2921,6 +2923,8 @@ function renderRole(){
 }
 
 function formatZhe(value){const n=Math.round(Number(value)*10)/10;return `${Number.isInteger(n)?n:n.toFixed(1)}折`;}
+function productAmountCents(price){return Math.max(0,Math.round((Number(price)||0)*10));}
+function updateProductPriceBinding(){const price=Math.max(0,Math.round(Number($('#product-price')?.value)||0));const help=$('#product-price-binding');if(!help)return;help.textContent=price>0?`每兑换一个所选单位：${fmt(price)} 云贝 = ${money(productAmountCents(price))}`:'每兑换一个所选单位需要支付的云贝；金额按 10 云贝 = ¥1 自动计算';}
 
 function syncAdminView(){
  $$('[data-admin-view]').forEach(b=>b.classList.toggle('active',b.dataset.adminView===adminView));
@@ -2972,13 +2976,13 @@ function renderAdminLists(){
   </article>`;
  }).join('')||'<div class="admin-empty">暂无充值档位，请在上方添加。</div>');
 
- shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${state.config.catalog.map(p=>{
+ shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝 / 金额</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${state.config.catalog.map(p=>{
   const enabled=p.enabled!==false;
   return `<tr data-product-row="${esc(p.id)}" class="${enabled?'':'product-offline'}">
    <td><div class="admin-table-cover">${p.cover?`<img src="${esc(p.cover)}" alt="${esc(p.name)} 封面">`:`${icon(p.icon||'gift')}<span>默认封面</span>`}</div></td>
    <td class="admin-product-name">${esc(p.name)}</td>
    <td>${esc(p.category)}</td><td>${esc(p.unit||'份')}</td>
-   <td class="num admin-product-price">${fmt(p.price)}<small>云贝</small></td>
+   <td class="num admin-product-price">${fmt(p.price)}<small>云贝 / ${money(productAmountCents(p.price))}</small></td>
    <td><label class="admin-switch"><input type="checkbox" aria-label="${enabled?'下架':'上架'} ${esc(p.name)}" data-admin-product-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'上架':'下架'}</em></label></td>
    <td><button type="button" class="table-action danger" data-admin-delete-product="${esc(p.id)}" aria-label="删除 ${esc(p.name)}">删除</button></td>
   </tr>`;
@@ -3047,7 +3051,7 @@ function readAdminProductForm(){
 
 function resetAdminProductForm(category='存储空间'){
  const set=(id,value)=>{const el=$('#'+id);if(el)el.value=value;};
- set('product-name','');set('product-price','');set('product-unit','份');closeProductUnitMenu();
+ set('product-name','');set('product-price','');set('product-unit','份');closeProductUnitMenu();updateProductPriceBinding();
  const select=$('#product-category');if(select&&[...select.options].some(o=>o.value===category))select.value=category;const categoryNew=$('#product-category-new');if(categoryNew){categoryNew.hidden=true;categoryNew.value='';}
  adminShopCover='';
  const preview=$('#admin-shop-cover-preview'),state=$('#admin-shop-cover-state');
@@ -3102,6 +3106,7 @@ document.addEventListener('submit',event=>{
 });
 
 document.addEventListener('input',event=>{
+ if(event.target.id==='product-price')updateProductPriceBinding();
  if(event.target.id==='product-unit'){
   event.target.classList.remove('admin-invalid');
   event.target.removeAttribute('aria-invalid');
