@@ -535,6 +535,8 @@ body{background:#f6f8fb!important}
   --accent: #cf5a16;
   --accent-dark: #a8420c;
   --accent-soft: #fff3e8;
+  --primary-button-fill: linear-gradient(115deg,#efac60 0%,#d9813c 42%,#c05a25 100%);
+  --primary-button-hover: linear-gradient(115deg,#e99c4b 0%,#ce712e 42%,#b64e1d 100%);
   --ink: #262b34;
   --muted: #717884;
   --line: #e7e9ed;
@@ -590,8 +592,8 @@ body { background: var(--bg) !important; color: var(--ink); }
 .surface-heading p { font-size: 11px; color: #7d8590; margin-top: 5px; line-height: 1.7; }
 .btn { min-height: 36px; padding: 8px 15px; gap: 7px; border: 1px solid #dde1e7; border-radius: 6px; background: #fff; color: #525d6b; font-size: 12px; font-weight: 500; box-shadow: none; }
 .btn:hover { background: #f8f9fb; border-color: #bfc6d0; }
-.btn.primary:not(:disabled), .exchange-btn:not(.needs-more), .table-action.invoice-apply { background: linear-gradient(115deg,#d86116,#c95411); border: 1px solid #ca5511; border-radius: 6px; color: #fff; box-shadow: 0 3px 7px #c8571214; font-weight: 600; }
-.btn.primary:not(:disabled):hover, .exchange-btn:not(.needs-more):hover, .table-action.invoice-apply:hover { background: linear-gradient(115deg,#ce570e,#b84909); border-color: #b84b0c; color: #fff; }
+.btn.primary:not(:disabled), .exchange-btn:not(.needs-more):not(:disabled), .table-action.invoice-apply:not(:disabled) { background: var(--primary-button-fill); border: 1px solid #cc7a39; border-radius: 6px; color: #fff; box-shadow: inset 0 1px 0 #fff2,0 3px 8px #b565211c; font-weight: 600; text-shadow: 0 1px 1px #85431f2b; }
+.btn.primary:not(:disabled):hover, .exchange-btn:not(.needs-more):not(:disabled):hover, .table-action.invoice-apply:not(:disabled):hover { background: var(--primary-button-hover); border-color: #b9692c; color: #fff; }
 .btn:disabled, .btn.primary:disabled { background: #f1f2f4; color: #9ca2ac; border-color: #e6e8ec; box-shadow: none; }
 button:focus-visible, a:focus-visible { outline: 3px solid #e391584f; outline-offset: 3px; }
 input:focus-visible, select:focus-visible { outline: 0; border-color: #d4834d !important; box-shadow: 0 0 0 3px #d4834d14; }
@@ -698,7 +700,7 @@ tbody tr:hover { background: #fcfcfd; }
 .order-id { font-size: 10px; color: #939ba6; margin-top: 4px; letter-spacing: .1px; }
 .table-demo { font-size: 9px; margin-left: 7px; padding: 1px 4px; color: #929aa5; border-color: #e5e8ed; background: #f8f9fa; }
 .table-action { min-height: 30px; font-size: 11px; color: #657d9c; }
-.table-action.invoice-apply { color: #b2561e; background: #fff4e9; border-color: #efd4bc; border-radius: 5px; padding: 5px 10px; }
+.table-action.invoice-apply { border-radius: 5px; padding: 5px 10px; }
 .table-action.invoice-download { color: #4d698c; background: #f2f5f9; border: 1px solid #dde5ef; border-radius: 5px; padding: 5px 9px; }
 .table-action.invoice-download .icon { width: 13px; height: 13px; }
 .tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; color: #3d8165; background: #edf7f1; }
