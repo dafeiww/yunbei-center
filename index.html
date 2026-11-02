@@ -535,6 +535,8 @@ body{background:#f6f8fb!important}
 .admin-new-row td{background:#fff7ed !important;transition:background-color .8s ease}
 .admin-new-row td:first-child{box-shadow:inset 3px 0 0 #f08a3d}
 
+.admin-item-row.admin-new-row{background:#fff7ed !important;border-color:#f7c59b !important;box-shadow:inset 3px 0 0 #f08a3d}
+
   </style>
   <style>
 /* 2026-11: desktop wallet design. Existing account and payment behavior is retained.
@@ -1134,7 +1136,7 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
             <p class="admin-caption">最多可添加 6 个充值档位；新增档位默认不启用，确认启用后在云贝充值显示。</p>
           </article>
           <article class="surface admin-config-card" id="admin-shop-panel" hidden>
-            <div class="surface-heading"><div><h3>新增商城商品</h3><p>填写商品信息并上传封面，保存后在下方表格中管理，确认上架后对用户展示</p></div></div>
+            <div class="surface-heading"><div><h3>新建兑换商品</h3><p>填写商品信息并上传封面，保存后在下方表格中管理，确认上架后对用户展示</p></div></div>
             <form id="admin-product-form" class="admin-add-form" novalidate>
               <label class="admin-line-field product-name-field"><span class="admin-line-label">商品名称</span><span class="admin-line-input wide"><input id="product-name" type="text" maxlength="60" placeholder="如：科研分析体验券、活动礼品包" required></span><small>作为商城卡片的商品标题</small></label>
               <label class="admin-line-field"><span class="admin-line-label">权益分类</span><span class="admin-line-input admin-category-input"><select id="product-category"><option value="存储空间">存储空间</option><option value="项目分享">项目分享</option></select><button type="button" class="btn" id="admin-category-add">新增分类</button></span><small>选择已有分类，或点击“新增分类”创建分类</small></label>
@@ -2935,6 +2937,13 @@ function focusAdminProductRow(id){
  row.scrollIntoView({behavior:'smooth',block:'center'});
  setTimeout(()=>row.classList.remove('admin-new-row'),2200);
 }
+function focusAdminPlanRow(id){
+ const row=$(`[data-plan-row="${CSS.escape(id)}"]`);
+ if(!row)return;
+ row.classList.add('admin-new-row');
+ row.scrollIntoView({behavior:'smooth',block:'center'});
+ setTimeout(()=>row.classList.remove('admin-new-row'),2200);
+}
 function updateProductPriceBinding(){const price=Math.max(0,Math.round(Number($('#product-price')?.value)||0));const moneyInput=$('#product-money');if(moneyInput)moneyInput.value=(productAmountCents(price)/100).toFixed(2);}
 
 function syncAdminView(){
@@ -2973,7 +2982,7 @@ function renderAdminLists(){
  plans.innerHTML=planHeader+(state.config.rechargePlans.map(p=>{
   const quote=rechargeQuote(p.id),enabled=p.enabled!==false;
   return `
-  <article class="admin-item-row plan-row ${enabled?'':'disabled'}">
+  <article class="admin-item-row plan-row ${enabled?'':'disabled'}" data-plan-row="${esc(p.id)}">
     <div class="admin-list-cell primary"><strong>¥${p.yuan}</strong></div>
     <div class="admin-list-cell"><b>${fmt(quote.principal)}</b></div>
     <div class="admin-list-cell"><b>${fmt(quote.bonus)}</b></div>
@@ -3088,8 +3097,9 @@ document.addEventListener('submit',event=>{
   const data=readAdminPlanForm();
   if(!data.valid){updateAdminPlanForm('paid');showAdminAlert('admin-plan-alert','请检查充值金额和实付金额，折扣需在 1–9 折之间。');return;}
   if(state.config.rechargePlans.length>=6){toast('最多可添加 6 个充值档位。');return;}
-  state.config.rechargePlans.push({id:uid('P'),yuan:data.yuan,principal:Math.round(data.yuan*10),bonus:data.bonus,discountZhe:data.discountZhe,paidCents:data.paidCents,enabled:false});
-  persist();applyConfig();renderAdmin();renderAll();resetAdminPlanForm();toast('充值档位已保存，暂未启用。');
+  const planId=uid('P');
+  state.config.rechargePlans.push({id:planId,yuan:data.yuan,principal:Math.round(data.yuan*10),bonus:data.bonus,discountZhe:data.discountZhe,paidCents:data.paidCents,enabled:false});
+  persist();applyConfig();renderAdmin();renderAll();resetAdminPlanForm();focusAdminPlanRow(planId);toast('充值档位已保存，暂未启用。');
   return;
  }
  if(event.target.id==='admin-product-form'){
