@@ -532,6 +532,9 @@ body{background:#f6f8fb!important}
 .admin-product-price span{display:block}
 .admin-product-price small{display:block;margin-left:0;margin-top:2px}
 
+.admin-new-row td{background:#fff7ed !important;transition:background-color .8s ease}
+.admin-new-row td:first-child{box-shadow:inset 3px 0 0 #f08a3d}
+
   </style>
   <style>
 /* 2026-11: desktop wallet design. Existing account and payment behavior is retained.
@@ -2925,6 +2928,13 @@ function renderRole(){
 
 function formatZhe(value){const n=Math.round(Number(value)*10)/10;return `${Number.isInteger(n)?n:n.toFixed(1)}折`;}
 function productAmountCents(price){return Math.max(0,Math.round((Number(price)||0)*10));}
+function focusAdminProductRow(id){
+ const row=$(`[data-product-row="${CSS.escape(id)}"]`);
+ if(!row)return;
+ row.classList.add('admin-new-row');
+ row.scrollIntoView({behavior:'smooth',block:'center'});
+ setTimeout(()=>row.classList.remove('admin-new-row'),2200);
+}
 function updateProductPriceBinding(){const price=Math.max(0,Math.round(Number($('#product-price')?.value)||0));const moneyInput=$('#product-money');if(moneyInput)moneyInput.value=(productAmountCents(price)/100).toFixed(2);}
 
 function syncAdminView(){
@@ -3089,12 +3099,13 @@ document.addEventListener('submit',event=>{
   if(!Number.isSafeInteger(d.price)||d.price<1){showAdminAlert('admin-product-alert','所需云贝需填写大于 0 的整数。');return;}
   $('#product-unit')?.classList.remove('admin-invalid');
   $('#product-unit')?.removeAttribute('aria-invalid');
+  const productId=uid('P');
   state.config.catalog.push({
-   id:uid('P'),name:d.name,category:d.category,price:d.price,unit:d.unit,
+   id:productId,name:d.name,category:d.category,price:d.price,unit:d.unit,
    cover:adminShopCover,enabled:false,kind:'generic',icon:'gift',color:'peach',
    badge:d.category||'权益扩展'
   });
-  persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');toast('商品已保存，暂未上架。');
+  persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');focusAdminProductRow(productId);toast('商品已保存，暂未上架。');
  }
 });
 
