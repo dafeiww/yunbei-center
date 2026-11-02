@@ -562,17 +562,18 @@ body { background: var(--bg) !important; color: var(--ink); }
 .topbar .mini-avatar { width: 31px; height: 31px; background: #edf0f4; }
 .topbar .mini-avatar .icon { width: 22px; height: 22px; }
 .signin-badge { width: 20px; height: 21px; font-size: 13px; }
-.sidebar { width: 216px; top: 68px; padding: 22px 14px 18px; background: #292f38; border-right: 1px solid #292f38; }
+.sidebar { width: 216px; top: 68px; padding: 22px 14px 18px; background: #53a9ff; border-right: 1px solid #53a9ff; color: #123e68; }
 .sidebar .nav { gap: 5px; }
-.module-nav-label { margin: 10px 16px 12px; color: #8f97a4; font-size: 11px; letter-spacing: 1px; }
+.module-nav-label { margin: 10px 16px 12px; color: #194b78; font-size: 11px; letter-spacing: 1px; }
 .module-navigation { gap: 6px; }
-.module-nav-item, .sidebar .nav-item { height: 44px; min-height: 44px; padding: 0 16px; border-radius: 7px; color: #bdc4cf; font-size: 13px; }
-.module-nav-item>.icon, .sidebar .nav-item>.icon { width: 17px; height: 17px; color: #909baa; }
-.module-nav-item:hover, .sidebar .nav-item:hover { background: #ffffff07; color: #fff; }
-.module-nav-item.active, .sidebar .nav-item.active { background: #f3a46615; color: #ffc591; box-shadow: inset 3px 0 #f3a466; font-weight: 600; }
-.module-nav-item.active>.icon, .sidebar .nav-item.active>.icon { color: #ffc591; }
-.module-nav-divider { margin: 20px 14px 13px; background: #ffffff0c; }
-.sidebar-note { padding: 22px 12px 0; font-size: 10px; color: #929caa; }
+.module-nav-item, .sidebar .nav-item { height: 44px; min-height: 44px; padding: 0 16px; border-radius: 7px; color: #123e68; font-size: 13px; }
+.module-nav-item>.icon, .sidebar .nav-item>.icon { width: 17px; height: 17px; color: #194e7d; }
+.module-nav-item:hover, .sidebar .nav-item:hover { background: #ffffff3d; color: #123e68; }
+.module-nav-item.active, .sidebar .nav-item.active { background: #e9f4ff; color: #155697; box-shadow: inset 3px 0 #1e70bc; font-weight: 600; }
+.module-nav-item.active>.icon, .sidebar .nav-item.active>.icon { color: #155697; }
+.module-nav-divider { margin: 20px 14px 13px; background: #235e8e33; }
+.sidebar-note { padding: 22px 12px 0; font-size: 10px; color: #17456e; }
+.sidebar button:focus-visible { outline-color: #164b7b; }
 .page-breadcrumb { margin-bottom: 15px; gap: 9px; font-size: 11px; color: #9096a1; }
 .page-breadcrumb>span { color: #858c97; }
 .page-breadcrumb>span:last-child { color: #535d6b; }
@@ -595,6 +596,18 @@ body { background: var(--bg) !important; color: var(--ink); }
 button:focus-visible, a:focus-visible { outline: 3px solid #e391584f; outline-offset: 3px; }
 input:focus-visible, select:focus-visible { outline: 0; border-color: #d4834d !important; box-shadow: 0 0 0 3px #d4834d14; }
 .quiet-note, .info-line { font-size: 11px; color: #7c8591; line-height: 1.85; }
+
+/* Warm pictograms share the coin's gold-to-orange shading. */
+.topbar .top-coin .icon { stroke: url(#warm-icon-on-dark); stroke-width: 1.7; }
+.page-balance>.icon,
+#wallet-checkin .icon,
+.wallet-link .icon,
+.bundle-icon>.icon,
+.invoice-banner>.icon,
+.module-entry-icon.warm>.icon,
+.checkin-day:not(.done) .day-coin .icon,
+.modal-note>.icon { stroke: url(#warm-icon-gradient); stroke-width: 1.7; }
+.bundle-icon { background: linear-gradient(135deg,#fff7e7,#fbe5c9); border-color: #eed1a9; }
 
 /* Balance and plans remain together; the complete order is visible beside them. */
 .recharge-layout { grid-template-areas: 'wallet pay' 'plans pay'; grid-template-columns: minmax(0,1fr) 322px; gap: 20px; align-items: start; margin-bottom: 0; }
@@ -699,7 +712,8 @@ tbody tr:hover { background: #fcfcfd; }
 .invoice-page-btn.current { background: #fff4e9; color: #b15a23; border-color: #e9c7a8; }
 .invoice-page-btn:disabled { color: #bcc2cb; background: #fafbfc; border-color: #edf0f3; }
 .records-summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; margin-bottom: 25px; }
-#panel-ledger .record-stat { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 23px 24px; box-shadow: none; }
+#panel-ledger .record-stat { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 23px 108px 23px 24px; box-shadow: none; }
+#panel-ledger .stat-cloud-coin { position: absolute; top: 50%; right: 24px; width: 66px; height: 60px; transform: translateY(-50%); object-fit: contain; pointer-events: none; filter: drop-shadow(0 4px 4px #a56b2c12); }
 #panel-ledger .balance-stat { background: #fff4e7; border-color: #f0ddc5; }
 #panel-ledger .earned-stat { background: #eef4fc; border-color: #dce6f4; }
 #panel-ledger .spent-stat { background: #faf0e9; border-color: #ebdacc; }
@@ -743,7 +757,7 @@ tbody tr:hover { background: #fcfcfd; }
 .price span { font-size: 11px; color: #9a8a7a; }
 .exchange-btn { min-height: 34px; padding: 7px 14px; border-radius: 6px; font-size: 12px; }
 .bundle { margin-top: 22px; padding: 20px 23px; border-radius: 10px; border-color: #e6e8ec; background: #fff; }
-.bundle-icon { color: #a08060; background: #f9f4ed; border-color: #f0e6d9; }
+.bundle-icon { color: #a08060; background: linear-gradient(135deg,#fff7e7,#fbe5c9); border-color: #eed1a9; }
 .bundle h3 { color: #596270; font-size: 13px; }
 .bundle p { color: #9198a2; font-size: 11px; }
 .bundle-cost { font-size: 24px; color: #ad652a; }
@@ -774,12 +788,12 @@ tbody tr:hover { background: #fcfcfd; }
 .invite-link-note { color: #9aa2ac; font-size: 10px; margin: 12px 0 0; line-height: 1.8; }
 .invite-account { margin: auto 0 0; padding: 19px 0 0; border-top: 1px solid #edf0f3; background: none; justify-content: space-between; gap: 12px; font-size: 11px; color: #8994a1; }
 .invite-account b { font-size: 16px; color: #536d8c; padding: 0 3px; }
-.invite-steps { padding: 20px 25px; gap: 18px; margin-bottom: 22px; }
-.invite-steps>div { gap: 12px; }
-.invite-steps b { font-size: 22px; color: #c3cad3; font-weight: 500; }
-.invite-steps strong { font-size: 12px; color: #6b7785; font-weight: 500; }
-.invite-steps small { font-size: 10px; color: #9aa4b0; }
-.invite-steps>.icon { width: 14px; height: 14px; color: #cbd1d8; }
+.invite-steps { padding: 22px 25px; gap: 18px; margin-bottom: 22px; background: linear-gradient(110deg,#fff5e4 0%,#ffe9ce 52%,#fff0db 100%); border: 1px solid #edc495; box-shadow: 0 3px 12px #b9772610; }
+.invite-steps>div { gap: 14px; }
+.invite-steps b { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; font-size: 21px; line-height: 1; color: #94431a; font-weight: 650; background: linear-gradient(135deg,#ffdf9d 0%,#f7b967 58%,#eea45d 100%); border: 1px solid #e9ac60; border-radius: 11px; box-shadow: inset 0 1px 0 #fff4c8,0 3px 7px #c07c2c14; }
+.invite-steps strong { font-size: 13px; color: #704327; font-weight: 600; }
+.invite-steps small { font-size: 11px; color: #8f6949; margin-top: 4px; }
+.invite-steps>.icon { width: 18px; height: 18px; color: #c47a39; stroke: url(#warm-icon-gradient); stroke-width: 2; }
 .invite-records-card { overflow: hidden; }
 .invite-records-card .surface-heading { padding-bottom: 18px; }
 .invite-person { display: flex; align-items: center; gap: 11px; }
@@ -904,6 +918,8 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
 </head>
 <body>
   <svg class="symbols" aria-hidden="true"><defs>
+    <linearGradient id="warm-icon-gradient" gradientUnits="userSpaceOnUse" x1="3" y1="2" x2="21" y2="23"><stop stop-color="#f2bc75"></stop><stop offset=".5" stop-color="#df9850"></stop><stop offset="1" stop-color="#bd7134"></stop></linearGradient>
+    <linearGradient id="warm-icon-on-dark" gradientUnits="userSpaceOnUse" x1="3" y1="2" x2="21" y2="23"><stop stop-color="#ffe6b2"></stop><stop offset=".5" stop-color="#ffc67f"></stop><stop offset="1" stop-color="#eaa15c"></stop></linearGradient>
     <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.5 18a4.5 4.5 0 0 1-.8-8.9A6.5 6.5 0 0 1 18 7.8a5.1 5.1 0 0 1 .5 10.2H6.5Z"></path><path d="m9 13 2 2 4-4"></path></symbol>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-8H9v8H4a1 1 0 0 1-1-1Z"></path></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 15l4-5 4 2 5-7"></path><path d="M17 5h4v4"></path></symbol>
@@ -987,7 +1003,7 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
         <div class="bundle"><div class="bundle-icon"><svg class="icon"><use href="#i-gift"></use></svg></div><div class="bundle-copy"><h3>空间与协作，一次备齐</h3><p>50 GB 云存储 + 项目分享增加 5 人，按单项价格合计兑换。</p></div><div class="bundle-cost num">1,000<small>云贝</small></div><button class="btn" data-action="bundle">兑换组合<svg class="icon"><use href="#i-arrow"></use></svg></button></div>
       </section>
       <section class="page-panel" id="panel-orders" role="region" aria-labelledby="page-title" hidden><div class="list-tools"><div class="categories" id="order-filters"><button class="category active" data-order-status="all" aria-pressed="true">全部兑换<span class="order-filter-count" id="all-order-count">30</span></button><button class="category" data-order-status="active" aria-pressed="false">生效中<span class="order-filter-count" id="active-order-count">16</span></button><button class="category" data-order-status="expired" aria-pressed="false">已到期<span class="order-filter-count" id="expired-order-count">14</span></button></div><label class="search"><svg class="icon"><use href="#i-search"></use></svg><input id="order-search" type="search" placeholder="搜索权益名称或订单号" aria-label="搜索兑换记录"></label></div><div class="list-card"><div class="list-head"><h2>我的兑换</h2><small>每一份权益，都有迹可循</small><button class="btn" data-action="export-orders"><svg class="icon"><use href="#i-download"></use></svg>导出记录</button></div><div class="table-wrap"><table><thead><tr><th>兑换权益 / 订单编号</th><th>消耗云贝</th><th>兑换时间</th><th>权益状态</th><th>操作</th></tr></thead><tbody id="order-rows"></tbody></table></div><div class="invoice-pagination"><span id="orders-total" role="status"></span><nav id="order-pagination" aria-label="兑换记录分页"></nav></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>兑换成功后权益自动生效，使用优先扣减奖励云贝；只有充值订单可开票，兑换记录不重复开票。</p></section>
-      <section class="page-panel" id="panel-ledger" role="region" aria-labelledby="page-title" hidden><div class="records-summary"><div class="record-stat balance-stat"><span>当前可用云贝</span><strong class="num" id="ledger-balance">3,000</strong></div><div class="record-stat earned-stat"><span>累计获得</span><strong class="num positive" id="ledger-earned">4,000</strong></div><div class="record-stat spent-stat"><span>累计使用</span><strong class="num" id="ledger-spent">1,000</strong></div></div><div class="list-tools"><div class="categories" id="ledger-filters"><button class="category active" data-ledger-filter="all">全部明细</button><button class="category" data-ledger-filter="income">云贝收入</button><button class="category" data-ledger-filter="expense">云贝支出</button></div><div class="ledger-tools"><select id="ledger-source-filter" aria-label="云贝来源筛选"><option value="all">全部来源</option><option value="recharge">充值得云贝</option><option value="checkin">签到得云贝</option><option value="invite">邀请好友得云贝</option><option value="exchange">权益兑换</option><option value="drawing">云贝绘图</option></select><button class="btn" data-action="export-ledger"><svg class="icon"><use href="#i-download"></use></svg>导出明细</button></div></div><div class="list-card"><div class="table-wrap"><table><thead><tr><th>变动说明</th><th>发生时间</th><th>云贝变动</th><th>变动后余额</th><th>关联单号</th></tr></thead><tbody id="ledger-rows"></tbody></table></div><div class="invoice-pagination"><span id="ledger-total" role="status"></span><nav id="ledger-pagination" aria-label="云贝明细分页"></nav></div></div></section>
+      <section class="page-panel" id="panel-ledger" role="region" aria-labelledby="page-title" hidden><div class="records-summary"><div class="record-stat balance-stat"><span>当前可用云贝</span><strong class="num" id="ledger-balance">3,000</strong><img class="stat-cloud-coin" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTYgMTA0IiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmltIiB4MT0iMjciIHkxPSIyIiB4Mj0iODIiIHkyPSIxMDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZmMWJkIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZmU1YTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmN2M2NmMiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZXZlbCIgeDE9IjU4IiB5MT0iMTMiIHgyPSI1OCIgeTI9IjkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2Y1YzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZDc4NCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZhY2UiIHgxPSIzNiIgeTE9IjIwIiB4Mj0iNzYiIHkyPSI4NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU5YWEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmRjODgiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0aWNrIiB4MT0iNDUiIHkxPSI0OCIgeDI9Ijc2IiB5Mj0iNjgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZjZiMzY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWU5NjQyIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTU4IDRDMjkgNCA3IDI4IDMgNTJjLTIgMTIgMiAxOSAxMyAyNmwzMSAyMWM3IDUgMTUgNSAyMiAwbDMxLTIxYzExLTcgMTUtMTQgMTMtMjZDMTA5IDI4IDg3IDQgNTggNFoiIGZpbGw9IiNlYWIxNWIiLz4KICA8cGF0aCBkPSJNNTggMkMyOSAyIDcgMjYgMyA1MGMtMiAxMiAyIDE5IDEzIDI2bDMxIDIxYzcgNSAxNSA1IDIyIDBsMzEtMjFjMTEtNyAxNS0xNCAxMy0yNkMxMDkgMjYgODcgMiA1OCAyWiIgZmlsbD0idXJsKCNyaW0pIiBzdHJva2U9IiNmZmYwYjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+CiAgPHBhdGggZD0iTTU4IDEyYy0yNCAwLTQzIDIwLTQ3IDQwLTIgMTAgMiAxNSAxMCAyMWwyOSAxOWM1IDQgMTEgNCAxNiAwbDI5LTE5YzgtNiAxMi0xMSAxMC0yMS00LTIwLTIzLTQwLTQ3LTQwWiIgZmlsbD0idXJsKCNiZXZlbCkiLz4KICA8cGF0aCBkPSJNNTggMjBjLTIwIDAtMzYgMTctNDAgMzQtMiA3IDEgMTEgNyAxNWwyNyAxOGM0IDMgOCAzIDEyIDBsMjctMThjNi00IDktOCA3LTE1LTQtMTctMjAtMzQtNDAtMzRaIiBmaWxsPSJ1cmwoI2ZhY2UpIi8+CiAgPHBhdGggZD0iTTIwIDYzYy0zLTQtMy04LTEtMTQgNS0xNiAyMC0yOSAzOS0yOSIgc3Ryb2tlPSIjZmZmM2NiIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0ibTQ1IDUwIDEwIDEwIDIwLTIxIiBzdHJva2U9InVybCgjdGljaykiIHN0cm9rZS13aWR0aD0iNi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="" aria-hidden="true"></div><div class="record-stat earned-stat"><span>累计获得</span><strong class="num positive" id="ledger-earned">4,000</strong><img class="stat-cloud-coin" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTYgMTA0IiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmltIiB4MT0iMjciIHkxPSIyIiB4Mj0iODIiIHkyPSIxMDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZmMWJkIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZmU1YTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmN2M2NmMiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZXZlbCIgeDE9IjU4IiB5MT0iMTMiIHgyPSI1OCIgeTI9IjkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2Y1YzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZDc4NCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZhY2UiIHgxPSIzNiIgeTE9IjIwIiB4Mj0iNzYiIHkyPSI4NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU5YWEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmRjODgiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0aWNrIiB4MT0iNDUiIHkxPSI0OCIgeDI9Ijc2IiB5Mj0iNjgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZjZiMzY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWU5NjQyIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTU4IDRDMjkgNCA3IDI4IDMgNTJjLTIgMTIgMiAxOSAxMyAyNmwzMSAyMWM3IDUgMTUgNSAyMiAwbDMxLTIxYzExLTcgMTUtMTQgMTMtMjZDMTA5IDI4IDg3IDQgNTggNFoiIGZpbGw9IiNlYWIxNWIiLz4KICA8cGF0aCBkPSJNNTggMkMyOSAyIDcgMjYgMyA1MGMtMiAxMiAyIDE5IDEzIDI2bDMxIDIxYzcgNSAxNSA1IDIyIDBsMzEtMjFjMTEtNyAxNS0xNCAxMy0yNkMxMDkgMjYgODcgMiA1OCAyWiIgZmlsbD0idXJsKCNyaW0pIiBzdHJva2U9IiNmZmYwYjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+CiAgPHBhdGggZD0iTTU4IDEyYy0yNCAwLTQzIDIwLTQ3IDQwLTIgMTAgMiAxNSAxMCAyMWwyOSAxOWM1IDQgMTEgNCAxNiAwbDI5LTE5YzgtNiAxMi0xMSAxMC0yMS00LTIwLTIzLTQwLTQ3LTQwWiIgZmlsbD0idXJsKCNiZXZlbCkiLz4KICA8cGF0aCBkPSJNNTggMjBjLTIwIDAtMzYgMTctNDAgMzQtMiA3IDEgMTEgNyAxNWwyNyAxOGM0IDMgOCAzIDEyIDBsMjctMThjNi00IDktOCA3LTE1LTQtMTctMjAtMzQtNDAtMzRaIiBmaWxsPSJ1cmwoI2ZhY2UpIi8+CiAgPHBhdGggZD0iTTIwIDYzYy0zLTQtMy04LTEtMTQgNS0xNiAyMC0yOSAzOS0yOSIgc3Ryb2tlPSIjZmZmM2NiIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0ibTQ1IDUwIDEwIDEwIDIwLTIxIiBzdHJva2U9InVybCgjdGljaykiIHN0cm9rZS13aWR0aD0iNi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="" aria-hidden="true"></div><div class="record-stat spent-stat"><span>累计使用</span><strong class="num" id="ledger-spent">1,000</strong><img class="stat-cloud-coin" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTYgMTA0IiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmltIiB4MT0iMjciIHkxPSIyIiB4Mj0iODIiIHkyPSIxMDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZmMWJkIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZmU1YTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmN2M2NmMiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZXZlbCIgeDE9IjU4IiB5MT0iMTMiIHgyPSI1OCIgeTI9IjkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2Y1YzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZDc4NCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZhY2UiIHgxPSIzNiIgeTE9IjIwIiB4Mj0iNzYiIHkyPSI4NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU5YWEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmRjODgiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0aWNrIiB4MT0iNDUiIHkxPSI0OCIgeDI9Ijc2IiB5Mj0iNjgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZjZiMzY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWU5NjQyIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTU4IDRDMjkgNCA3IDI4IDMgNTJjLTIgMTIgMiAxOSAxMyAyNmwzMSAyMWM3IDUgMTUgNSAyMiAwbDMxLTIxYzExLTcgMTUtMTQgMTMtMjZDMTA5IDI4IDg3IDQgNTggNFoiIGZpbGw9IiNlYWIxNWIiLz4KICA8cGF0aCBkPSJNNTggMkMyOSAyIDcgMjYgMyA1MGMtMiAxMiAyIDE5IDEzIDI2bDMxIDIxYzcgNSAxNSA1IDIyIDBsMzEtMjFjMTEtNyAxNS0xNCAxMy0yNkMxMDkgMjYgODcgMiA1OCAyWiIgZmlsbD0idXJsKCNyaW0pIiBzdHJva2U9IiNmZmYwYjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+CiAgPHBhdGggZD0iTTU4IDEyYy0yNCAwLTQzIDIwLTQ3IDQwLTIgMTAgMiAxNSAxMCAyMWwyOSAxOWM1IDQgMTEgNCAxNiAwbDI5LTE5YzgtNiAxMi0xMSAxMC0yMS00LTIwLTIzLTQwLTQ3LTQwWiIgZmlsbD0idXJsKCNiZXZlbCkiLz4KICA8cGF0aCBkPSJNNTggMjBjLTIwIDAtMzYgMTctNDAgMzQtMiA3IDEgMTEgNyAxNWwyNyAxOGM0IDMgOCAzIDEyIDBsMjctMThjNi00IDktOCA3LTE1LTQtMTctMjAtMzQtNDAtMzRaIiBmaWxsPSJ1cmwoI2ZhY2UpIi8+CiAgPHBhdGggZD0iTTIwIDYzYy0zLTQtMy04LTEtMTQgNS0xNiAyMC0yOSAzOS0yOSIgc3Ryb2tlPSIjZmZmM2NiIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0ibTQ1IDUwIDEwIDEwIDIwLTIxIiBzdHJva2U9InVybCgjdGljaykiIHN0cm9rZS13aWR0aD0iNi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="" aria-hidden="true"></div></div><div class="list-tools"><div class="categories" id="ledger-filters"><button class="category active" data-ledger-filter="all">全部明细</button><button class="category" data-ledger-filter="income">云贝收入</button><button class="category" data-ledger-filter="expense">云贝支出</button></div><div class="ledger-tools"><select id="ledger-source-filter" aria-label="云贝来源筛选"><option value="all">全部来源</option><option value="recharge">充值得云贝</option><option value="checkin">签到得云贝</option><option value="invite">邀请好友得云贝</option><option value="exchange">权益兑换</option><option value="drawing">云贝绘图</option></select><button class="btn" data-action="export-ledger"><svg class="icon"><use href="#i-download"></use></svg>导出明细</button></div></div><div class="list-card"><div class="table-wrap"><table><thead><tr><th>变动说明</th><th>发生时间</th><th>云贝变动</th><th>变动后余额</th><th>关联单号</th></tr></thead><tbody id="ledger-rows"></tbody></table></div><div class="invoice-pagination"><span id="ledger-total" role="status"></span><nav id="ledger-pagination" aria-label="云贝明细分页"></nav></div></div></section>
       <section class="page-panel" id="panel-admin" role="region" aria-labelledby="page-title" hidden>
         <div class="admin-hero"><div><h2>管理配置</h2><p>仅管理员可见。新增保存后，充值档位和商城权益会立即更新。</p></div><span class="admin-role-pill">管理员</span></div>
         <nav class="admin-tabs" aria-label="管理配置页面"><button type="button" class="active" data-admin-view="recharge">充值配置</button><button type="button" data-admin-view="shop">商城配置</button></nav>
