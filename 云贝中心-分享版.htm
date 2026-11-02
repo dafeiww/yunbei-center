@@ -527,6 +527,8 @@ body{background:#f6f8fb!important}
 .admin-modal-sm .modal-content{padding:22px 24px 24px}
 .admin-modal .admin-submit-row .btn{width:auto}
 .admin-category-modal-overlay{z-index:95}
+.required-mark{color:#e2664a;font-style:normal;margin-left:2px;font-weight:700}
+.admin-invalid{border-color:#e2664a !important;box-shadow:0 0 0 3px rgba(226,102,74,.12)}
 
   </style>
   <style>
@@ -1132,7 +1134,7 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
               <label class="admin-line-field product-name-field"><span class="admin-line-label">商品名称</span><span class="admin-line-input wide"><input id="product-name" type="text" maxlength="60" placeholder="如：科研分析体验券、活动礼品包" required></span><small>作为商城卡片的商品标题</small></label>
               <label class="admin-line-field"><span class="admin-line-label">权益分类</span><span class="admin-line-input admin-category-input"><select id="product-category"><option value="存储空间">存储空间</option><option value="项目分享">项目分享</option></select><button type="button" class="btn" id="admin-category-add">新增分类</button></span><small>选择已有分类，或点击“新增分类”创建分类</small></label>
               <label class="admin-line-field"><span class="admin-line-label">所需云贝</span><span class="admin-line-input"><input id="product-price" type="number" min="1" step="1" placeholder="请输入云贝数量" required><i>云贝</i></span><small>每兑换一个所选单位需要支付的云贝</small></label>
-              <div class="admin-line-field product-unit-field"><label class="admin-line-label" for="product-unit">兑换单位</label><div class="unit-select" id="product-unit-select"><div class="admin-line-input"><input id="product-unit" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="product-unit-options" aria-describedby="product-unit-help" maxlength="20" value="份" placeholder="搜索或输入单位" autocomplete="off" required><button type="button" class="unit-toggle" aria-label="展开兑换单位选项" tabindex="-1"><svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="unit-options" id="product-unit-options" role="listbox" aria-label="兑换单位" hidden></div></div><small id="product-unit-help">支持搜索常用单位，也可直接输入自定义单位</small></div>
+              <div class="admin-line-field product-unit-field"><label class="admin-line-label" for="product-unit">兑换单位<em class="required-mark">*</em></label><div class="unit-select" id="product-unit-select"><div class="admin-line-input"><input id="product-unit" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="product-unit-options" aria-describedby="product-unit-help" maxlength="20" value="份" placeholder="搜索或输入单位" autocomplete="off" required><button type="button" class="unit-toggle" aria-label="展开兑换单位选项" tabindex="-1"><svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="unit-options" id="product-unit-options" role="listbox" aria-label="兑换单位" hidden></div></div><small id="product-unit-help">必填。支持搜索常用单位，也可直接输入自定义单位</small></div>
               <div class="admin-line-field product-cover-field"><span class="admin-line-label">封面图片</span><div class="admin-cover-editor"><img id="admin-shop-cover-preview" alt="封面预览" hidden><button type="button" class="btn" id="admin-shop-cover-button">上传封面</button><input id="admin-shop-cover" type="file" accept="image/*" hidden><span id="admin-shop-cover-state">未上传，使用默认封面；建议比例 320 × 128</span></div></div>
               <p class="admin-form-alert" id="admin-product-alert" hidden></p>
               <div class="admin-submit-row"><button class="btn primary" type="submit">保存商品</button></div>
@@ -2503,7 +2505,7 @@ function prepareState(){
  if(state.skillBundleVersion!==1){if(!state.config.catalog.some(p=>p.id==='bio-skill'))state.config.catalog.push(skillBundleProduct());state.skillBundleVersion=1;applyConfig();}
  const sampleCatalog=defaultCatalog().filter(p=>p.kind!=='generic');
  if(!['user','admin'].includes(state.role))state.role='user';
- if(state.catalogVersion!==3){state.catalogVersion=3;const allowed=new Set(catalog.map(p=>p.id));state.orders=state.orders.filter(o=>allowed.has(o.productId));state.invoiceExamples=[];for(let i=0;i<24;i++){const p=sampleCatalog[i%sampleCatalog.length],age=i<12?2+i%7:p.days+10+i%5,created=addDays(nowIso(),-age);state.invoiceExamples.push({id:'DEMOYB'+String(i+1).padStart(6,'0'),kind:'exchange',productId:p.id,name:p.name,price:p.price,created,expires:addDays(created,p.days),demo:true});}}
+ if(state.catalogVersion!==4){state.catalogVersion=4;for(const item of defaultCatalog()){if(!state.config.catalog.some(p=>p.id===item.id))state.config.catalog.push(item);}applyConfig();const allowed=new Set(catalog.map(p=>p.id));state.orders=state.orders.filter(o=>allowed.has(o.productId));state.invoiceExamples=[];for(let i=0;i<24;i++){const p=sampleCatalog[i%sampleCatalog.length],age=i<12?2+i%7:p.days+10+i%5,created=addDays(nowIso(),-age);state.invoiceExamples.push({id:'DEMOYB'+String(i+1).padStart(6,'0'),kind:'exchange',productId:p.id,name:p.name,price:p.price,created,expires:addDays(created,p.days),demo:true});}}
  if(state.ledgerVersion!==3){const rows=[
    {label:'历史账户云贝入账',delta:3470,created:'2026-09-01T10:00:00+08:00',orderId:'—',source:'legacy'},
    {label:'充值到账 · ¥120.00',delta:1200,created:'2026-09-05T14:12:00+08:00',orderId:'CZSEED01',source:'recharge'},
@@ -3080,13 +3082,30 @@ document.addEventListener('submit',event=>{
   const d=readAdminProductForm();
   if(!d.name){showAdminAlert('admin-product-alert','请填写权益名称。');return;}
   if(!Number.isSafeInteger(d.price)||d.price<1){showAdminAlert('admin-product-alert','所需云贝需填写大于 0 的整数。');return;}
-  if(!d.unit){showAdminAlert('admin-product-alert','请选择或输入兑换单位。');return;}
+  const unitInput=$('#product-unit');
+  if(!d.unit){
+   unitInput?.classList.add('admin-invalid');
+   unitInput?.setAttribute('aria-invalid','true');
+   showAdminAlert('admin-product-alert','请选择或输入兑换单位。');
+   unitInput?.focus();
+   return;
+  }
+  unitInput?.classList.remove('admin-invalid');
+  unitInput?.removeAttribute('aria-invalid');
   state.config.catalog.push({
    id:uid('P'),name:d.name,category:d.category,price:d.price,unit:d.unit,
    cover:adminShopCover,enabled:false,kind:'generic',icon:'gift',color:'peach',
    badge:d.category||'权益扩展'
   });
   persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');toast('商品已保存，暂未上架。');
+ }
+});
+
+document.addEventListener('input',event=>{
+ if(event.target.id==='product-unit'){
+  event.target.classList.remove('admin-invalid');
+  event.target.removeAttribute('aria-invalid');
+  showAdminAlert('admin-product-alert','');
  }
 });
 
