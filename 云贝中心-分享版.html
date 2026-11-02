@@ -3133,7 +3133,7 @@ document.addEventListener('click',event=>{
   if(!isAdmin()||!pendingAdminPublish)return;
   const {kind,id}=pendingAdminPublish,item=(kind==='product'?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);
   if(!item){closeModal();toast('该记录已不存在，请刷新列表。');return;}
-  item.enabled=true;pendingAdminPublish=null;closeModal();persist();applyConfig();renderAll();toast(kind==='product'?'商品已上架，用户现在可以兑换。':'充值档位已启用，用户现在可以充值。');return;
+  item.enabled=true;pendingAdminPublish=null;closeModal();persist();applyConfig();renderAll();setTab(kind==='product'?'shop':'recharge');toast(kind==='product'?'商品已上架，用户现在可以兑换。':'充值档位已启用，用户现在可以充值。');return;
  }
  const viewBtn=event.target.closest('[data-admin-view]');
  if(viewBtn){closeProductUnitMenu();adminView=viewBtn.dataset.adminView;syncAdminView();return;}
