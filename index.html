@@ -1207,6 +1207,18 @@ textarea:focus-visible {
 .operations-table td, .operations-table th { vertical-align: middle; }
 .operations-table tbody tr:nth-child(even) td { background: #fcfdfe; }
 
+/* Keep both prototype roles visible for direct switching. */
+.page-context-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 18px; margin-bottom: 18px; }
+.page-context-bar .page-breadcrumb { margin-bottom: 0; }
+.role-switcher { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }
+.role-switcher-label { font-size: 12px; color: #7d8795; white-space: nowrap; }
+.role-switcher-options { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid #e2e7ee; border-radius: 10px; background: #edf1f5; }
+.role-switcher-options button { min-height: 32px; padding: 6px 16px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #738093; font-size: 12px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
+.role-switcher-options button:hover { background: #ffffff8a; color: #425770; }
+.role-switcher-options button.active { background: #fff; color: #a15a22; border-color: #eee2d7; box-shadow: 0 2px 5px #24374a08; font-weight: 650; }
+.role-switcher-options button:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (max-width: 620px) { .page-context-bar { gap: 10px; } .role-switcher { gap: 7px; } .role-switcher-options button { padding: 6px 11px; } }
+
   </style>
 </head>
 <body>
@@ -1248,7 +1260,7 @@ textarea:focus-visible {
   <header class="topbar" aria-label="平台导航">
     <a class="platform-brand" href="#recharge" aria-label="派森诺基因云 · 云贝中心"><img src="data:image/png;base64,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" alt="派森诺基因云 GENESCLOUD" width="429" height="88"></a>
     <nav class="platform-nav" aria-label="产品导航"><button class="platform-item" data-action="workspace">云分析</button><button class="platform-item current" data-tab="shop" aria-current="page">云图汇<svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg></button><button class="platform-item" data-action="help">云学院</button></nav>
-    <div class="top-actions"><button class="top-coin" data-tab="recharge" aria-label="云贝充值"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝充值</span></button><button class="top-link feedback-link" data-action="contact" aria-label="问题反馈"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg>问题反馈</button><button class="top-link top-signin" data-action="earn"><span class="signin-badge" aria-hidden="true">签</span>签到</button><button class="top-link project-link" data-action="workspace"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>项目中心</button><button class="top-link role-switch" data-action="role-switch"><span id="role-switch-label">普通用户</span><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg></button><button class="profile-button" data-action="profile" aria-label="个人中心"><span class="avatar mini-avatar"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg></span></button></div>
+    <div class="top-actions"><button class="top-coin" data-tab="recharge" aria-label="云贝充值"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝充值</span></button><button class="top-link feedback-link" data-action="contact" aria-label="问题反馈"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg>问题反馈</button><button class="top-link top-signin" data-action="earn"><span class="signin-badge" aria-hidden="true">签</span>签到</button><button class="top-link project-link" data-action="workspace"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>项目中心</button><button class="profile-button" data-action="profile" aria-label="个人中心"><span class="avatar mini-avatar"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg></span></button></div>
   </header>
   <aside class="sidebar" aria-label="主导航">
     <nav class="nav" aria-label="账户导航">
@@ -1268,7 +1280,10 @@ textarea:focus-visible {
   </aside>
   <main class="main">
     <div class="content">
-      <nav class="page-breadcrumb" aria-label="当前位置"><span>云贝中心</span><svg class="icon" id="breadcrumb-divider" hidden><use href="#i-chevron"></use></svg><span id="breadcrumb-current" hidden>账户概览</span></nav>
+      <div class="page-context-bar">
+        <nav class="page-breadcrumb" aria-label="当前位置"><span>云贝中心</span><svg class="icon" id="breadcrumb-divider" hidden><use href="#i-chevron"></use></svg><span id="breadcrumb-current" hidden>账户概览</span></nav>
+        <div class="role-switcher" role="group" aria-label="项目角色"><span class="role-switcher-label">项目角色</span><div class="role-switcher-options"><button type="button" data-set-role="admin" aria-pressed="false">管理员</button><button type="button" class="active" data-set-role="user" aria-pressed="true">用户</button></div></div>
+      </div>
       <div class="page-head"><div><h1 id="page-title" tabindex="-1">云贝总览</h1><p id="page-description">管理你的云贝，开启更多绘图与分析可能。</p></div><div class="page-head-actions"><button class="page-balance" data-tab="ledger" id="page-balance" hidden><svg class="icon"><use href="#i-coin"></use></svg><span>可用云贝</span><strong class="num" id="page-balance-value">3,000</strong></button><button class="subtle-btn" data-action="rules"><svg class="icon"><use href="#i-help"></use></svg>使用规则</button></div></div>
       <section class="page-panel" id="panel-dashboard" role="region" aria-labelledby="page-title" hidden>
  <div class="section-heading"><span class="period-filter-label">统计周期</span><div class="period-switch" aria-label="统计周期"><button data-period="7">最近一周</button><button data-period="30" class="active">最近一月</button><button data-period="90">最近三月</button><button data-period="custom">自定义</button></div></div>
@@ -3111,8 +3126,12 @@ function selectProductUnit(unit){
 }
 
 function renderRole(){
- const label=$('#role-switch-label'),nav=$('#tab-admin');
- if(label)label.textContent=isAdmin()?'管理员':'普通用户';
+ const nav=$('#tab-admin');
+ $$('.role-switcher [data-set-role]').forEach(button=>{
+  const selected=button.dataset.setRole===state.role;
+  button.classList.toggle('active',selected);
+  button.setAttribute('aria-pressed',String(selected));
+ });
  if(nav)nav.hidden=!isAdmin();
  const operationsNav=$('#tab-operations');if(operationsNav)operationsNav.hidden=!isAdmin();
  document.body.classList.toggle('is-admin',isAdmin());
@@ -3608,7 +3627,7 @@ function setTab(tab,updateHash=true){
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
 }
 const actions={
- close:closeModal,rules:showRules,help:showRules,earn:()=>earn(),checkin,rights:showRights,'role-switch':roleSwitch,'add-plan':addPlan,'add-product':addProduct,
+ close:closeModal,rules:showRules,help:showRules,earn:()=>earn(),checkin,rights:showRights,'add-plan':addPlan,'add-product':addProduct,
  recharge:()=>{closeModal();setTab('recharge');},checkout,'copy-invite':copyInvite,'copy-invite-link':copyInviteLink,'share-invite':shareInviteLink,'invite-demo':inviteDemo,'usage-details':()=>openUsageDetails(),'invoice-rules':invoiceRules,
  'apply-period':()=>{dashboardCustomStart=$('#dashboard-start').value;dashboardCustomEnd=$('#dashboard-end').value;const valid=dashboardRange().valid;$('#dashboard-range-error').textContent=valid?'':'请选择不晚于今天、开始早于结束且最多 366 天的日期范围。';if(valid)renderDashboard();},
  'view-orders':()=>{closeModal();setTab('orders');},'continue-shopping':()=>{closeModal();setTab('shop');},
@@ -3666,14 +3685,17 @@ window.addEventListener('storage',e=>{if(e.key===STORE){try{const next=JSON.pars
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderOverview();if($('#modal').classList.contains('checkin-modal'))earn();}});
 renderAll();setTab(location.hash.slice(1)||'recharge',false);
 
-function roleSwitch(){
- openModal('切换角色',`<p class="modal-intro">普通用户使用充值和兑换功能；管理员可配置充值档位、赠送比例和商城权益。</p><div class="role-cards"><button class="role-card ${state.role==='user'?'current':''}" data-set-role="user"><strong>普通用户</strong><small>充值 · 兑换 · 明细 · 发票</small></button><button class="role-card ${state.role==='admin'?'current':''}" data-set-role="admin"><strong>管理员</strong><small>充值与商城配置</small></button></div><div class="modal-actions"><button class="btn" data-action="close">关闭</button></div>`);
-}
 function addPlan(){state.config.rechargePlans.push({id:uid('P'),yuan:100,bonusPercent:5,enabled:false});renderAdmin();}
 function addProduct(){state.config.catalog.push({id:uid('P'),name:'新商品',category:'商品兑换',price:500,unit:'份',enabled:false,kind:'generic',icon:'gift',color:'peach',badge:'商品兑换'});renderAdmin();}
 document.addEventListener('click',event=>{
  const b=event.target.closest('[data-set-role]');if(!b)return;
- state.role=b.dataset.setRole==='admin'?'admin':'user';persist();renderRole();renderAdmin();renderAll();closeModal();if(['admin','operations'].includes(activeTab)&&!isAdmin())setTab('recharge');
+ const role=b.dataset.setRole==='admin'?'admin':'user';
+ if(state.role===role)return;
+ closeProductUnitMenu();
+ if(!$('#admin-category-modal').hidden)closeAdminCategoryModal();
+ if(!$('#overlay').hidden)closeModal();
+ state.role=role;persist();renderAll();
+ if(['admin','operations'].includes(activeTab)&&!isAdmin())setTab('recharge');
 });
 
   </script>
