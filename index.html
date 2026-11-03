@@ -545,10 +545,10 @@ body{background:#f6f8fb!important}
   --accent: #cf5a16;
   --accent-dark: #a8420c;
   --accent-soft: #fff3e8;
-  --primary-button-fill: #ffebd8;
-  --primary-button-hover: #ffe0c2;
-  --primary-button-border: #edc39e;
-  --primary-button-text: #91491f;
+  --primary-button-fill: linear-gradient(135deg, #fff3e5 0%, #ffe3c5 52%, #ffd1ac 100%);
+  --primary-button-hover: linear-gradient(135deg, #ffedd9 0%, #ffdcb7 52%, #ffc79f 100%);
+  --primary-button-border: #f3cea4;
+  --primary-button-text: #a15a22;
   --ink: #262b34;
   --muted: #717884;
   --line: #e7e9ed;
@@ -604,8 +604,8 @@ body { background: var(--bg) !important; color: var(--ink); }
 .surface-heading p { font-size: 11px; color: #7d8590; margin-top: 5px; line-height: 1.7; }
 .btn { min-height: 36px; padding: 8px 15px; gap: 7px; border: 1px solid #dde1e7; border-radius: 6px; background: #fff; color: #525d6b; font-size: 12px; font-weight: 500; box-shadow: none; }
 .btn:hover { background: #f8f9fb; border-color: #bfc6d0; }
-.btn.primary:not(:disabled), .exchange-btn:not(.needs-more):not(:disabled), .table-action.invoice-apply:not(:disabled) { background: var(--primary-button-fill); border: 1px solid var(--primary-button-border); border-radius: 6px; color: var(--primary-button-text); box-shadow: none; font-weight: 600; text-shadow: none; }
-.btn.primary:not(:disabled):hover, .exchange-btn:not(.needs-more):not(:disabled):hover, .table-action.invoice-apply:not(:disabled):hover { background: var(--primary-button-hover); border-color: #dfb083; color: var(--primary-button-text); }
+.btn.primary:not(:disabled), .exchange-btn:not(.needs-more):not(:disabled), .table-action.invoice-apply:not(:disabled) { background: var(--primary-button-fill); border: 1px solid var(--primary-button-border); border-radius: 6px; color: var(--primary-button-text); box-shadow: 0 5px 14px rgba(238,157,82,.16), inset 0 1px 0 rgba(255,255,255,.72); font-weight: 650; text-shadow: none; }
+.btn.primary:not(:disabled):hover, .exchange-btn:not(.needs-more):not(:disabled):hover, .table-action.invoice-apply:not(:disabled):hover { background: var(--primary-button-hover); border-color: #f0bf8b; color: var(--primary-button-text); box-shadow: 0 6px 16px rgba(238,157,82,.20), inset 0 1px 0 rgba(255,255,255,.76); }
 .btn:disabled, .btn.primary:disabled { background: #f1f2f4; color: #9ca2ac; border-color: #e6e8ec; box-shadow: none; }
 button:focus-visible, a:focus-visible { outline: 3px solid #e391584f; outline-offset: 3px; }
 input:focus-visible, select:focus-visible { outline: 0; border-color: #d4834d !important; box-shadow: 0 0 0 3px #d4834d14; }
@@ -1033,6 +1033,180 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
 .operations-status-tab.active span { background: #ffeeda; color: #9a5a25; }
 @media (max-width: 960px) { .operations-list-toolbar { align-items: stretch; flex-direction: column; } }
 
+.plans-offer-tag {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 9px !important;
+  padding: 8px 13px !important;
+  border: 1px solid #f6c896 !important;
+  border-radius: 999px !important;
+  background: linear-gradient(120deg,#fff7e9 0%,#ffe5c3 56%,#ffd3ab 100%) !important;
+  box-shadow: 0 7px 18px rgba(214,133,63,.18) !important;
+  color: #a65d23 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+.plans-offer-tag b { font-size: 15px !important; color: #a94712 !important; letter-spacing: -.2px; }
+.plans-offer-tag>span { color: #a26a38 !important; font-weight: 600 !important; }
+
+.recharge-plan .plan-rate {
+  top: 0;
+  right: 0;
+  padding: 5px 10px;
+  border-radius: 0 9px 0 11px;
+  border-bottom: 1px solid #ffe1bb;
+  border-left: 1px solid #ffe1bb;
+  background: linear-gradient(120deg,#fff3e2,#ffdfb9 58%,#ffd2ab);
+  color: #a44d13;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 750;
+  letter-spacing: .2px;
+  box-shadow: 0 4px 10px rgba(214,133,63,.12);
+}
+.recharge-plan.selected .plan-rate { background: linear-gradient(120deg,#fff1dd,#ffdcba 58%,#ffcfa6); color: #9c460f; }
+
+/* Cross-page UI consistency pass */
+:root {
+  --success: #2f855a;
+  --success-bg: #effaf4;
+  --warning: #a2601d;
+  --warning-bg: #fff7ea;
+  --danger: #c0392b;
+  --danger-bg: #fff1ef;
+  --focus-ring: 3px solid rgba(236,157,82,.25);
+  --card-shadow: 0 10px 30px rgba(31,54,76,.05);
+}
+
+.surface, .list-card, .metric, .record-stat { border-radius: 16px; border-color: #e9eef3; box-shadow: var(--card-shadow); }
+.surface-heading, .list-head { align-items: center; }
+.surface-heading h3, .list-head h2 { letter-spacing: -.2px; }
+
+/* Tables: calmer hierarchy and a consistent reading rhythm */
+.table-wrap table, .operations-table, .admin-shop-table { border-collapse: separate; border-spacing: 0; }
+.table-wrap th, .operations-table th, .admin-shop-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8fafc;
+  color: #6e8290;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .2px;
+}
+.table-wrap td, .operations-table td, .admin-shop-table td { color: #64788a; }
+.table-wrap tbody tr:hover td, .operations-table tbody tr:hover td, .admin-shop-table tbody tr:hover td { background: #fbfdff; }
+
+/* Statuses use one semantic system across the product */
+.tag {
+  border: 1px solid #e4ebf0;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-weight: 650;
+  line-height: 1;
+}
+.tag.pending {
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: #f3d7a8;
+}
+.tag.to-invoice {
+  color: #a94b12;
+  background: #fff4e4;
+  border-color: #f5d4a8;
+}
+.tag.success {
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: #cdeadb;
+}
+.tag.failed {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-color: #f3ccc4;
+}
+
+/* Accessibility and form focus */
+.btn:focus-visible,
+.category:focus-visible,
+.tab:focus-visible,
+.recharge-plan:focus-visible,
+.admin-tabs button:focus-visible,
+.operations-status-tab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 0;
+  border-color: #f0b578;
+}
+
+/* Recharge: keep checkout visible while browsing plans */
+@media (min-width: 901px) {
+  .checkout-summary {
+    position: sticky;
+    top: 92px;
+    align-self: start;
+    max-height: calc(100vh - 122px);
+    overflow: auto;
+  }
+}
+.recharge-plan { border-radius: 12px; }
+.recharge-plan.selected {
+  background: linear-gradient(160deg,#fffaf4,#fff 68%);
+  border-color: #f0c395;
+  box-shadow: 0 12px 28px rgba(214,133,63,.13), inset 0 0 0 1px #f0c395;
+}
+.recharge-plan.selected::after {
+  background: linear-gradient(135deg,#ffe9cc,#ffd3a6);
+  color: #9d5317;
+  box-shadow: 0 4px 10px rgba(214,133,63,.18);
+}
+
+/* Shop cards: stable height and predictable scan path */
+.product-card { display: flex; flex-direction: column; }
+.product-body { display: flex; flex-direction: column; flex: 1; }
+.product-body h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.7em;
+}
+.product-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: normal;
+  min-height: 2.8em;
+}
+.product-footer { margin-top: auto; }
+
+/* Admin configuration: cleaner form-to-list rhythm */
+.admin-tabs { border-radius: 12px; }
+.admin-tabs button { border-radius: 8px; font-weight: 550; }
+.admin-tabs button.active { font-weight: 650; }
+.admin-add-form { border-color: #e9eff4; border-radius: 14px; }
+.admin-line-input input:focus,
+.admin-line-input select:focus,
+#product-unit:focus { background: #fff; }
+.admin-shop-table th:first-child { border-top-left-radius: 8px; }
+.admin-shop-table th:last-child { border-top-right-radius: 8px; }
+.admin-shop-table tbody tr:nth-child(even) td { background: #fcfdfe; }
+.admin-shop-table .admin-product-name { line-height: 1.5; }
+
+/* Operations: make status tabs and large tables easier to scan */
+.operations-list-toolbar { flex-wrap: wrap; }
+.operations-status-tab { font-weight: 550; }
+.operations-status-tab.active { font-weight: 700; }
+.operations-table td, .operations-table th { vertical-align: middle; }
+.operations-table tbody tr:nth-child(even) td { background: #fcfdfe; }
+
   </style>
 </head>
 <body>
@@ -1107,7 +1281,7 @@ body:has(#panel-admin:not([hidden])) .page-head { display: flex !important; }
 <section class="page-panel" id="panel-recharge" role="region" aria-labelledby="page-title" hidden>
   <div class="recharge-layout"><div class="wallet recharge-wallet"><div class="wallet-inner"><div class="wallet-label"><img class="wallet-brand-coin" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTYgMTA0IiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmltIiB4MT0iMjciIHkxPSIyIiB4Mj0iODIiIHkyPSIxMDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZmMWJkIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZmU1YTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmN2M2NmMiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZXZlbCIgeDE9IjU4IiB5MT0iMTMiIHgyPSI1OCIgeTI9IjkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2Y1YzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZDc4NCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZhY2UiIHgxPSIzNiIgeTE9IjIwIiB4Mj0iNzYiIHkyPSI4NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU5YWEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmRjODgiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0aWNrIiB4MT0iNDUiIHkxPSI0OCIgeDI9Ijc2IiB5Mj0iNjgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZjZiMzY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWU5NjQyIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTU4IDRDMjkgNCA3IDI4IDMgNTJjLTIgMTIgMiAxOSAxMyAyNmwzMSAyMWM3IDUgMTUgNSAyMiAwbDMxLTIxYzExLTcgMTUtMTQgMTMtMjZDMTA5IDI4IDg3IDQgNTggNFoiIGZpbGw9IiNlYWIxNWIiLz4KICA8cGF0aCBkPSJNNTggMkMyOSAyIDcgMjYgMyA1MGMtMiAxMiAyIDE5IDEzIDI2bDMxIDIxYzcgNSAxNSA1IDIyIDBsMzEtMjFjMTEtNyAxNS0xNCAxMy0yNkMxMDkgMjYgODcgMiA1OCAyWiIgZmlsbD0idXJsKCNyaW0pIiBzdHJva2U9IiNmZmYwYjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+CiAgPHBhdGggZD0iTTU4IDEyYy0yNCAwLTQzIDIwLTQ3IDQwLTIgMTAgMiAxNSAxMCAyMWwyOSAxOWM1IDQgMTEgNCAxNiAwbDI5LTE5YzgtNiAxMi0xMSAxMC0yMS00LTIwLTIzLTQwLTQ3LTQwWiIgZmlsbD0idXJsKCNiZXZlbCkiLz4KICA8cGF0aCBkPSJNNTggMjBjLTIwIDAtMzYgMTctNDAgMzQtMiA3IDEgMTEgNyAxNWwyNyAxOGM0IDMgOCAzIDEyIDBsMjctMThjNi00IDktOCA3LTE1LTQtMTctMjAtMzQtNDAtMzRaIiBmaWxsPSJ1cmwoI2ZhY2UpIi8+CiAgPHBhdGggZD0iTTIwIDYzYy0zLTQtMy04LTEtMTQgNS0xNiAyMC0yOSAzOS0yOSIgc3Ryb2tlPSIjZmZmM2NiIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0ibTQ1IDUwIDEwIDEwIDIwLTIxIiBzdHJva2U9InVybCgjdGljaykiIHN0cm9rZS13aWR0aD0iNi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="" aria-hidden="true">我的可用云贝<span class="demo-label">体验账户</span></div><div class="balance-row"><strong class="num" id="balance">3,000</strong><span>云贝</span></div><div class="wallet-breakdown"><span>充值余额<b class="num" id="wallet-paid">0</b></span><span>奖励云贝<b class="num" id="wallet-reward">3,000</b></span></div><div class="wallet-under"><button class="btn primary" id="wallet-checkin" data-action="checkin" aria-label="每日签到领取 5 云贝"><svg class="icon"><use href="#i-gift"></use></svg><span id="wallet-checkin-label">签到领云贝</span><span class="checkin-bonus" id="wallet-checkin-bonus">+5</span></button><button class="wallet-link" data-tab="ledger">查看明细<svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="wallet-bottom"><span>累计获得<b class="num" id="earned">4,000</b></span><span class="divider"></span><span>累计使用<b class="num" id="spent">1,000</b></span><span class="divider"></span><button class="wallet-week-link" data-action="earn" aria-label="查看本周累计签到"><span id="wallet-checkin-hint">本周签到 0/7 天</span><svg class="icon"><use href="#i-chevron"></use></svg></button></div></div>
           
-        </div><article class="surface recharge-plans-surface"><div class="surface-heading"><div><h3>选择充值档位</h3><p>选择适合你的档位，优惠与赠送一起享</p></div><span class="plans-offer-tag"><b id="plans-offer-title">首充 8 折</b><span>各档位优惠实时生效</span></span></div><div id="recharge-plans" class="recharge-plans" role="group" aria-label="充值档位"></div><p class="quiet-note">充值成功即时到账，赠送云贝额外发放。使用时优先扣减奖励余额。</p></article><aside class="surface checkout-summary"><div class="surface-heading"><h3>支付确认</h3><span class="tag" id="checkout-first-tag">充值折扣</span></div><div class="quote-line"><span>充值原价</span><strong id="quote-face">¥100.00</strong></div><div class="quote-line quote-discount"><span>档位优惠</span><strong id="quote-discount">−¥20.00</strong></div><div class="quote-line"><span>云贝</span><strong id="quote-principal">1,000</strong></div><div class="quote-line"><span>额外赠送</span><strong class="positive" id="quote-bonus">+50</strong></div><div class="quote-total"><span>合计到账</span><strong class="num" id="quote-total">1,050<small>云贝</small></strong></div><div class="quote-pay"><span>实付金额</span><strong class="num" id="quote-paid">¥80.00</strong></div><div class="payment-qr-panel"><div class="payment-countdown" id="payment-countdown" aria-live="polite">支付倒计时 05:00</div><div class="payment-qr" id="payment-qr"></div><div class="payment-methods" aria-label="支持的支付方式"><span class="payment-method wechat">微信支付</span><span class="payment-method alipay">支付宝</span></div><p class="payment-qr-method" id="payment-method-label">微信 / 支付宝均可扫码支付</p><button class="btn primary recharge-submit" id="simulate-pay">模拟支付完成</button><p class="payment-demo">当前为演示页面，扫码不会扣款。点击按钮可体验云贝到账。</p></div><p class="checkout-invoice"><svg class="icon"><use href="#i-file"></use></svg><span>充值订单可开票，金额按实付计算。<br>赠送云贝与权益兑换不另行开票。</span></p></aside></div>
+        </div><article class="surface recharge-plans-surface"><div class="surface-heading"><div><h3>选择充值档位</h3><p>选择适合你的档位，优惠与赠送一起享</p></div><span class="plans-offer-tag"><b id="plans-offer-title">首充 8 折</b></span></div><div id="recharge-plans" class="recharge-plans" role="group" aria-label="充值档位"></div><p class="quiet-note">充值成功即时到账，赠送云贝额外发放。使用时优先扣减奖励余额。</p></article><aside class="surface checkout-summary"><div class="surface-heading"><h3>支付确认</h3><span class="tag" id="checkout-first-tag">充值折扣</span></div><div class="quote-line"><span>充值原价</span><strong id="quote-face">¥100.00</strong></div><div class="quote-line quote-discount"><span>档位优惠</span><strong id="quote-discount">−¥20.00</strong></div><div class="quote-line"><span>云贝</span><strong id="quote-principal">1,000</strong></div><div class="quote-line"><span>额外赠送</span><strong class="positive" id="quote-bonus">+50</strong></div><div class="quote-total"><span>合计到账</span><strong class="num" id="quote-total">1,050<small>云贝</small></strong></div><div class="quote-pay"><span>实付金额</span><strong class="num" id="quote-paid">¥80.00</strong></div><div class="payment-qr-panel"><div class="payment-countdown" id="payment-countdown" aria-live="polite">支付倒计时 05:00</div><div class="payment-qr" id="payment-qr"></div><div class="payment-methods" aria-label="支持的支付方式"><span class="payment-method wechat">微信支付</span><span class="payment-method alipay">支付宝</span></div><p class="payment-qr-method" id="payment-method-label">微信 / 支付宝均可扫码支付</p><button class="btn primary recharge-submit" id="simulate-pay">模拟支付完成</button><p class="payment-demo">当前为演示页面，扫码不会扣款。点击按钮可体验云贝到账。</p></div><p class="checkout-invoice"><svg class="icon"><use href="#i-file"></use></svg><span>充值订单可开票，金额按实付计算。<br>赠送云贝与权益兑换不另行开票。</span></p></aside></div>
 
 </section>
 <section class="page-panel" id="panel-invite" role="region" aria-labelledby="page-title" hidden>
