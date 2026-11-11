@@ -89,9 +89,35 @@
   const index=f.stage;f.stage++;f.reward+=r.inviter[index];f.friendReward+=r.friend[index];const label=f.stage===2?'首次完成绘图':'次周再次使用';
   addCredit(r.inviter[index],'invite','同门邀请 · '+label,f.id);log('当前用户','邀请奖励','云贝',r.inviter[index],f.id);log('受邀好友：'+f.name,'好友奖励','云贝',r.friend[index],f.id);put();renderAll();toast('奖励已发放：邀请人 +'+r.inviter[index]+'，好友 +'+r.friend[index]+' 云贝。');
  }
+ function inviteTable(friends,r){
+  const rows=friends.map(f=>{
+   const fr=f.rules||r,stage=Math.min(3,Math.max(1,f.stage));
+   const status={1:'等待完成首图',2:'等待次周回访',3:'全部解锁'}[stage];
+   const reward=(amount,total)=>`<strong class="supply-invite-reward">${fmt(amount)}</strong><span class="supply-invite-limit"> / ${fmt(total)} 云贝</span>`;
+   const action=f.demo?'<span class="supply-invite-action-note">—</span>':stage<3?button('friend-'+f.id,stage===1?'模拟好友完成首图':'模拟好友回访使用'):'<span class="supply-invite-action-note">已完成</span>';
+   return `<tr class="supply-invite-row" data-supply-example="${f.demo?'true':'false'}">
+    <td><div class="supply-invite-person"><strong title="${esc(f.name)}">${esc(f.name)}</strong>${f.demo?'<span class="supply-example-tag">示例</span>':''}</div></td>
+    <td class="supply-invite-date">${esc(f.created.replaceAll('-','.'))}</td>
+    <td><span class="supply-invite-progress stage-${stage}"><i aria-hidden="true"></i>${status}</span></td>
+    <td>${reward(f.reward,fr.inviter.reduce((a,b)=>a+b,0))}</td>
+    <td>${reward(f.friendReward,fr.friend.reduce((a,b)=>a+b,0))}</td>
+    <td>${action}</td>
+   </tr>`;
+  }).join('');
+  return `<article class="surface supply-invite-records">
+   <div class="supply-heading"><div><h3>同门成长进度</h3><p class="supply-invite-count">共 ${friends.length} 位好友 · 含 3 条示例记录</p></div><button class="btn" data-supply="friend-add" ${r.enabled?'':'disabled'}>体验好友注册</button></div>
+   <div class="supply-invite-table-wrap" tabindex="0" role="region" aria-label="邀请好友进度表，可横向滚动">
+    <table class="supply-invite-table" aria-label="同门成长进度">
+     <colgroup><col class="invite-col-person"><col class="invite-col-date"><col class="invite-col-progress"><col class="invite-col-reward"><col class="invite-col-reward"><col class="invite-col-action"></colgroup>
+     <thead><tr><th scope="col">好友昵称</th><th scope="col">注册时间</th><th scope="col">成长进度</th><th scope="col">我获得奖励</th><th scope="col">好友获得奖励</th><th scope="col">操作</th></tr></thead>
+     <tbody>${rows||'<tr><td colspan="6" class="supply-empty">还没有邀请记录，送同门一份绘图体验吧。</td></tr>'}</tbody>
+    </table>
+   </div><p class="supply-invite-scroll-hint">左右滑动，查看完整奖励与操作</p>
+  </article>`;
+ }
  function inviteView(){
   const r=cfg().invite,friends=[...s.friends,...inviteExamples],earned=friends.reduce((n,f)=>n+f.reward,0),max=r.inviter.reduce((a,b)=>a+b,0),friendMax=r.friend.reduce((a,b)=>a+b,0),link=new URL(location.href);if(['云贝科研补给-管理员原型.html','admin.html'].includes(decodeURIComponent(link.pathname).split('/').pop()))link.pathname=link.pathname.replace(/[^/]+$/,'云贝科研补给-交互原型.html');link.hash='invite';link.searchParams.set('gift','volcano');
-  $('#panel-invite').innerHTML=`<section class="supply-invite-hero"><div><span class="supply-kicker">送同门一份科研见面礼</span><h2>这张图，<br>你也可以做。</h2><p>分享同款模板、示例数据和新人绘图体验。<br>一起做出第一张图，再一起解锁下一份补给。</p><div class="supply-badge" style="display:inline-block;margin-top:16px">${r.enabled?'每位有效新用户：邀请人最高 '+max+' 云贝，好友最高 '+friendMax+' 云贝':'邀请活动暂未开放，已有邀请按原规则继续'}</div></div><div class="supply-gift"><h3>你的科研见面礼</h3><span>火山图同款模板 + 示例数据</span><span>新人绘图体验 1 次</span><input readonly id="supply-link" aria-label="邀请体验链接" value="${esc(link.href)}">${button('copy','复制邀请体验链接',!r.enabled)}<small class="supply-status">已邀请 ${friends.length} 位 · 累计获得 ${earned} 云贝（含示例）</small></div></section><div class="supply-perks">${['好友完成注册','好友完成第一张图','好友回访再次使用'].map((name,i)=>`<article class="supply-invite-step"><b>+${r.inviter[i]} <small style="font-size:12px">云贝 / 邀请人</small></b><h3>${name}</h3><p>好友同步获得 ${r.friend[i]} 云贝${i===2?'；注册满 '+r.returnDays+' 天后再次使用。':'。'}</p></article>`).join('')}</div><article class="surface" style="padding:22px"><div class="supply-heading" style="margin-top:0"><h3>同门成长进度</h3><button class="btn" data-supply="friend-add" ${r.enabled?'':'disabled'}>体验好友注册</button></div>${friends.length?friends.map(f=>{const fr=f.rules||r;return `<div class="supply-friend" data-supply-example="${f.demo?'true':'false'}"><div><strong>${esc(f.name)}${f.demo?'<span class="supply-example-tag">示例</span>':''}</strong><small>${f.created.slice(5).replace('-','.')} 注册 · 已注册 ${f.stage>=2?'→ 首图已完成':'→ 等待第一张图'} ${f.stage===3?'→ 回访已完成':''}</small></div><span>我已得 ${f.reward} / ${fr.inviter.reduce((a,b)=>a+b,0)}<br><small>好友已得 ${f.friendReward} / ${fr.friend.reduce((a,b)=>a+b,0)} 云贝</small></span>${f.demo?'<span class="supply-badge">'+({1:'等待完成首图',2:'等待次周回访',3:'全部解锁'}[f.stage])+'</span>':f.stage<3?button('friend-'+f.id,f.stage===1?'模拟好友完成首图':'模拟好友回访使用'):'<span class="supply-badge">全部解锁</span>'}</div>`;}).join(''):'<div class="supply-empty">把一份用得上的绘图体验，送给你的第一位研究伙伴。</div>'}</article><p class="quiet-note" style="margin-top:12px">每位新用户仅参与一次；每位邀请人每月最多 ${r.monthlyCap} 位。列表含 3 条示例记录，示例奖励仅作展示，不计入余额或月度名额。好友账户与使用行为通过按钮模拟。</p>`;
+  $('#panel-invite').innerHTML=`<section class="supply-invite-hero"><div><span class="supply-kicker">送同门一份科研见面礼</span><h2>这张图，<br>你也可以做。</h2><p>分享同款模板、示例数据和新人绘图体验。<br>一起做出第一张图，再一起解锁下一份补给。</p><div class="supply-badge" style="display:inline-block;margin-top:16px">${r.enabled?'每位有效新用户：邀请人最高 '+max+' 云贝，好友最高 '+friendMax+' 云贝':'邀请活动暂未开放，已有邀请按原规则继续'}</div></div><div class="supply-gift"><h3>你的科研见面礼</h3><span>火山图同款模板 + 示例数据</span><span>新人绘图体验 1 次</span><input readonly id="supply-link" aria-label="邀请体验链接" value="${esc(link.href)}">${button('copy','复制邀请体验链接',!r.enabled)}<small class="supply-status">已邀请 ${friends.length} 位 · 累计获得 ${earned} 云贝（含示例）</small></div></section><div class="supply-perks">${['好友完成注册','好友完成第一张图','好友回访再次使用'].map((name,i)=>`<article class="supply-invite-step"><b>+${r.inviter[i]} <small style="font-size:12px">云贝 / 邀请人</small></b><h3>${name}</h3><p>好友同步获得 ${r.friend[i]} 云贝${i===2?'；注册满 '+r.returnDays+' 天后再次使用。':'。'}</p></article>`).join('')}</div>${inviteTable(friends,r)}<p class="quiet-note" style="margin-top:12px">每位新用户仅参与一次；每位邀请人每月最多 ${r.monthlyCap} 位。列表含 3 条示例记录，示例奖励仅作展示，不计入余额或月度名额。好友账户与使用行为通过按钮模拟。</p>`;
  }
  renderInvites=inviteView;
  checkin=sign;earn=showCheck;actions.checkin=sign;actions.earn=()=>showCheck();
