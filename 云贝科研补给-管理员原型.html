@@ -1325,6 +1325,7 @@ textarea:focus-visible {
 .growth-activity-switch>input{z-index:2;cursor:pointer;scroll-margin-top:100px}.growth-toggle{pointer-events:none}.growth-form input,.growth-form select{scroll-margin-top:100px}
 .admin-shop-table th:nth-child(5){width:180px}
 .admin-shop-table .admin-product-price small{display:inline;margin:0 0 0 6px;white-space:nowrap}
+.growth-section+.growth-section{margin-top:20px}#panel-operations .growth-section{margin-top:22px}
 
 </style>
 </head>
@@ -3953,7 +3954,6 @@ document.addEventListener('click',event=>{
  const A=window.YunbeiSupply;if(!A)return;
  const labels={checkin:'签到补给',recharge:'首充补给',invite:'邀请奖励'};
  const drafts={checkin:A.clone(A.config().checkin),recharge:A.clone(A.config().recharge),invite:A.clone(A.config().invite)};
- const tabs=[['recharge','充值档位'],['supply-checkin','签到补给'],['supply-recharge','首充补给'],['supply-invite','邀请奖励'],['shop','商城配置'],['supply-records','奖励记录']];
  const defs=A.definitions;
  const options=value=>Object.entries(defs).map(([id,d])=>`<option value="${id}" ${id===value?'selected':''}>${d.name}</option>`).join('');
  const input=(name,value,min=0,max=10000)=>`<input name="${name}" type="number" min="${min}" max="${max}" step="1" value="${value}" required>`;
@@ -3961,10 +3961,13 @@ document.addEventListener('click',event=>{
  const formHeader=(title,description)=>`<div class="growth-form-heading"><div><h3>${title}</h3><p>${description}</p></div><span class="growth-scope-label">管理员配置</span></div>`;
  const saveFooter=key=>`<div class="growth-form-footer"><span id="growth-dirty-${key}">配置已保存</span><button class="btn primary" type="submit">保存并生效</button></div>`;
  const preview=key=>`<aside class="growth-preview"><div class="growth-preview-heading"><span>用户端实时预览</span><small>根据左侧草稿变化</small></div><div id="growth-preview-${key}"></div><div class="growth-preview-note">${key==='checkin'?'新规则用于尚未开始的签到周；本周已有签到的用户沿用本周规则。':key==='recharge'?'保存后新发生的首充使用新规则；已开启的三周补给保持原有权益。':'保存后创建的新邀请使用新规则；已注册的受邀好友按原规则完成。'}</div></aside>`;
- $('.admin-hero h2').textContent='增长活动管理';
- $('.admin-hero p').textContent='配置签到、首充和邀请奖励，在右侧预览用户体验，保存后按生效范围执行。';
- $('.admin-tabs').innerHTML=tabs.map(([id,name])=>`<button type="button" data-admin-view="${id}">${name}</button>`).join('');
- $('.admin-tabs').insertAdjacentHTML('beforebegin','<div class="growth-summary" id="growth-summary"></div>');
+ $('.admin-hero h2').textContent='管理配置';
+ $('.admin-hero p').textContent='集中配置充值档位、商城、签到、首充和邀请奖励；保存后按页面说明的范围生效。';
+ const adminTabs=$('.admin-tabs');
+ adminTabs.insertAdjacentHTML('beforebegin','<div class="growth-summary" id="growth-summary"></div>');
+ adminTabs.hidden=true;
+ const operationsPanel=$('#panel-operations'),recordsSection=$('#admin-supply-records');
+ if(operationsPanel&&recordsSection)operationsPanel.appendChild(recordsSection);
  $('.admin-hero').insertAdjacentHTML('beforeend','<div class="growth-header-actions"><button class="btn" type="button" data-growth-action="preview">预览用户端</button><button class="btn" type="button" data-growth-action="rules">查看生效规则</button></div>');
  const c=drafts.checkin,p=drafts.recharge,i=drafts.invite;
  $('#panel-admin').insertAdjacentHTML('beforeend',`
@@ -4006,12 +4009,12 @@ document.addEventListener('click',event=>{
  function refreshSummary(){const c=A.config();$('#growth-summary').innerHTML=Object.entries(labels).map(([key,name])=>`<div><span class="growth-state-dot ${c[key].enabled?'on':''}"></span><strong>${name}</strong><span>${c[key].enabled?'已开启':'已暂停'}</span></div>`).join('')+`<small>已生效版本 v${c.version} · 保存后自动同步用户端</small>`;}
  function filteredEvents(){const type=$('#growth-log-filter')?.value||'all';return A.data.events.filter(x=>type==='all'||x.source===type);}
  function renderRecords(){const events=A.data.events,rows=filteredEvents();const coins=events.filter(x=>x.kind==='云贝').reduce((a,x)=>a+x.amount,0),perks=events.filter(x=>x.kind!=='云贝'&&x.source!=='权益使用').length,uses=events.filter(x=>x.source==='权益使用').length;$('#growth-record-stats').innerHTML=[['累计发放云贝',coins,'邀请人与好友奖励分别计入'],['累计发放权益',perks,'签到与首充补给'],['已使用权益',uses,'通过演示体验导出']].map(x=>`<div><span>${x[0]}</span><strong>${x[1]}</strong><small>${x[2]}</small></div>`).join('');$('#growth-record-count').textContent='共 '+rows.length+' 条';$('#growth-record-body').innerHTML=rows.length?rows.map(x=>`<tr><td>${x.day}</td><td>${esc(x.who)}</td><td>${esc(x.source)}</td><td>${esc(x.kind)}</td><td class="num">${x.amount}</td><td><span class="growth-record-status">${x.source==='权益使用'?'已使用':'已到账'}</span></td></tr>`).join(''):'<tr><td colspan="6" class="growth-record-empty">暂无发放记录。切换到用户端体验签到、首充和邀请后，记录会显示在这里。</td></tr>';$('#growth-change-history').innerHTML=A.data.configHistory.length?A.data.configHistory.slice(0,20).map(x=>`<div class="growth-change-row"><strong>v${x.version} · ${labels[x.key]}</strong><span>${esc(x.summary)}</span><small>${esc(x.time)}</small></div>`).join(''):'<div class="growth-record-empty">尚未修改配置，当前使用默认活动方案。</div>';}
- const nativeSync=syncAdminView;syncAdminView=function(){nativeSync();$$('.growth-section').forEach(el=>el.hidden=el.id!=='admin-'+adminView);};
+ const nativeSync=syncAdminView;syncAdminView=function(){nativeSync();const configVisible=activeTab==='admin'&&isAdmin();$('#admin-recharge-panel').hidden=!configVisible;$('#admin-shop-panel').hidden=!configVisible;$$('.growth-section').forEach(el=>el.hidden=el.id==='admin-supply-records'?activeTab!=='operations':!configVisible);};
  const nativeLists=renderAdminLists;
  renderAdminLists=function(){const quote=rechargeQuote;try{rechargeQuote=function(id=selectedPlan){const q=quote(id),p=state.config.rechargePlans.find(x=>x.id===id);if(!q||!p)return q;const z=Number(p.discountZhe)||8;return {...q,first:true,discountZhe:z,paidCents:Number.isFinite(Number(p.paidCents))?Number(p.paidCents):Math.round(p.yuan*100*z/10)};};nativeLists();const h=$('#admin-plan-list .admin-list-header');if(h){h.children[3].textContent='首充折扣';h.children[4].textContent='首充实付';}}finally{rechargeQuote=quote;}};
  const nativeAdmin=renderAdmin;renderAdmin=function(){nativeAdmin();refreshSummary();renderRecords();};
  const headerActions=$('.growth-header-actions');headerActions.id='growth-main-actions';headerActions.hidden=true;$('.page-head-actions').append(headerActions);
- pageInfo.admin=['增长活动管理','配置签到、首充与邀请奖励，预览用户体验，追踪每一笔发放。'];
+ pageInfo.admin=['管理配置','集中管理充值档位、商城商品、签到、首充与邀请奖励。'];
  const nativeSetTab=setTab;setTab=function(...args){nativeSetTab(...args);headerActions.hidden=activeTab!=='admin'||!isAdmin();};
  const savedPlanHelp=$('#admin-recharge-panel .admin-caption');if(savedPlanHelp)savedPlanHelp.textContent='最多 6 个充值档位；新增默认关闭。折扣仅用于首次成功充值，复充按原价计算，档位赠送照常发放。';
  const discountLabel=$('#plan-discount')?.closest('label');if(discountLabel){discountLabel.querySelector('.admin-line-label').textContent='首充折扣';discountLabel.querySelector('small').textContent='仅首充享折扣，复充按原价计算';}

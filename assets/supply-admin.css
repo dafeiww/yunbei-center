@@ -6,3 +6,23 @@
 .growth-activity-switch>input{z-index:2;cursor:pointer;scroll-margin-top:100px}.growth-toggle{pointer-events:none}.growth-form input,.growth-form select{scroll-margin-top:100px}
 .admin-shop-table th:nth-child(5){width:180px}
 .admin-shop-table .admin-product-price small{display:inline;margin:0 0 0 6px;white-space:nowrap}
+.growth-section+.growth-section{margin-top:20px}#panel-operations .growth-section{margin-top:22px}
+
+.growth-discount-form{padding:22px;margin:0 0 20px}.growth-discount-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:18px}.growth-discount-fields label{display:grid;gap:8px}.growth-discount-fields span{font-size:11px;color:#677684}.growth-discount-fields input{min-height:40px;padding:9px 11px;border:1px solid #dce3e9;border-radius:5px;font-size:12px}.growth-discount-fields small{font-size:10px;color:#a1a9b1}
+.growth-week-editor{display:grid;gap:14px}.growth-week-card{display:grid;grid-template-columns:125px minmax(0,1fr);gap:16px;align-items:start;padding:15px;border:1px solid #e6e9ed;border-radius:8px;background:#fcfcfd}.growth-week-card>div:first-child{display:flex;align-items:center;gap:10px}.growth-week-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.growth-week-fields label{display:grid;gap:7px;min-width:0}.growth-week-fields span{font-size:10px;color:#7e8b96}.growth-week-fields input{width:100%;min-height:38px;padding:8px 10px;border:1px solid #dce3e9;border-radius:5px;font-size:12px}.growth-week-fields small{font-size:9px;color:#a1a9b1}
+@media(max-width:950px){.growth-week-card{grid-template-columns:1fr}.growth-week-fields{grid-template-columns:1fr}}@media(max-width:600px){.growth-discount-fields{grid-template-columns:1fr}.growth-discount-form{padding:16px}}
+
+/* Wider admin configuration forms */
+.growth-editor-layout{grid-template-columns:minmax(0,1fr)!important}
+.growth-preview{display:none!important}
+.growth-week-editor{gap:22px}
+.growth-week-card{grid-template-columns:minmax(170px,210px) minmax(0,1fr)!important;gap:34px!important;align-items:center!important;padding:26px 30px!important;border-radius:12px!important}
+.growth-week-card>div:first-child{gap:16px;align-items:flex-start}
+.growth-week-fields{grid-template-columns:minmax(0,1fr) minmax(240px,300px)!important;gap:36px!important}
+.growth-week-fields input{min-height:46px!important;font-size:14px!important;padding:10px 14px!important}
+.growth-week-fields label{gap:9px}
+.growth-week-fields span{font-size:12px}
+.growth-week-fields small{font-size:11px}
+@media(max-width:950px){.growth-week-card{grid-template-columns:1fr!important;gap:18px!important;padding:22px!important}.growth-week-fields{grid-template-columns:1fr!important;gap:18px!important}}
+.growth-week-fields input{height:46px!important;min-height:46px!important;max-height:46px!important}
+.growth-week-fields label{align-content:start}
