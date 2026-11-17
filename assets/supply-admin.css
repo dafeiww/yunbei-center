@@ -26,3 +26,7 @@
 @media(max-width:950px){.growth-week-card{grid-template-columns:1fr!important;gap:18px!important;padding:22px!important}.growth-week-card>div:first-child{flex-wrap:wrap}.growth-week-card>div:first-child>strong,.growth-week-card>div:first-child>small{white-space:normal}.growth-week-fields{grid-template-columns:1fr!important;gap:18px!important}}
 .growth-week-fields input{height:46px!important;min-height:46px!important;max-height:46px!important}
 .growth-week-fields label{align-content:start}
+
+.growth-week-fields .growth-week-link{grid-column:1/-1}.growth-week-fields .growth-week-link input{font-size:12px}.growth-week-fields .growth-week-link small{color:#677684}
+
+.btn.save-success{background:#eef7f1!important;border-color:#c9d9cd!important;color:#4d7c5f!important;box-shadow:none!important}.btn.save-error{background:#fff3f2!important;border-color:#e3b6b2!important;color:#a84942!important;box-shadow:none!important}.growth-form-footer span.is-dirty{color:#a85b23}.growth-form-footer span.is-saved{color:#4d7c5f}

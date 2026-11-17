@@ -6,17 +6,18 @@
  const start=()=>weekStart(day());
  const clone=v=>JSON.parse(JSON.stringify(v));
  const definitions={volcano:{name:'高级火山图体验',unit:'次'},palette:{name:'科研配色模板包',unit:'份'},export:{name:'矢量图导出体验',unit:'次'},ai:{name:'AI 分析报告体验',unit:'次'},consult:{name:'科研顾问 1 对 1',unit:'次'},report:{name:'结题报告导出包',unit:'次'}};
- const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[5,5,10,10,40],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级科研图表体验',desc:'火山图、热图等高级图表模板 + 示例数据',uses:1,kind:'volcano'},{name:'AI 分析报告体验',desc:'上传结果表，AI 生成 1 份图文解读报告',uses:1,kind:'ai'},{name:'结题报告导出包',desc:'把本项目图表、AI解读和结论整理成 1 份可交付报告',uses:1,kind:'report'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
+ const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[5,5,10,10,40],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级科研图表体验',desc:'火山图、热图等高级图表模板 + 示例数据',uses:1,kind:'volcano',link:''},{name:'AI 分析报告体验',desc:'上传结果表，AI 生成 1 份图文解读报告',uses:1,kind:'ai'},{name:'结题报告导出包',desc:'把本项目图表、AI解读和结论整理成 1 份可交付报告',uses:1,kind:'report'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
  if(!state.config.supplyRules)state.config.supplyRules=clone(defaults);
  const cfg=()=>state.config.supplyRules;if(cfg().invite.monthlyCap===undefined||cfg().invite.monthlyCap>0)cfg().invite.monthlyCap=0;
  const rechargeDiscounts=()=>{const d=state.config.rechargeDiscounts||{},num=v=>Number.isFinite(Number(v))?Math.min(9,Math.max(1,Math.round(Number(v)*10)/10)):undefined;return {first:num(d.first)??8,second:num(d.second)??8.8,later:num(d.later)??9};};
- const normalizeWeek=v=>{const kind=typeof v==='string'?v:(v.kind||'volcano'),def=definitions[kind]||definitions.volcano,uses=Math.max(1,Math.round(Number(typeof v==='string'?1:v.uses)||1));return {name:String(typeof v==='string'?def.name:v.name||def.name),desc:String(typeof v==='string'?def.name:v.desc||def.name),uses,kind};};
- const rechargeStage=()=>{const count=(state.recharges||[]).filter(o=>o.status==='paid').length;return count===0?0:count===1?1:count===2?2:3;};
+ const normalizeWeek=v=>{const kind=typeof v==='string'?v:(v.kind||'volcano'),def=definitions[kind]||definitions.volcano,uses=Math.max(1,Math.round(Number(typeof v==='string'?1:v.uses)||1));return {name:String(typeof v==='string'?def.name:v.name||def.name),desc:String(typeof v==='string'?def.name:v.desc||def.name),uses,kind,link:String(typeof v==='string'?'':v.link||'').trim()};};
+ const RECHARGE_STAGE_RESET='2026-11-17-first-discount';if(state.rechargeStageReset!==RECHARGE_STAGE_RESET){state.paidRechargeCount=0;state.rechargeStageReset=RECHARGE_STAGE_RESET;}state.paidRechargeCount=Math.max(0,Math.min(99,Math.round(Number(state.paidRechargeCount)||0)));
+ const rechargeStage=()=>((Math.max(0,Math.round(Number(state.paidRechargeCount)||0)))%4);
  const inviteExamples=[['林同学',1,1],['陈同学',2,4],['周同学',3,9]].map(([name,stage,age],i)=>({id:'DEMO-SUPPLY-'+i,name,created:shiftedDay(day(),-age),stage,reward:defaults.invite.inviter.slice(0,stage).reduce((a,b)=>a+b,0),friendReward:defaults.invite.friend.slice(0,stage).reduce((a,b)=>a+b,0),rules:clone(defaults.invite),demo:true}));
  s.weekRules=s.weekRules||{};s.events=s.events||[];s.configHistory=s.configHistory||[];
  const rule=()=>s.weekRules[start()]||cfg().checkin;
  const log=(who,source,kind,amount,reference='')=>s.events.unshift({id:uid('AW'),day:day(),who,source,kind,amount,reference});
- const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);};
+ const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return id;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);return id;};
  const legacyGifts=['科研配色模板包','矢量图导出体验','专家图表美化服务'];
 cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.length===3?cfg().recharge.weeks.map((week,i)=>legacyGifts.includes(week.name)||['expert','consult'].includes(week.kind)?clone(defaults.recharge.weeks[i]):week):clone(defaults.recharge.weeks)).slice(0,3).map(normalizeWeek);
  if(s.pass)s.pass.weeks=(Array.isArray(s.pass.weeks)&&s.pass.weeks.length===3?s.pass.weeks:clone(cfg().recharge.weeks)).slice(0,3).map(normalizeWeek);
@@ -32,6 +33,7 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  function useTrial(perkId=null){
   const perk=perkId?s.perks.find(p=>p.id===perkId&&perkRemaining(p)>0):null;
   if(perkId&&!perk){toast('这份权益次数已用完。');return;}
+  if(perk?.link){const win=window.open(perk.link,'_blank','noopener');if(win){toast('已打开'+perk.name+'对应页面。');return;}openModal('打开'+perk.name,`<p class="supply-modal-note">浏览器拦截了自动跳转，请点击下方链接。</p><div class="modal-actions"><a class="btn primary" href="${esc(perk.link)}" target="_blank" rel="noopener">去使用</a></div>`);return;}
   activePerkId=perk?.id||null;
   const palette=perk?.kind==='palette',ai=perk?.kind==='ai',consult=perk?.kind==='consult',report=perk?.kind==='report';
   const aiArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">AI Research Report</text><rect x="40" y="72" width="500" height="14" rx="7" fill="#dce3e8"/><rect x="40" y="100" width="360" height="14" rx="7" fill="#e9edf1"/><rect x="40" y="138" width="180" height="112" rx="10" fill="#fff3e4" stroke="#f0d8b6"/><rect x="240" y="138" width="140" height="112" rx="10" fill="#eef6ff" stroke="#d7e7f5"/><rect x="400" y="138" width="140" height="112" rx="10" fill="#f0f7f2" stroke="#d7e9dc"/><text x="130" y="202" text-anchor="middle" font-size="14" fill="#b17b40">Result</text><text x="310" y="202" text-anchor="middle" font-size="14" fill="#3f7cae">Insight</text><text x="470" y="202" text-anchor="middle" font-size="14" fill="#328365">Next</text></svg>`;
@@ -49,22 +51,21 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  }
  function track(){
   const r=rule(),n=checks().length,total=r.rewards.reduce((a,b)=>a+b,0),earned=checks().reduce((a,c)=>a+c.reward,0);
-  if(!cfg().checkin.enabled)return '<div class="supply-paused">签到补给暂未开放，已经获得的云贝和权益仍可使用。</div>';
-  return `<div class="supply-track-head"><strong>本周补给进度 ${n}/5</strong><span>${earned}/${total} 云贝</span></div><div class="supply-days">${r.rewards.map((v,i)=>`<div class="supply-day ${i<n?'done':''} ${i+1===r.unlockAt||i===4?'milestone':''}"><b>${i<n?'✓':'+'+v}</b><span>第${i+1}次${i+1===r.unlockAt?' · 体验':i===4?' · 大礼包':''}</span></div>`).join('')}</div><div class="supply-track-bottom"><span>${n>=5?'本周补给已领满，下周继续。':n>=r.unlockAt?'绘图体验已解锁，再来 '+(5-n)+' 次领满云贝。':'再签到 '+(r.unlockAt-n)+' 次，解锁'+definitions[r.perk].name+'。'}</span>${button('check',n>=5?'本周已领满':done()?'今日已签到':'签到领补给',n>=5||done())}</div>`;
+  if(!cfg().checkin.enabled)return '<div class="supply-paused">签到暂未开放，已获得的云贝保留。</div>';
+  return `<div class="supply-track-head"><strong>本周签到进度 ${n}/5</strong><span>${earned}/${total} 云贝</span></div><div class="supply-days">${r.rewards.map((v,i)=>`<div class="supply-day ${i<n?'done':''}"><b>${i<n?'✓':'+'+v}</b><span>第${i+1}次</span></div>`).join('')}</div><div class="supply-track-bottom"><span>${n>=5?'本周奖励已领满，下周继续。':'再签到 '+(5-n)+' 次，领满 '+total+' 云贝。'}</span>${button('check',n>=5?'本周已领满':done()?'今日已签到':'签到领云贝',n>=5||done())}</div>`;
  }
  function sign(){
-  if(!cfg().checkin.enabled){toast('签到补给暂未开放。');return;}
+  if(!cfg().checkin.enabled){toast('签到暂未开放。');return;}
   const n=checks().length;if(done()||n>=5)return showCheck();
   if(!s.weekRules[start()])s.weekRules[start()]=clone(cfg().checkin);
-  const r=rule(),reward=r.rewards[n];s.checks.push({day:day(),reward});addCredit(reward,'checkin','科研补给 · 本周第 '+(n+1)+' 次签到');log('当前用户','签到补给','云贝',reward,start());
-  if(n+1===r.unlockAt)grant('check-'+start(),r.perk,'签到补给');put();renderAll();showCheck(reward);
+  const r=rule(),reward=r.rewards[n];s.checks.push({day:day(),reward});addCredit(reward,'checkin','签到得云贝 · 本周第 '+(n+1)+' 次签到');log('当前用户','签到奖励','云贝',reward,start());put();renderAll();showCheck(reward);
  }
- function showCheck(reward=0){const r=rule(),total=r.rewards.reduce((a,b)=>a+b,0);openModal('每周科研补给',`${reward?`<div class="supply-award">签到成功，${reward} 云贝已到账。${checks().length===r.unlockAt?definitions[r.perk].name+'已解锁。':''}</div>`:''}${track()}<p class="supply-modal-note" style="margin-top:18px">每周任选 5 天参与，无需连续。第 ${r.unlockAt} 次额外解锁 ${definitions[r.perk].name}，第 5 次累计领满 ${total} 云贝。周一开启新一轮，已获得的云贝和体验权益保留。</p>${checks().length>=r.unlockAt?`<div class="modal-actions">${button('owned','查看我的补给')}</div>`:''}`);}
+ function showCheck(reward=0){const r=rule(),total=r.rewards.reduce((a,b)=>a+b,0);openModal('签到得云贝',`${reward?`<div class="supply-award">签到成功，${reward} 云贝已到账。</div>`:''}${track()}<p class="supply-modal-note" style="margin-top:18px">每周任选 5 天参与，无需连续，第 5 次累计领满 ${total} 云贝。周一开启新一轮，已获得的云贝保留。</p>`);}
  const rechargePanel=$('#panel-recharge');
   const nativeQuote=rechargeQuote;
- rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),exhausted=stage>=3,zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:d.first;return {...q,first:stage===0,rechargeStage:stage,discountExhausted:exhausted,discountZhe:zhe,paidCents:Math.round(q.faceCents*zhe/10)};};
+ rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:10;const label=stage===0?'首充 '+formatZhe(d.first):stage===1?'第2次 '+formatZhe(d.second):stage===2?'第3次 '+formatZhe(d.later):'第4次 原价';return {...q,first:stage===0,rechargeStage:stage,discountExhausted:false,discountZhe:zhe,discountLabel:label,paidCents:Math.round(q.faceCents*zhe/10)};};
  const nativeComplete=completeRecharge;
- completeRecharge=function(q){const order=nativeComplete(q);if(order){if(order.bonus){state.wallet.paid-=order.bonus;state.wallet.reward+=order.bonus;const row=state.ledger.find(r=>r.orderId===order.id&&r.label==='充值赠送云贝');if(row)row.source='bonus';}if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
+ completeRecharge=function(q){const order=nativeComplete(q);if(order){state.paidRechargeCount=Math.min(99,(Number(state.paidRechargeCount)||0)+1);if(order.bonus){state.wallet.paid-=order.bonus;state.wallet.reward+=order.bonus;const row=state.ledger.find(r=>r.orderId===order.id&&r.label==='充值赠送云贝');if(row)row.source='bonus';}if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
  const passLabels={unpaid:'首充后开启',future:'待开启',task:'完成使用后可领',ready:'可领取',claimed:'已领取',expired:'已过期'};
  function renderRechargePass(){
   const card=$('#supply-recharge-pass');if(!card)return;
@@ -75,12 +76,12 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   $('#supply-pass-state').textContent=!s.pass?'未开启':['claimed','expired'].every(v=>[0,1,2].some(i=>passStatus(i)===v))?'已完成':status==='expired'?'部分已过期':'进行中';
   $('#supply-pass-grid').innerHTML=weeks.map((week,i)=>{
    const st=passStatus(i);
-   const action=st==='ready'?button('claim-'+i,'领取权益'):'';
+   const action=st==='ready'?button('claim-open-'+i,'领取权益'):'';
    return `<article class="supply-pass-item status-${st}"><div class="supply-pass-week"><b>${i+1}</b><span>第 ${i+1} 周</span><small>充值后第 ${i*7+1}—${i*7+7} 天</small></div><strong>${esc(week.name)}</strong><p>${esc(week.desc||'')} · 可用 ${week.uses} 次</p><div class="supply-pass-foot"><em>${passLabels[st]}</em>${action}</div></article>`;
   }).join('');
  }
  const nativeRecharge=renderRecharge;
- renderRecharge=function(){nativeRecharge();const heading=$('.recharge-plans-surface .surface-heading');let ladder=$('#supply-discount-ladder');if(heading&&!ladder){heading.insertAdjacentHTML('afterend','<div class="supply-discount-ladder" id="supply-discount-ladder"></div>');ladder=$('#supply-discount-ladder');}const q=rechargeQuote();if(!q)return;const d=rechargeDiscounts();const stages=[['首充',d.first],['第2次',d.second],['第3次起',d.later]];if(ladder){ladder.style.display=q.discountExhausted?'none':'';ladder.innerHTML=stages.map(([name,zhe],i)=>`<span class="${q.rechargeStage===i?'active':''} ${q.rechargeStage>i?'done':''}"><small>${name}</small><b>${formatZhe(zhe)}</b>${q.rechargeStage===i?'<em>当前</em>':q.rechargeStage>i?'<em>已用</em>':''}</span>`).join('');}$('#plans-offer-title').textContent=q.discountExhausted?'充值':(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+formatZhe(q.discountZhe)+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');$('#checkout-first-tag').textContent=(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+q.discountZhe+' 折';$('.quote-discount').hidden=q.discountZhe>=10||q.discountExhausted;$('#checkout-first-tag').hidden=q.discountExhausted;$$('.plan-rate').forEach(e=>e.hidden=q.discountExhausted);renderRechargePass();};
+ renderRecharge=function(){nativeRecharge();const ladder=$('#supply-discount-ladder');if(ladder)ladder.remove();const q=rechargeQuote();if(!q)return;$('#plans-offer-title').textContent=q.discountLabel+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
  const nativePay=payRecharge;
  payRecharge=function(){
   const previousOrder=state.recharges[0]?.id,previousPass=s.pass;
@@ -98,7 +99,11 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   </div>`;
  };
  function passStatus(i){if(!s.pass)return 'unpaid';const from=shiftedDay(s.pass.start,i*7),to=shiftedDay(from,6);if(s.pass.claimed.includes(i))return 'claimed';if(day()<from)return 'future';if(day()>to)return 'expired';return s.usage.slice(s.pass.usageStart).some(u=>u.day>=from&&u.day<=to)?'ready':'task';}
- function claim(i){if(passStatus(i)!=='ready')return;s.pass.claimed.push(i);grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');put();renderAll();toast('本周进阶补给已领取，可在“我的科研补给”查看。');}
+ function claimOpen(i){
+  const week=s.pass?.weeks[i],st=passStatus(i);if(!week||st!=='ready')return;
+  openModal('领取第 '+(i+1)+' 周权益',`<div class="supply-award">${esc(week.name)} · 可用 ${week.uses} 次</div><p class="supply-modal-note">${esc(week.desc||'')}</p><p class="supply-modal-note">领取后立即打开对应体验，本次使用会计入权益次数。</p><div class="modal-actions"><button type="button" class="btn" data-supply="close-modal">稍后再领</button><button type="button" class="btn primary" data-supply="claim-confirm-${i}">去使用</button></div>`);
+ }
+ function claim(i){if(passStatus(i)!=='ready')return;const perkId=grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');s.pass.claimed.push(i);put();renderAll();const perk=s.perks.find(p=>p.id===perkId);if(perk&&perkRemaining(perk)>0){useTrial(perkId);toast('已领取，正在打开'+perk.name+'。');}else{toast('本周进阶补给已领取，可在“我的科研补给”查看。');}}
  function friendAdd(){
   if(!cfg().invite.enabled){toast('邀请活动暂未开放。');return;}
   const month=day().slice(0,7);const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(month)).length>=cap){toast('已达到本月有效邀请名额。');return;}
@@ -145,9 +150,9 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  checkin=sign;earn=showCheck;actions.checkin=sign;actions.earn=()=>showCheck();
  actions.rules=()=>{const c=cfg(),r=rule();openModal('科研补给规则',`<div class="rule"><h3>每周签到</h3><p>每日一次，无需连续。累计 ${r.unlockAt} 天解锁 ${definitions[r.perk].name}，5 天累计 ${r.rewards.reduce((a,b)=>a+b,0)} 云贝。周一开启新一轮，已获奖励保留。</p></div><div class="rule"><h3>首充补给</h3><p>首充享 ${state.config.rechargeDiscounts?.first??8} 折，后续优惠由系统自动匹配，不做公开阶梯展示。额外补给${c.recharge.enabled?'已开启':'暂未开放'}；开启后以充值日为起点，每 7 天一个周期，共 3 周。三周内容为 ${cfg().recharge.weeks.map(w=>`${w.name}（${w.uses} 次）`).join('、')}；每周期完成一次绘图或分析可领取当周权益，当期逾期未领不补发，已领取权益按配置次数使用。</p></div><div class="rule"><h3>邀请奖励</h3><p>注册、首次绘图、回访三个阶段，邀请人分别得 ${c.invite.inviter.join('、')} 云贝，好友分别得 ${c.invite.friend.join('、')} 云贝。回访需注册满 ${c.invite.returnDays} 天后再次使用；每位邀请人不限邀请人数。已开始的邀请按原规则完成。</p></div><div class="rule"><h3>原型说明</h3><p>支付、好友行为和绘图均为演示，数据仅在当前浏览器保存。云贝即时到账，发票按充值实付金额计算。</p></div>`);};
  pageInfo.recharge[1]='';pageInfo.invite[1]='送同门一份科研见面礼，一起使用，分阶段解锁奖励。';
- function update(){const n=checks().length,currentRule=rule(),enabled=cfg().checkin.enabled,checked=done()||n>=5;$('#wallet-checkin-label').textContent=!enabled?'签到暂未开放':n>=5?'本周已领满':done()?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin').disabled=enabled&&!checked;$('#wallet-checkin').classList.toggle('is-signed',checked);$('#wallet-checkin use').setAttribute('href',checked?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+n+'/5 天 · 已获 '+checks().reduce((v,c)=>v+c.reward,0)+' 云贝';$('#wallet-checkin-bonus').hidden=!enabled||checked;$('#wallet-checkin-bonus').textContent='+'+(rule().rewards[n]||0);$('#wallet-checkin').setAttribute('aria-label',!enabled?'签到暂未开放':checked?'查看本周签到进度':'每日签到领取 '+(currentRule.rewards[n]||0)+' 云贝');$('.wallet-week-link').title='签到 '+currentRule.unlockAt+' 天解锁'+definitions[currentRule.perk].name+'；每周最多 '+currentRule.rewards.reduce((a,b)=>a+b,0)+' 云贝，无需连续';}
+ function update(){const n=checks().length,currentRule=rule(),enabled=cfg().checkin.enabled,checked=done()||n>=5;$('#wallet-checkin-label').textContent=!enabled?'签到暂未开放':n>=5?'本周已领满':done()?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin').disabled=enabled&&!checked;$('#wallet-checkin').classList.toggle('is-signed',checked);$('#wallet-checkin use').setAttribute('href',checked?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+n+'/5 天 · 已获 '+checks().reduce((v,c)=>v+c.reward,0)+' 云贝';$('#wallet-checkin-bonus').hidden=!enabled||checked;$('#wallet-checkin-bonus').textContent='+'+(rule().rewards[n]||0);$('#wallet-checkin').setAttribute('aria-label',!enabled?'签到暂未开放':checked?'查看本周签到进度':'每日签到领取 '+(currentRule.rewards[n]||0)+' 云贝');$('.wallet-week-link').title='每周最多 '+currentRule.rewards.reduce((a,b)=>a+b,0)+' 云贝，无需连续';}
  const nativeAll=renderAll;renderAll=function(){nativeAll();update();};
-  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
+  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a==='close-modal')closeModal();else if(a.startsWith('claim-open-'))claimOpen(Number(a.slice(11)));else if(a.startsWith('claim-confirm-')){closeModal();claim(Number(a.slice(14)));}else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
  document.addEventListener('submit',e=>{
   if(e.target.id!=='supply-invite-form')return;e.preventDefault();if(!cfg().invite.enabled)return;
   const data=new FormData(e.target),name=data.get('friend').trim(),account=data.get('account').trim().toLowerCase();if(!name||!account)return;
@@ -158,6 +163,100 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   addCredit(r.inviter[0],'invite','邀请同门注册 · '+name,id);log('当前用户','邀请奖励','云贝',r.inviter[0],id);log('受邀好友：'+name,'好友奖励','云贝',r.friend[0],id);put();closeModal();renderAll();toast('注册奖励已分别记入邀请人和好友账户。');
  });
  window.YunbeiSupply={data:s,config:cfg,defaults,definitions,clone,escape:esc,day,refresh:()=>renderAll(),rule,showRules:()=>actions.rules()};
+ window.addEventListener('storage',e=>{if(e.key!==STORE||!e.newValue)return;try{const next=JSON.parse(e.newValue);if(!next||next.walletVersion!==2)return;const currentRole=state.role;const supply=s;Object.assign(state,next);state.role=currentRole;if(next.supply&&supply)Object.assign(supply,next.supply);renderAll();}catch{}});
  put();renderAll();setTab(location.hash.slice(1)||'recharge',false);
  if(new URLSearchParams(location.search).get('gift')==='volcano')openModal('同门送你一份绘图体验','<div class="supply-award">火山图同款模板 + 示例数据 + 新人体验 1 次</div><p class="supply-modal-note">这张图，你也可以做。用示例数据完成第一次绘图与导出，体验基因云的科研工具。</p><div class="modal-actions">'+button('trial','打开同款绘图体验')+'</div>');
+
+function ybTaskCfg(){const d={enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const c=cfg().yunbeiTasks||{};return {...d,...c,invite:{...d.invite,...(c.invite||{})},profile:{...d.profile,...(c.profile||{})},checkin:{...d.checkin,...(c.checkin||{})},wechat:{...d.wechat,...(c.wechat||{})},avatar:{...d.avatar,...(c.avatar||{})}};}
+function ensureTaskData(){if(!state.taskData)state.taskData={completed:[],checkinDate:'',invite:{date:'',count:0}};if(!Array.isArray(state.taskData.completed))state.taskData.completed=[];if(state.taskData.invite?.date!==day())state.taskData.invite={date:day(),count:0};}
+function taskCompleted(id){ensureTaskData();return state.taskData.completed.includes(id);}
+function inviteDailyCount(){ensureTaskData();return state.taskData.invite.count;}
+function inviteDailyLimit(){return Math.max(0,Number(ybTaskCfg().invite.daily)||0);}
+function inviteAllRecords(){return [...(state.invites||[]),...(state.inviteExamples||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
+function taskCard(id,title,desc,reward,status){const done=taskCompleted(id);return `<article class="task-card ${done?'done':''}"><div><span class="task-kind">${id==='invite'?'每日任务':'成长任务'}</span><h4>${esc(title)}</h4><p>${esc(desc)}</p><small>${esc(status)}</small></div><div><b>+${reward}</b><span>云贝</span><button class="btn ${done?'':'primary'}" type="button" data-supply-task="${id}" ${done?'disabled':''}>${done?'已完成':'去完成'}</button></div></article>`;}
+function renderTaskCenter(){
+ const box=$('#supply-task-center');if(!box)return;ensureTaskData();const c=ybTaskCfg(),limit=inviteDailyLimit(),count=inviteDailyCount(),records=inviteAllRecords(),link=inviteShareUrl();
+ const canInvite=limit===0||count<limit;
+ const cards=[taskCard('invite','邀请好友得云贝','只有未注册基因云的新账号有效，双方注册成功即得云贝。',`${c.invite.inviter}/${c.invite.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`),taskCard('profile','完善个人中心','补充昵称、研究方向和所在单位。',c.profile.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'),taskCard('checkin','签到得云贝','每天签到一次，完成即到账。',c.checkin.reward,state.taskData.checkinDate===day()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到'),taskCard('wechat','绑定微信','绑定后可同步消息和快捷登录。',c.wechat.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'),taskCard('avatar','上传个人图像','上传头像，让协作更亲切。',c.avatar.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励')];
+ const rows=records.slice(0,10).map(r=>`<tr><td class="record-title"><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">历史示例</span>':''}</div></div></td><td data-label="邀请码"><b>${esc(state.inviteCode)}</b></td><td data-label="我的奖励">+${r.reward||c.invite.inviter} 云贝</td><td data-label="好友奖励">+${r.friendReward||c.invite.friend} 云贝</td><td data-label="状态"><span class="tag success">${r.status==='rewarded'?'邀请成功':'已完成'}</span></td></tr>`).join('');
+ box.innerHTML=`<div class="task-hero"><div><span class="eyebrow">云贝任务</span><h2>完成任务，持续拿云贝</h2><p>签到、资料、微信、头像和邀请都集中在这里；邀请需使用你的专属邀请码。</p></div><div class="task-invite-code"><span>我的邀请码</span><strong>${esc(state.inviteCode)}</strong><input readonly value="${esc(link)}"><button class="btn primary" type="button" data-action="copy-invite-link">复制邀请链接</button></div></div><div class="task-grid">${cards.join('')}</div><article class="surface invite-records-card"><div class="surface-heading"><div><h3>邀请记录</h3><p>今日已成功 ${count} 位${limit===0?' · 不限人数':' / 上限 '+limit+' 位'}；仅未注册过基因云的新账号有效。</p></div></div><div class="table-wrap"><table><thead><tr><th>受邀好友</th><th>邀请码</th><th>我的奖励</th><th>好友奖励</th><th>状态</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;padding:40px">暂无邀请记录。</td></tr>'}</tbody></table></div></article>`;
+}
+function completeTask(id,reward,label){ensureTaskData();if(state.taskData.completed.includes(id))return;state.taskData.completed.push(id);addCredit(reward,'task',label);log('当前用户','任务奖励','云贝',reward);persist();renderAll();toast(label+'，'+reward+' 云贝已到账。');}
+function taskCheckin(){ensureTaskData();const c=ybTaskCfg();if(state.taskData.checkinDate===day())return toast('今天已完成签到任务。');state.taskData.checkinDate=day();addCredit(c.checkin.reward,'task','每日签到任务');log('当前用户','任务奖励','云贝',c.checkin.reward);persist();renderAll();toast('签到成功，'+c.checkin.reward+' 云贝已到账。');}
+function openTaskModal(id){
+ const c=ybTaskCfg();
+ if(id==='invite'){openModal('邀请好友注册',`<p class="modal-intro">邀请码 <b>${esc(state.inviteCode)}</b> 已绑定本次邀请；账号必须未注册过基因云。</p><form id="task-invite-form"><div class="field"><label for="task-friend-name">好友昵称</label><input id="task-friend-name" required maxlength="30" placeholder="例如：研究伙伴小林"></div><div class="field"><label for="task-friend-key">好友账号</label><input id="task-friend-key" required pattern="[A-Za-z0-9@._-]{3,60}" maxlength="60" placeholder="例如 researcher01"></div><div class="modal-error" id="modal-error" hidden></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">模拟注册成功</button></div></form>`);return;}
+ if(id==='profile'){openModal('完善个人中心',`<form id="task-profile-form"><div class="field"><label for="task-name">昵称</label><input id="task-name" required maxlength="30" placeholder="请填写昵称"></div><div class="field"><label for="task-org">所在单位</label><input id="task-org" required maxlength="60" placeholder="请填写单位或课题组"></div><div class="field"><label for="task-field">研究方向</label><input id="task-field" required maxlength="60" placeholder="如转录组分析"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">保存并领奖</button></div></form>`);return;}
+ if(id==='wechat'){openModal('绑定微信',`<form id="task-wechat-form"><div class="field"><label for="task-wechat">微信号</label><input id="task-wechat" required maxlength="40" placeholder="请填写微信号"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">确认绑定</button></div></form>`);return;}
+ if(id==='avatar'){openModal('上传个人图像',`<form id="task-avatar-form"><div class="field"><label for="task-avatar">选择头像</label><input id="task-avatar" type="file" accept="image/*" required></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">上传并领奖</button></div></form>`);return;}
+}
+function taskInviteSubmit(){
+ const name=$('#task-friend-name')?.value.trim(),account=$('#task-friend-key')?.value.trim().toLowerCase(),fail=message=>{const el=$('#modal-error');if(el){el.hidden=false;el.textContent=message;}};
+ if(!name||!account)return fail('请填写好友昵称和账号。');const limit=inviteDailyLimit();if(limit>0&&inviteDailyCount()>=limit)return fail('今日邀请人数已达上限。');const c=ybTaskCfg();const exists=inviteAllRecords().some(r=>String(r.friendKey||'').toLowerCase()===account);if(exists)return fail('该账号已在基因云注册过，只有新注册账号才能获得邀请奖励。');
+ const id=uid('INV');state.invites.unshift({id,friendKey:account,name,reward:c.invite.inviter,friendReward:c.invite.friend,created:nowIso(),status:'rewarded'});state.taskData.invite.count++;addCredit(c.invite.inviter,'invite','邀请好友注册 · '+name,id);log('受邀好友：'+name,'好友奖励','云贝',c.invite.friend,id);persist();closeModal();renderAll();toast('邀请成功，双方云贝已到账。');
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='checkin')return taskCheckin();openTaskModal(id);});
+document.addEventListener('submit',e=>{
+ if(e.target.id==='task-invite-form'){e.preventDefault();taskInviteSubmit();return;}
+ if(e.target.id==='task-profile-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('profile',ybTaskCfg().profile.reward,'个人中心已完善');}return;}
+ if(e.target.id==='task-wechat-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');}return;}
+ if(e.target.id==='task-avatar-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('avatar',ybTaskCfg().avatar.reward,'个人头像已上传');}return;}
+});
+renderInvites=function(){renderTaskCenter();};renderTaskCenter();
+pageInfo.invite[0]='云贝任务';pageInfo.invite[1]='完成每日任务和成长任务，持续获得云贝。';
+
+
+let rechargeOrderFilter='all',rechargeOrderPage=1,rechargeOrderKeyword='';
+function rechargeOrderRecords(){if(!Array.isArray(state.rechargeFailures))state.rechargeFailures=[{id:'CZFAIL20261001',kind:'recharge',name:'充值 100 元',faceCents:10000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-5),paymentMethod:'wechat',status:'failed',failReason:'支付超时',demo:true},{id:'CZFAIL20261002',kind:'recharge',name:'充值 50 元',faceCents:5000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-2),paymentMethod:'alipay',status:'failed',failReason:'用户取消支付',demo:true}];return [...(state.recharges||[]),...(state.rechargeExamples||[]),...(state.rechargeFailures||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
+function renderRechargeOrders(){
+ const body=$('#recharge-order-rows');if(!body)return;
+ const all=rechargeOrderRecords();const rows=all.filter(o=>{const ok=rechargeOrderFilter==='all'||o.status===rechargeOrderFilter;const kw=rechargeOrderKeyword.trim();return ok&&(!kw||o.id.toLowerCase().includes(kw.toLowerCase())||money(o.paidCents).includes(kw));});
+ const pages=Math.max(1,Math.ceil(rows.length/10));rechargeOrderPage=Math.max(1,Math.min(rechargeOrderPage,pages));
+ body.innerHTML=rows.slice((rechargeOrderPage-1)*10,rechargeOrderPage*10).map(o=>{const status=o.status||'paid';return `<tr class="${status==='failed'?'order-failed':''}"><td class="record-title" data-label="充值订单"><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}${o.demo?'<span class="table-demo">历史示例</span>':''}</div></td><td data-label="充值金额">${money(o.faceCents)}</td><td data-label="实付金额">${money(o.paidCents)}</td><td data-label="到账云贝">${status==='failed'?'0 云贝':fmt((o.principal||0)+(o.bonus||0))+' 云贝'}</td><td data-label="支付方式">${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</td><td data-label="状态"><span class="tag ${status==='failed'?'failed':'success'}">${status==='failed'?(o.failReason||'充值失败'):'充值成功'}</span></td><td data-label="操作"><button class="table-action" data-recharge-order="${esc(o.id)}">查看详情</button></td></tr>`;}).join('')||'<tr><td colspan="7" style="text-align:center;padding:40px">暂无符合条件的充值订单。</td></tr>';
+ $('#recharge-order-total').textContent=pageCaption(rows.length,rechargeOrderPage);$('#recharge-order-pagination').innerHTML=pager(pages,rechargeOrderPage,'recharge-order-page');
+}
+function rechargeOrderDetail(id){const o=rechargeOrderRecords().find(x=>x.id===id);if(!o)return;const failed=o.status==='failed';openModal('充值订单详情',`<div class="exchange-preview">${icon(failed?'file':'coin')}<div><h3>${esc(o.name)} · ${failed?'充值失败':'已支付'}</h3><p>${failed?esc(o.failReason||'支付未完成'):'云贝已到账'}</p></div></div><div class="detail-line"><span>充值订单号</span><strong style="font-size:11px">${esc(o.id)}</strong></div><div class="detail-line"><span>充值时间</span><strong>${displayDate(o.created,true)}</strong></div><div class="detail-line"><span>充值原价</span><strong>${money(o.faceCents)}</strong></div>${failed?'<div class="detail-line"><span>实付金额</span><strong>¥0.00</strong></div><div class="detail-line"><span>到账云贝</span><strong>0 云贝</strong></div>':`<div class="detail-line"><span>实付金额</span><strong>${money(o.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt((o.principal||0)+(o.bonus||0))} 云贝</strong></div>`}<div class="detail-line"><span>支付方式</span><strong>${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</strong></div>${failed?'<div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-tab="recharge">重新充值</button></div>':`<div class="detail-line"><span>可开票金额</span><strong>${money(o.invoiceCents||o.paidCents)}</strong></div><div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-invoice-order="${esc(o.id)}">申请开票</button></div>`}`);
+}
+document.addEventListener('click',e=>{const f=e.target.closest('[data-recharge-order-status]');if(f){rechargeOrderFilter=f.dataset.rechargeOrderStatus;rechargeOrderPage=1;$$('#recharge-order-filters .category').forEach(x=>x.classList.toggle('active',x===f));renderRechargeOrders();return;}const d=e.target.closest('[data-recharge-order]');if(d){rechargeOrderDetail(d.dataset.rechargeOrder);}});
+document.addEventListener('input',e=>{if(e.target.id==='recharge-order-search'){rechargeOrderKeyword=e.target.value;rechargeOrderPage=1;renderRechargeOrders();}});
+document.addEventListener('click',e=>{const page=e.target.closest('[data-recharge-order-page]');if(page){rechargeOrderPage=Number(page.dataset.rechargeOrderPage);renderRechargeOrders();}});
+const nativeAllOrders=renderAll;renderAll=function(){nativeAllOrders();renderRechargeOrders();};
+
+
+function aiTokenBalance(){if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;return state.orders.reduce((sum,o)=>sum+(Number(o.tokenAmount)||0),0)-state.tokenUsed;}
+const aiModels=[
+ {id:'deepseek-v4-flash',name:'DeepSeek V4 Flash',factor:.4,note:'高速通用'},
+ {id:'5.6-terra',name:'5.6 Terra',factor:.8,note:'均衡稳定'},
+ {id:'5.6-luna',name:'5.6 Luna',factor:.9,note:'轻量高效'},
+ {id:'5.6-sol',name:'5.6 Sol',factor:1.0,note:'主力推理'},
+ {id:'6-luna',name:'6 Luna',factor:1.1,note:'新一代通用'},
+ {id:'6-sol',name:'6 Sol',factor:1.3,note:'更强推理'},
+ {id:'6-astra',name:'6 Astra',factor:1.6,note:'旗舰能力'},
+ {id:'image-2',name:'Image-2',factor:1.4,note:'多模态辅助'}
+];
+function aiModel(id){return aiModels.find(m=>m.id===id)||aiModels[0];}
+function aiEstimateTokens(text,id){const m=aiModel(id);return Math.max(80,Math.round((String(text||'').length+45)*1.1*m.factor));}
+function ensureAiChat(){if(!state.aiChat)state.aiChat={model:'deepseek-v4-flash',messages:[{role:'assistant',text:'你好，我已就绪。你可以直接提问，也可以让我帮你梳理研究问题、分析思路或输出结构化结论。',tokens:0}]};if(!Array.isArray(state.aiChat.messages))state.aiChat.messages=[];if(!aiModels.some(m=>m.id===state.aiChat.model))state.aiChat.model='deepseek-v4-flash';}
+function aiChatCard(m){return `<div class="ai-message ${m.role}">${esc(m.text)}${m.tokens?`<small>消耗 ${fmt(m.tokens)} Token</small>`:''}</div>`;}
+function renderAiChat(){
+ const chat=$('#ai-chat-panel');if(!chat)return;const balance=aiTokenBalance();ensureAiChat();
+ chat.innerHTML=`<div class="ai-chat"><aside class="ai-chat-side"><h4>模型与额度</h4><div class="meta">剩余 Token<br><strong>${fmt(balance)}</strong><br>已消耗 ${fmt(state.tokenUsed||0)} Token</div><div class="ai-model-list">${aiModels.map(m=>`<button type="button" class="ai-model ${state.aiChat.model===m.id?'active':''}" data-ai-model="${esc(m.id)}"><span>${esc(m.name)}</span><small>${m.factor}x · ${esc(m.note)}</small></button>`).join('')}</div></aside><div class="ai-chat-main"><div class="ai-messages" id="ai-messages">${state.aiChat.messages.map(aiChatCard).join('')}</div><form class="ai-input" id="ai-chat-form"><textarea id="ai-chat-input" placeholder="输入你的问题，Enter 发送，Shift + Enter 换行" required></textarea><div class="ai-input-footer"><small>主流模型通用，不同模型按倍率扣减。</small><button class="btn primary" type="submit">发送</button></div></form></div></div>`;
+ requestAnimationFrame(()=>{const box=$('#ai-messages');if(box)box.scrollTop=box.scrollHeight;$('#ai-chat-input')?.focus();});
+}
+function openAiChat(){ensureAiChat();openModal('AI 对话','<div id="ai-chat-panel"></div>');renderAiChat();}
+function sendAiMessage(){
+ const input=$('#ai-chat-input');if(!input)return;const text=input.value.trim();if(!text)return;const cost=aiEstimateTokens(text,state.aiChat.model);if(aiTokenBalance()<cost){toast('Token 不足，请先兑换。');return;}
+ state.aiChat.messages.push({role:'user',text,tokens:cost});state.tokenUsed=(state.tokenUsed||0)+cost;
+ const model=aiModel(state.aiChat.model);const reply=text.length>40?`我已收到你的问题。基于 ${model.name}，我会先拆解关键信息，再给出可执行的分析建议。你可以继续补充数据背景、目标结论或输出格式。`:`我可以用 ${model.name} 帮你继续拆解「${text}」。你可以补充使用场景、数据类型和期望输出，我会给出更准确的建议。`;
+ state.aiChat.messages.push({role:'assistant',text:reply,tokens:0});persist();renderAiChat();renderOverview();renderProducts();renderOrders();toast(`已消耗 ${fmt(cost)} Token。`);
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-action="ai-chat"]')){e.preventDefault();openAiChat();return;}const model=e.target.closest('[data-ai-model]');if(model){ensureAiChat();state.aiChat.model=model.dataset.aiModel;persist();renderAiChat();}});
+document.addEventListener('submit',e=>{if(e.target.id==='ai-chat-form'){e.preventDefault();sendAiMessage();}});
+document.addEventListener('keydown',e=>{if(e.target.id==='ai-chat-input'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAiMessage();}});
+
+
+if(!state.config.catalog.some(p=>p.id==='token-100k')){state.config.catalog.unshift({id:'token-100k',name:'AI Token · 10万',category:'AI Token',price:100,desc:'可切换主流模型对话',unit:'10万 Token',kind:'aiToken',tokenAmount:100000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
+if(!state.config.catalog.some(p=>p.id==='token-500k')){state.config.catalog.splice(1,0,{id:'token-500k',name:'AI Token · 50万',category:'AI Token',price:450,desc:'批量对话更划算',unit:'50万 Token',kind:'aiToken',tokenAmount:500000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
+if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;
+
 })();

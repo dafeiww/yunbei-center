@@ -1220,6 +1220,357 @@ textarea:focus-visible {
 @media (max-width: 620px) { .page-context-bar { gap: 10px; } .role-switcher { gap: 7px; } .role-switcher-options button { padding: 6px 11px; } }
 
   </style>
+<style>
+
+.supply-kicker{color:#ac5c23;font-size:11px;letter-spacing:2px}.supply-days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}.supply-day{padding:13px 5px;border:1px solid #eadfce;border-radius:9px;text-align:center;background:#fff}.supply-day b{display:block;font-size:19px;color:#8e5630;margin-bottom:7px}.supply-day span{font-size:10px;color:#8b8075}.supply-day.done{background:#ffead3;border-color:#efa45f}.supply-day.milestone{border-color:#e5a25c}.supply-track-head{display:flex;justify-content:space-between;font-size:12px;color:#72543d;gap:12px}.supply-track-head strong{font-size:15px}.supply-track-bottom{display:flex;gap:14px;align-items:center;justify-content:space-between;font-size:11px;color:#8b7664}.supply-track-bottom .btn{min-height:40px}.supply-perks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 22px}.supply-perk{background:#fff;border:1px solid #e4e8ed;border-radius:12px;padding:19px;min-width:0}.supply-perk>small{color:#a66c39;font-size:11px}.supply-perk h3{font-size:15px;margin:10px 0 7px;color:#34404e}.supply-perk p{font-size:11px;color:#86919b;line-height:1.8;margin-bottom:13px}.supply-perk .btn{font-size:11px;min-height:36px}.supply-heading{display:flex;align-items:center;justify-content:space-between;margin-top:22px;gap:14px}.supply-heading h3{font-size:17px}.supply-heading small{font-size:11px;color:#8895a2}.supply-badge{font-size:10px;background:#fff1dd;color:#ad6426;border-radius:5px;padding:5px 8px}.supply-status{font-size:11px;color:#ac642f;line-height:1.8}.supply-recharge-note{padding:13px 22px;background:#fff7e9;border-bottom:1px solid #f1e1cb;color:#995d2c;font-size:11px;line-height:1.8}.supply-demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px dashed #d9e1e7;padding:15px 0;margin-top:30px;color:#8c98a4;font-size:10px}.supply-demo button{border:1px solid #dce3e8;border-radius:5px;background:#fff;padding:7px 10px;color:#71808e;font-size:10px}.supply-invite-hero{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;border:1px solid #f1d5b1;background:#fff7eb;border-radius:14px;padding:30px;margin-bottom:20px}.supply-invite-hero h2{font-size:31px;line-height:1.5;color:#493726;margin:12px 0}.supply-invite-hero p{font-size:12px;line-height:1.9;color:#8d7765}.supply-gift{background:#fff;border:1px solid #efdcc1;border-radius:13px;padding:23px;display:flex;flex-direction:column;gap:12px}.supply-gift h3{font-size:18px;color:#725139}.supply-gift span{font-size:12px;color:#8c7c6f}.supply-gift input{width:100%;border:1px solid #e5dfd7;border-radius:5px;padding:10px;font-size:10px;color:#8c8177}.supply-invite-step{padding:21px;background:#fff;border:1px solid #e6e9ed;border-radius:11px}.supply-invite-step b{font-size:29px;color:#b26931}.supply-invite-step h3{font-size:14px;margin:8px 0}.supply-invite-step p{font-size:11px;color:#89929c;line-height:1.8}.supply-friend{display:flex;gap:16px;align-items:center;justify-content:space-between;border-top:1px solid #edf0f3;padding:17px 0;font-size:12px}.supply-friend small{display:block;color:#9099a2;margin-top:6px;font-size:10px}.supply-empty{padding:28px;text-align:center;color:#8d99a4;font-size:12px}.supply-chart{background:#fafcfe;border:1px solid #e3e9ed;border-radius:8px;padding:10px;margin:16px 0}.supply-chart svg{display:block;width:100%;height:auto}.supply-modal-note{font-size:12px;color:#81909c;line-height:1.8}.supply-award{padding:16px;margin:14px 0;background:#fff4df;border:1px solid #f0d6ad;border-radius:9px;color:#9e652f;font-size:13px;line-height:1.8}.recharge-layout{grid-template-columns:minmax(0,1fr) 320px!important}.supply-trial-card{padding:20px;border:1px solid #e3e8ee;border-radius:12px;background:#fff;margin-top:18px}.supply-trial-card p{font-size:12px;color:#86929b;line-height:1.8;margin:9px 0 14px}
+@media(max-width:1080px){.recharge-layout{grid-template-columns:minmax(0,1fr) 285px!important}.supply-perks{gap:9px}.supply-perk{padding:14px}}
+@media(max-width:800px){.sidebar{display:none!important}.main{margin-left:0!important;padding-top:60px!important}.topbar{height:60px!important;padding:0 14px!important}.platform-brand{max-width:145px}.platform-brand img{max-width:140px!important;width:100%!important;height:auto!important}.platform-nav,.feedback-link,.top-actions .top-link,.top-actions .project-center{display:none!important}.top-actions{margin-left:auto!important;gap:8px!important}.content{padding:20px 16px!important}.recharge-layout{display:flex!important;flex-direction:column!important;gap:18px!important}.recharge-layout>.recharge-wallet,.recharge-layout>.recharge-plans-surface,.recharge-layout>.checkout-summary{width:100%!important;grid-area:auto!important;position:static!important;max-width:none!important}.recharge-wallet{min-height:200px!important}.recharge-plans{grid-template-columns:repeat(2,minmax(0,1fr))!important}.checkout-summary{padding:0 0 20px!important}.supply-perks{grid-template-columns:1fr}.supply-invite-hero{grid-template-columns:1fr;padding:22px;gap:20px}.supply-invite-hero h2{font-size:26px}.supply-heading{align-items:flex-start;flex-direction:column;gap:7px}.supply-track-bottom{align-items:flex-start;flex-direction:column;gap:12px}.supply-track-bottom .btn{width:100%}.supply-friend{align-items:flex-start;flex-wrap:wrap}.supply-day{padding:12px 3px}.supply-day b{font-size:17px}.supply-day span{font-size:9px}.page-context-bar{gap:8px!important}.footer{flex-wrap:wrap!important}.supply-demo{padding-bottom:25px}.modal{max-width:calc(100vw - 24px)!important}.supply-invite-step{padding:18px}.supply-perk p{margin-bottom:10px}}
+
+[hidden]{display:none!important}.supply-reward-wallet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.supply-reward-item{padding:14px;border:1px solid #e7e9ed;border-radius:8px;font-size:12px;display:flex;flex-direction:column;gap:10px}.supply-paused{padding:18px;color:#9d7c5c;background:#fff8ec;border-radius:9px;font-size:12px}.supply-reward-item small{color:#8a95a0}.supply-error{color:#b65032;font-size:12px;margin-top:12px} @media(max-width:800px){html,body{max-width:100%;overflow-x:hidden}.content,.main,.page-panel{min-width:0;width:auto}.supply-invite-hero{min-width:0}.supply-reward-wallet{grid-template-columns:1fr}.wallet-inner{display:block!important}.wallet-under{margin-top:14px!important;align-items:flex-start!important}.recharge-wallet .wallet-bottom{margin-top:16px!important}.topbar{width:100%!important}.supply-invite-hero>*,.supply-gift{min-width:0}.supply-gift input{min-width:0}.page-head h1{font-size:24px}.role-switcher-label{display:none}.supply-demo button{min-height:40px}}
+
+.modal:has(.supply-payment-success){width:510px}
+.modal:has(.supply-payment-success) .modal-top{padding:20px 24px 0}
+.modal:has(.supply-payment-success) .modal-top h2{font-size:16px}
+.modal:has(.supply-payment-success) .modal-content{padding:18px 24px 24px}
+.supply-payment-result{text-align:center}
+.supply-payment-result .success-icon{width:46px;height:46px;margin:0 auto 12px}
+.supply-payment-result .success-icon .icon{width:25px;height:25px}
+.supply-payment-result h3{font-size:27px;font-weight:650;line-height:1.35;color:#303b49;margin:0}
+.supply-payment-result h3 span{font-size:21px;font-weight:600}
+.supply-payment-result p{font-size:12px;line-height:1.8;color:#7e8b99;margin:8px 0 0}
+.supply-payment-summary{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:15px 18px;margin:20px 0;background:#f6f8fa;border:1px solid #edf0f3;border-radius:9px}
+.supply-payment-summary>div{min-width:0}
+.supply-payment-summary>div+div{padding-left:18px;border-left:1px solid #e2e7ed}
+.supply-payment-summary span{display:block;color:#8793a1;font-size:11px;margin-bottom:6px}
+.supply-payment-summary strong{font-size:21px;font-weight:600;line-height:1.3;color:#3f4c5d;font-variant-numeric:tabular-nums}
+.supply-payment-summary small{font-size:11px;font-weight:400;color:#7c8998}
+.supply-payment-pass{display:flex;align-items:flex-start;gap:11px;padding:15px 16px;background:#fff6e8;border:1px solid #f1d7b3;border-radius:9px;margin-bottom:18px}
+.supply-payment-pass>.icon{flex-shrink:0;width:22px;height:22px;color:#c27a38;margin-top:1px}
+.supply-payment-pass strong{display:block;font-size:14px;font-weight:600;color:#a4602a}
+.supply-payment-pass p{font-size:11px;line-height:1.8;color:#9b7e63;margin:5px 0 6px}
+.supply-payment-pass small{display:block;font-size:11px;color:#ac713c;line-height:1.6}
+.supply-payment-order{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;font-size:11px;line-height:1.7;padding:0 0 12px;color:#8a97a4}
+.supply-payment-order>span{flex-shrink:0}
+.supply-payment-order strong{min-width:0;overflow-wrap:anywhere;text-align:right;font-size:11px;font-weight:500;color:#6b7a8a}
+.supply-payment-invoice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #edf0f3;border-bottom:1px solid #edf0f3}
+.supply-payment-invoice span{font-size:12px;color:#6e7c8d}
+.supply-payment-invoice b{font-weight:500;color:#526174;margin-left:4px}
+.supply-payment-invoice small{display:block;font-size:10px;color:#99a3af;margin-top:4px}
+.supply-payment-link{padding:5px 0;border:0;background:transparent;color:#ad682e;font-size:12px;line-height:1.5;font-weight:500;white-space:nowrap;cursor:pointer}
+.supply-payment-link:hover{color:#8f4d1f;text-decoration:underline;text-underline-offset:3px}
+.supply-payment-link:focus-visible{outline:2px solid #dfa467;outline-offset:3px;border-radius:3px}
+.supply-payment-links{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:10px}
+.supply-payment-links .supply-payment-link{color:#7e8c9b;font-size:11px}
+.supply-payment-actions{margin-top:16px;padding-top:16px;border-top:1px solid #edf0f3}
+.supply-payment-actions .btn{min-height:39px;box-shadow:none}
+.supply-example-tag{display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 6px;border:1px solid #e4e9ef;border-radius:4px;background:#f7f9fb;color:#8c98a5;font-size:9px;font-weight:400;line-height:1.5}
+.supply-invite-records{padding:22px;min-width:0}
+.supply-invite-records .supply-heading{margin:0 0 18px;align-items:center}
+.supply-invite-records .supply-heading h3{font-size:16px;color:#415267}
+.supply-invite-count{margin:7px 0 0;font-size:11px;color:#8b98a6;line-height:1.6}
+.supply-invite-table-wrap{max-width:100%;overflow-x:auto;border:1px solid #e5e9ef;border-radius:8px;overscroll-behavior-x:contain}
+.supply-invite-table-wrap:focus-visible{outline:2px solid #dda36d;outline-offset:3px}
+.supply-invite-table{width:100%;min-width:980px;table-layout:fixed;border-collapse:separate;border-spacing:0}
+.supply-invite-table .invite-col-person{width:17%}
+.supply-invite-table .invite-col-date{width:14%}
+.supply-invite-table .invite-col-progress{width:21%}
+.supply-invite-table .invite-col-reward{width:14%}
+.supply-invite-table .invite-col-action{width:20%}
+.supply-invite-table th,.supply-invite-table td{padding:17px 18px;text-align:left;vertical-align:middle;font-size:12px;line-height:1.6;white-space:nowrap}
+.supply-invite-table th{height:46px;padding-top:13px;padding-bottom:13px;background:#f6f8fb;border-bottom:1px solid #e5e9ef;font-size:11px;font-weight:500;color:#78899a}
+.supply-invite-table td{height:72px;border-bottom:1px solid #edf0f4;background:#fff;color:#6b7b8f}
+.supply-invite-table tbody tr:last-child td{border-bottom:0}
+.supply-invite-table tbody tr:hover td{background:#fbfcfe}
+.supply-invite-table th:nth-child(n+4),.supply-invite-table td:nth-child(n+4){text-align:center}
+.supply-invite-person{display:flex;align-items:center;gap:8px;min-width:0}
+.supply-invite-person strong{min-width:0;overflow:hidden;text-overflow:ellipsis;color:#415267;font-size:12px;font-weight:600}
+.supply-invite-person .supply-example-tag{flex-shrink:0;margin:0}
+.supply-invite-table .supply-invite-date{font-size:11px;color:#8b98a7;font-variant-numeric:tabular-nums}
+.supply-invite-progress{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:#a77a47}
+.supply-invite-progress i{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:currentColor;opacity:.75}
+.supply-invite-progress.stage-2{color:#648eaf}
+.supply-invite-progress.stage-3{color:#579679}
+.supply-invite-reward{font-size:16px;font-weight:600;color:#af6c35;font-variant-numeric:tabular-nums}
+.supply-invite-limit{font-size:10px;color:#95a1ae;font-variant-numeric:tabular-nums}
+.supply-invite-action-note{font-size:11px;color:#9aa5b1}
+.supply-invite-table .btn{min-height:34px;padding:7px 12px;font-size:11px;box-shadow:none}
+.supply-invite-scroll-hint{display:none;margin:12px 0 0;font-size:10px;color:#95a1ae}
+@media(max-width:1200px){.supply-invite-scroll-hint{display:block}}
+@media(max-width:800px){.supply-invite-records{padding:16px}.supply-invite-records .supply-heading{flex-direction:row;align-items:center;gap:12px}.supply-invite-records .supply-heading h3{font-size:15px}.supply-invite-records .supply-heading .btn{flex-shrink:0;padding:8px 10px;font-size:10px}.supply-invite-count{font-size:10px}.supply-invite-table th:first-child,.supply-invite-table td:first-child{position:sticky;left:0;z-index:1;box-shadow:1px 0 0 #edf0f4}.supply-invite-table th:first-child{background:#f6f8fb}}
+@media(max-width:520px){.modal:has(.supply-payment-success) .modal-top{padding:18px 18px 0}.modal:has(.supply-payment-success) .modal-content{padding:16px 18px 18px}.supply-payment-result h3{font-size:25px}.supply-payment-result h3 span{font-size:19px}.supply-payment-summary{padding:13px 12px;gap:12px;margin:17px 0}.supply-payment-summary>div+div{padding-left:12px}.supply-payment-summary strong{font-size:19px}.supply-payment-pass{padding:13px 12px;gap:9px}.supply-payment-invoice{gap:9px}.supply-payment-invoice .supply-payment-link{font-size:11px}.supply-payment-actions{display:grid;grid-template-columns:minmax(72px,1fr) minmax(0,1.8fr);gap:9px}.supply-payment-actions .btn{width:100%;min-width:0;min-height:42px;padding:9px 10px;font-size:12px}}
+
+/* Keep check-in inside the balance card; reward details open on demand. */
+#panel-recharge .recharge-wallet{min-height:190px;padding:22px}
+#panel-recharge .recharge-wallet .wallet-bottom{margin-top:14px;padding-top:12px}
+#panel-recharge .recharge-wallet .wallet-week-link{min-height:28px}
+@media(max-width:800px){
+ #panel-recharge .recharge-wallet{min-height:0!important;padding:18px}
+ #panel-recharge .recharge-wallet .wallet-inner{display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto auto;gap:0 12px}
+ #panel-recharge .recharge-wallet .wallet-label{grid-column:1;font-size:11px}
+ #panel-recharge .recharge-wallet .demo-label{display:none}
+ #panel-recharge .recharge-wallet .balance-row strong{font-size:38px}
+ #panel-recharge .recharge-wallet .wallet-breakdown{gap:12px;flex-wrap:wrap;font-size:10px}
+ #panel-recharge .recharge-wallet .wallet-under{grid-column:2;grid-row:1/4;margin-top:0!important;flex-direction:column;align-items:flex-end!important;justify-content:center;gap:4px}
+ #panel-recharge .recharge-wallet #wallet-checkin{min-height:40px;padding:8px 10px;font-size:11px;white-space:nowrap}
+ #panel-recharge .recharge-wallet .wallet-link{min-height:32px;font-size:11px}
+ #panel-recharge .recharge-wallet .wallet-bottom{margin-top:12px!important;padding-top:10px;gap:4px 16px}
+ #panel-recharge .recharge-wallet .wallet-week-link{flex-basis:100%;margin:0;min-height:28px;font-size:11px}
+}
+
+.supply-discount-ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 22px 16px;padding:12px;background:#fff8ec;border:1px solid #f0d6ad;border-radius:9px}.supply-discount-ladder span{display:grid;justify-items:center;gap:5px;padding:10px 8px;border:1px solid #e6d1ac;border-radius:7px;background:#fff;color:#9c7448}.supply-discount-ladder span small{font-size:10px;line-height:1}.supply-discount-ladder span b{font-size:16px;line-height:1;font-variant-numeric:tabular-nums}.supply-discount-ladder span em{font-style:normal;font-size:9px;line-height:1;padding:3px 6px;border-radius:99px;background:#f6efe4;color:#9d8263}.supply-discount-ladder span.done{opacity:.62;background:#fffdf8}.supply-discount-ladder span.done em{background:#eff6f1;color:#799981}.supply-discount-ladder span.active{border-color:#c88446;background:#fff3df;color:#8d5318;box-shadow:0 1px 5px #a85b201f}.supply-discount-ladder span.active em{background:#c88446;color:#fff}
+@media(max-width:800px){.supply-discount-ladder{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 16px 14px}}
+
+/* Two-level wallet navigation: earn on top, spend below. */
+.sidebar .module-navigation{display:flex;flex-direction:column;gap:16px;width:100%}
+.module-nav-group{display:flex;flex-direction:column;gap:3px;min-width:0}
+.sidebar .module-nav-parent{display:flex;align-items:center;gap:10px;width:100%;min-height:38px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:#f2f5f8;font-size:14px;font-weight:600;text-align:left;letter-spacing:.2px;transition:background .15s,color .15s}
+.sidebar .module-nav-parent .icon{flex-shrink:0;width:17px;height:17px;color:#aeb9c4}
+.sidebar .module-nav-parent:hover{background:#3a444f;color:#fff}
+.sidebar .module-nav-parent.active{background:transparent;color:#fff}
+.sidebar .module-nav-parent.active .icon{color:#fff}
+.module-subnav{display:flex;flex-direction:column;gap:2px;margin-left:16px;padding-left:11px;border-left:1px solid #ffffff20}
+.sidebar .module-nav-item{display:flex;align-items:center;gap:9px;width:100%;min-height:37px;padding:0 10px;border:0;border-radius:6px;background:transparent;color:#b9c3ce;font-size:13px;text-align:left;transition:background .15s,color .15s}
+.sidebar .module-nav-item .icon{flex-shrink:0;width:15px;height:15px;opacity:.7}
+.sidebar .module-nav-item:hover{background:#3a444f;color:#fff}
+.sidebar .module-nav-item.active{background:#53a9ff;color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #53a9ff}
+.sidebar .module-nav-item.active .icon{color:#fff;opacity:1}
+.module-nav-label{display:block;padding:0 12px 10px;color:#96a3b0;font-size:11px;letter-spacing:1.4px}
+.admin-module-navigation{display:flex;flex-direction:column;gap:6px}
+@media(max-width:960px) and (min-width:801px){
+ .sidebar{width:190px;padding-left:12px;padding-right:12px}
+ .main{margin-left:190px}
+ .sidebar .module-nav-parent{font-size:13px;padding:0 9px}
+ .sidebar .module-nav-item{font-size:12px;padding:0 8px}
+ .module-subnav{margin-left:10px;padding-left:8px}
+}
+
+/* Mobile wallet navigation stays compact and never scrolls sideways. */
+.mobile-module-nav{display:none}
+@media(max-width:800px){
+ .mobile-module-nav{display:grid;gap:10px;margin:0 0 18px;max-width:100%}
+ .mobile-module-group{min-width:0;padding:9px;background:#fff;border:1px solid #e0e7ec;border-radius:10px}
+ #mobile-module-nav .module-nav-parent{min-height:34px;padding:0 5px;color:#3c4652;font-size:13px}
+ #mobile-module-nav .module-nav-parent .icon{width:15px;height:15px;color:#d8843f}
+ #mobile-module-nav .module-subnav{display:flex;flex-direction:row;margin:8px 0 0;padding-left:0;border-left:0;gap:6px}
+ #mobile-module-nav .module-nav-item span{display:inline!important}
+ #mobile-module-nav .module-nav-item{flex:1;min-width:0;justify-content:center;min-height:36px;padding:0 4px;background:#f2f5f7;color:#536c7c;font-size:12px}
+ #mobile-module-nav .module-nav-item .icon{display:none}
+ #mobile-module-nav .module-nav-item.active{background:#53a9ff;color:#fff;box-shadow:inset 0 2px 0 #53a9ff}
+.sidebar .module-nav-group{gap:2px}
+.sidebar .module-nav-parent{justify-content:flex-start;min-height:38px;margin-top:6px;padding:0 10px;border-radius:6px;background:transparent;color:#e6ebf1;font-size:12px;font-weight:600;cursor:pointer}
+.sidebar .module-nav-parent .icon{width:16px;height:16px;color:#9fb0c0}
+.sidebar .module-nav-parent .nav-chevron{margin-left:auto;width:12px;height:12px;color:#95a5b6;transition:transform .18s ease}
+.sidebar .module-nav-parent[aria-expanded="true"] .nav-chevron{transform:rotate(90deg)}
+.sidebar .module-nav-parent[aria-expanded="false"] .nav-chevron{transform:rotate(-90deg)}
+.sidebar .module-nav-parent[aria-expanded="false"]+.module-subnav{display:none}
+.sidebar .module-subnav{display:flex;flex-direction:column;gap:3px;margin:3px 0 0;padding-left:12px;border-left:1px solid #ffffff18}
+.sidebar .module-nav-item{gap:8px;min-height:35px;padding:0 9px;border-radius:5px;color:#b9c4d0;font-size:13px}
+.sidebar .module-nav-item .icon{width:15px;height:15px}
+.sidebar .module-nav-item.active{box-shadow:none}
+
+}
+
+.custom-recharge-field{display:grid;gap:6px;width:100%;margin:3px 0 9px;text-align:left}
+.custom-recharge-field span{font-size:10px;color:#8194a2}
+.custom-recharge-field input{width:100%;min-height:36px;padding:7px 9px;border:1px solid #dce4e9;border-radius:6px;background:#fff;color:#3f5667;font-size:13px}
+.custom-recharge-field input:focus{outline:2px solid #53a9ff;outline-offset:1px;border-color:#53a9ff}
+
+.recharge-plans-surface{height:auto!important;overflow:visible!important}
+.recharge-plans{padding-bottom:24px!important}
+.recharge-plan.custom-plan{min-height:auto!important}
+
+/* Unified enterprise sidebar style: full-width parents, full-width children. */
+.sidebar{padding:0 0 18px}
+.sidebar .nav{gap:0}
+.sidebar .module-navigation{gap:0}
+.sidebar .module-nav-group{gap:0}
+.sidebar .module-nav-parent{min-height:66px;padding:0 24px;border-radius:0;font-size:17px}
+.sidebar .module-nav-parent .icon{width:21px;height:21px}
+.sidebar .module-nav-parent .nav-chevron{width:17px;height:17px;color:#a9b6c2}
+.sidebar .module-nav-parent:hover{background:#39434f}
+.sidebar .module-nav-parent.active{background:transparent}
+.sidebar .module-subnav{display:flex;flex-direction:column;gap:0;margin:0;padding:0;border:0;background:#38424d}
+.sidebar .module-nav-item{justify-content:center;min-height:66px;padding:0 24px;border-radius:0;background:#38424d;color:#fff;font-size:15px}
+.sidebar .module-nav-item+.module-nav-item{border-top:1px solid #ffffff08}
+.sidebar .module-nav-item .icon{display:none}
+.sidebar .module-nav-item:hover{background:#3e4b57}
+.sidebar .module-nav-item.active{background:#0b9bff;box-shadow:none}
+.sidebar .module-nav-item.active .icon{display:none}
+.sidebar .admin-module-navigation{gap:0}
+.sidebar .admin-nav{justify-content:center;min-height:66px;border-radius:0;font-size:15px}
+.sidebar .admin-nav.active{background:#0b9bff;box-shadow:none}
+@media(max-width:960px) and (min-width:801px){
+ .sidebar .module-nav-parent,.sidebar .module-nav-item,.sidebar .admin-nav{min-height:54px}
+}
+
+/* Unified sidebar metrics */
+@media(min-width:801px){
+ .sidebar{width:220px!important;padding:18px 0 16px!important}
+ .main{margin-left:220px!important}
+}
+.sidebar .nav{gap:0;padding:0}
+.sidebar .module-navigation,.sidebar .admin-module-navigation{gap:0}
+.sidebar .module-nav-parent,.sidebar .admin-parent{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 20px;border-radius:0;font-size:15px;line-height:1}
+.sidebar .module-nav-parent .icon,.sidebar .admin-parent .icon{width:18px;height:18px}
+.sidebar .module-nav-parent .nav-chevron,.sidebar .admin-parent .nav-chevron{width:15px;height:15px}
+.sidebar .module-subnav{margin:0;padding:0;border:0}
+.sidebar .module-nav-item,.sidebar .admin-nav{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:0 20px;border-radius:0;font-size:14px;line-height:1}
+.sidebar .module-nav-item .icon,.sidebar .admin-nav .icon{display:none}
+.sidebar .module-nav-item.active,.sidebar .admin-nav.active{background:#0b9bff;color:#fff;font-weight:500;box-shadow:none}
+.sidebar .module-nav-item:hover,.sidebar .admin-nav:hover{background:#3e4b57;color:#fff}
+.sidebar .admin-subnav{background:#38424d}
+@media(max-width:960px) and (min-width:801px){
+ .sidebar{width:190px!important;padding:16px 0 14px!important}
+ .main{margin-left:190px!important}
+ .sidebar .module-nav-parent,.sidebar .admin-parent{min-height:48px;padding:0 16px}
+ .sidebar .module-nav-item,.sidebar .admin-nav{min-height:44px}
+}
+
+/* First recharge three-week supply below recharge layout */
+.supply-pass-card{margin-top:20px;padding:24px}
+.supply-pass-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
+.supply-pass-head h3{margin:5px 0 6px;font-size:19px;color:#34445a}
+.supply-pass-head p{margin:0;color:#7b8b99;font-size:12px}
+.supply-pass-state{flex-shrink:0;padding:6px 10px;border-radius:6px;background:#fff1df;border:1px solid #edc9a1;color:#9c5a23;font-size:11px}
+.supply-pass-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.supply-pass-item{min-width:0;padding:18px;border:1px solid #e7e9ed;border-radius:10px;background:#fcfcfd}
+.supply-pass-item.status-ready{background:#f4fbff;border-color:#a6d9ff}
+.supply-pass-item.status-ready em{color:#0b8ff0}
+.supply-pass-item.status-claimed{background:#f7fbf8;border-color:#d7e7dc}
+.supply-pass-week{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.supply-pass-week b{display:grid;place-items:center;width:24px;height:24px;border-radius:6px;background:#ffe5c5;color:#a4551e;font-size:12px}
+.supply-pass-week span{color:#425666;font-weight:600;font-size:14px}
+.supply-pass-week small{margin-left:auto;color:#8895a3;font-size:10px}
+.supply-pass-item strong{display:block;color:#35455a;font-size:15px}
+.supply-pass-item p{margin:6px 0 14px;color:#7f8c99;font-size:12px;line-height:1.7}
+.supply-pass-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #e9ecef;padding-top:12px}
+.supply-pass-foot em{font-style:normal;color:#9c5a23;font-size:11px}
+@media(max-width:900px){.supply-pass-grid{grid-template-columns:1fr}.supply-pass-head{flex-direction:column}.supply-pass-state{align-self:flex-start}}
+
+.supply-ladder-title{grid-column:1/-1;font-size:12px;font-weight:650;color:#8d5318}.supply-ladder-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:800px){.supply-ladder-stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.supply-discount-ladder{display:block!important}
+.supply-ladder-title{display:block;margin:0 0 10px}
+.supply-ladder-stages{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+.supply-discount-ladder span{min-width:0;white-space:nowrap}
+.supply-discount-ladder span b{font-size:15px;white-space:nowrap}
+@media(max-width:800px){.supply-ladder-stages{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* Payment countdown */
+.payment-countdown{min-width:220px;padding:11px 18px!important;border:1px solid #ffb6a5;background:#fff4f2!important;color:#c8422f!important;font-size:15px!important;font-weight:750!important;border-radius:12px!important;box-shadow:0 8px 20px #c8422f14;gap:8px}
+.payment-countdown b{font-size:12px;font-weight:650}
+.payment-countdown span{font-variant-numeric:tabular-nums;letter-spacing:.8px}
+.payment-countdown.warning{background:#c8422f!important;border-color:#c8422f;color:#fff!important;box-shadow:0 10px 24px #c8422f24}
+.checkout-summary .payment-countdown{margin:0 0 16px}
+
+/* Cloud task center */
+.supply-task-center{display:grid;gap:18px}
+.task-hero{display:grid;grid-template-columns:1.3fr .9fr;gap:20px;padding:26px;border:1px solid #f0dab8;border-radius:16px;background:linear-gradient(125deg,#fff8ec,#fffdf8)}
+.task-hero h2,.task-hero p{margin:0}
+.task-invite-code{display:grid;gap:10px;padding:18px;border-radius:14px;background:#fff;border:1px solid #f0e2c7;box-shadow:0 8px 20px #a85b2010}
+.task-invite-code span{font-size:12px;color:#8d5318}
+.task-invite-code strong{font-size:28px;letter-spacing:2px;color:#a35118}
+.task-invite-code input{padding:11px 12px;border-radius:9px;border:1px solid #e4d2b2;color:#6d7b86;background:#fffdf8}
+.task-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.task-card{display:flex;gap:16px;justify-content:space-between;padding:20px;border:1px solid #e6eef3;border-radius:14px;background:#fff}
+.task-card h4{margin:8px 0 6px;font-size:16px}
+.task-card p,.task-card small{margin:0;color:#788a97;line-height:1.5}
+.task-card>div:first-child{max-width:72%}
+.task-card>div:last-child{text-align:right}
+.task-card b{font-size:24px;color:#c1641f}
+.task-card>div:last-child span{display:block;margin:2px 0 12px;font-size:11px;color:#98a5b0}
+.task-card.done{background:#fbfcfd;border-color:#e6edf2;opacity:.72}
+.task-kind{display:inline-block;padding:3px 8px;border-radius:99px;background:#fff1df;color:#a25717;font-size:11px;font-weight:600}
+.invite-records-card{padding:20px}
+@media(max-width:1000px){.task-hero,.task-grid{grid-template-columns:1fr}.task-card>div:first-child{max-width:64%}}
+
+/* Admin recharge activities */
+#admin-recharge-panel{padding:22px}
+.supply-activity-list{display:grid;gap:14px;margin:16px 0}
+.supply-activity-card{padding:16px;border:1px solid #e4e9ee;border-radius:12px;background:#fff}
+.supply-activity-card.active{border-color:#f0d3b0;background:#fffdf8;box-shadow:0 8px 18px #a85b200c}
+.activity-card-head{display:flex;justify-content:space-between;gap:16px}
+.activity-card-head h4{margin:7px 0 4px;font-size:17px}
+.activity-card-head p{margin:0;color:#71808d;font-size:12px}
+.activity-status{display:inline-block;padding:3px 8px;border-radius:99px;background:#eff5f1;color:#4d8163;font-size:11px}
+.supply-activity-card.active .activity-status{background:#fff1df;color:#a25717}
+.activity-buttons{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.activity-tiers{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.activity-tier-chip{display:inline-flex;gap:7px;align-items:center;padding:6px 9px;border:1px solid #e2e8ed;border-radius:8px;font-size:12px;background:#f8fafb;color:#66798a}
+.activity-tier-chip.on{border-color:#f0d3b0;background:#fff8ec;color:#925418}
+.activity-tier-chip b{font-size:10px;color:#8798a5}
+.activity-editor{margin-top:14px;padding:14px;border-top:1px dashed #e3e9ee;display:grid;gap:12px}
+.activity-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.activity-tier-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.activity-grid label,.activity-tier-grid label{display:grid;gap:5px;font-size:12px;color:#657a89}
+.activity-grid input,.activity-tier-grid input{min-height:38px;padding:0 10px;border:1px solid #dbe3e9;border-radius:7px}
+.activity-tier.on{border-color:#f0d3b0;background:#fffdf8;border-radius:9px;padding:8px}
+.activity-actions{display:flex;justify-content:flex-end;gap:9px}
+@media(max-width:1000px){.activity-grid,.activity-tier-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.activity-card-head{flex-direction:column}.activity-buttons{justify-content:flex-start}}
+
+/* Admin task config */
+.admin-supply-tasks .growth-day-inputs{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.admin-supply-tasks .growth-day-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Top batch invoice */
+.invoice-batch-top{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:0 0 12px}
+.invoice-batch-top small{color:#71808d}
+
+/* AI Token chat */
+.ai-chat{display:grid;grid-template-columns:220px 1fr;gap:14px;min-height:480px}
+.ai-chat-side{display:grid;gap:12px;padding:14px;border:1px solid #e2e8ee;border-radius:12px;background:#f8fafb}
+.ai-chat-side h4{margin:0;font-size:14px}
+.ai-chat-side .meta{font-size:12px;color:#6b7f8d;line-height:1.5}
+.ai-model-list{display:grid;gap:7px;max-height:330px;overflow:auto;padding-right:3px}
+.ai-model{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #dfe6ec;border-radius:9px;background:#fff;text-align:left;font-size:12px;color:#465a67}
+.ai-model.active{border-color:#e79a5e;background:#fff4ea;color:#8d5318;font-weight:600}
+.ai-chat-main{display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px;border:1px solid #e2e8ee;border-radius:12px;background:#fff}
+.ai-messages{display:grid;gap:10px;overflow:auto;max-height:420px;padding-right:6px}
+.ai-message{max-width:84%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.65}
+.ai-message.user{margin-left:auto;background:#eaf3fa;border:1px solid #d5e6f2;color:#2f4f65}
+.ai-message.assistant{background:#f6f8fa;border:1px solid #e6ecef;color:#4a5b68}
+.ai-message small{display:block;margin-top:6px;color:#8b9aa5;font-size:10px}
+.ai-input{display:grid;gap:8px}
+.ai-input textarea{min-height:82px;padding:11px;border:1px solid #dbe3e9;border-radius:10px;font-size:13px;resize:vertical}
+.ai-input-footer{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ai-input-footer small{color:#75858f}
+@media(max-width:820px){.ai-chat{grid-template-columns:1fr}.ai-model-list{max-height:190px}}
+
+#panel-admin{min-width:0}.admin-hero{flex-wrap:wrap;gap:14px}.admin-hero>div:first-child{flex:1;min-width:240px}.admin-hero h2{font-size:23px}.admin-hero p{max-width:640px;line-height:1.8}.growth-header-actions{display:flex;gap:8px}.growth-summary{display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:17px 20px;background:#fff;border:1px solid #e5e8ed;border-radius:10px;margin:0 0 20px}.growth-summary>div{display:flex;align-items:center;gap:8px;font-size:12px}.growth-summary>div>span:last-child{color:#82909b;font-size:11px}.growth-summary>small{margin-left:auto;font-size:10px;color:#8e99a4}.growth-state-dot{width:7px;height:7px;border-radius:50%;background:#b8bfc6}.growth-state-dot.on{background:#78a88b}.admin-tabs{display:flex;gap:5px;border:0;background:#e9edf2;padding:5px;border-radius:8px;overflow-x:auto;margin-bottom:22px}.admin-tabs button{background:transparent;border:0;white-space:nowrap;font-size:12px;color:#74818d;padding:10px 18px;min-height:39px;border-radius:5px}.admin-tabs button.active{background:#fff;color:#a85b23;box-shadow:0 1px 5px #3143590c}.growth-editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}.growth-form{padding:25px;min-width:0}.growth-form-heading{display:flex;gap:15px;justify-content:space-between;align-items:flex-start;margin-bottom:24px}.growth-form-heading h3{font-size:18px;color:#34404d;line-height:1.5}.growth-form-heading p{font-size:11px;color:#8994a0;line-height:1.8;margin-top:7px}.growth-scope-label{font-size:10px;background:#f5f7fa;color:#8c97a1;border:1px solid #e6ebef;border-radius:4px;padding:4px 7px;white-space:nowrap}.growth-activity-switch{display:flex;gap:10px;align-items:center;padding-bottom:22px;border-bottom:1px solid #eef0f3;margin-bottom:19px;cursor:pointer;position:relative}.growth-activity-switch>input{position:absolute;opacity:0;width:36px;height:22px;margin:0}.growth-toggle{display:block;width:34px;height:20px;background:#c5cbd1;border-radius:12px;position:relative;flex-shrink:0}.growth-toggle:after{content:"";width:14px;height:14px;position:absolute;top:3px;left:3px;border-radius:50%;background:#fff;transition:transform .15s}.growth-activity-switch input:checked+.growth-toggle{background:#cc925c}.growth-activity-switch input:checked+.growth-toggle:after{transform:translateX(14px)}.growth-activity-switch input:focus-visible+.growth-toggle{outline:3px solid #e6c4a4;outline-offset:3px}.growth-activity-switch strong{font-size:13px;font-weight:550;color:#4c5865}.growth-activity-switch small{margin-left:auto;font-size:11px;color:#a4703f}.growth-info-line{display:flex;align-items:center;flex-wrap:wrap;gap:9px;font-size:11px;background:#f6f8fb;padding:12px 14px;border-radius:7px;color:#8a96a2;line-height:1.7}.growth-info-line strong{font-size:11px;color:#5b6a77;font-weight:500}.growth-info-line span:last-child{margin-left:auto;font-size:10px;color:#9aa3ad}.growth-block-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:24px 0 14px}.growth-block-heading h4{font-size:13px;font-weight:550;color:#4b5966}.growth-block-heading>span{font-size:10px;color:#9aa4ad}.growth-day-inputs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.growth-day-inputs>label{display:flex;flex-direction:column;align-items:center;gap:10px;background:#fcfcfd;border:1px solid #e6e9ed;border-radius:7px;padding:12px 8px}.growth-day-inputs label>span{font-size:11px;color:#7e8b96}.growth-day-inputs input{width:100%;padding:7px 3px;text-align:center;font-size:18px;font-weight:600;color:#9d6738;border:1px solid #dde3e9;border-radius:5px;background:#fff;min-height:39px}.growth-day-inputs small{font-size:10px;color:#a0a8b0}.growth-budget{display:flex;justify-content:space-between;align-items:center;padding:15px 0 0;font-size:11px;color:#8e9aa4}.growth-budget strong{font-size:20px;color:#b76d32;font-weight:600}.growth-budget strong small{font-size:10px;color:#9d8168;font-weight:400}.growth-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}.growth-field{display:flex;flex-direction:column;gap:9px;min-width:0}.growth-field>span{font-size:11px;color:#677684}.growth-field select,.growth-field input{min-height:40px;width:100%;padding:9px 11px;background:#fff;border:1px solid #dce3e9;border-radius:5px;color:#576775;font-family:inherit;font-size:12px}.growth-field>small{font-size:10px;color:#a1a9b1;line-height:1.7}.growth-input-unit{display:flex;align-items:center;border:1px solid #dce3e9;border-radius:5px;background:#fff;overflow:hidden}.growth-input-unit input{border:0;min-width:0}.growth-input-unit em{font-style:normal;white-space:nowrap;font-size:11px;color:#8995a0;padding-right:12px}.growth-help{font-size:10px;color:#949fa9;line-height:1.9;background:#f8f9fb;border-radius:6px;padding:12px 14px;margin:20px 0 24px}.growth-form-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf0f3;padding-top:20px;gap:14px}.growth-form-footer>span{font-size:11px;color:#97a29b}.growth-form-footer>span.is-dirty{color:#bf793f}.growth-form-footer>span.is-saved{color:#2e8468}.btn.primary.save-success{background:#328365;border-color:#2c755a;box-shadow:none}.growth-form-footer .btn{padding-left:22px;padding-right:22px}.growth-preview{position:sticky;top:90px;min-width:0;background:#fffaf3;border:1px solid #f0ddc2;border-radius:11px;overflow:hidden}.growth-preview-heading{display:flex;flex-direction:column;gap:5px;padding:17px 20px;border-bottom:1px solid #f1e4d1;background:#fff6e8}.growth-preview-heading>span{font-size:12px;color:#996534;font-weight:550}.growth-preview-heading small{font-size:10px;color:#ae967c}.growth-preview>[id^=growth-preview-]{padding:22px 20px 24px}.growth-phone-tag{font-size:10px;letter-spacing:1px;color:#bb824c}.growth-preview h3{font-size:24px;line-height:1.5;margin:12px 0;color:#624832;letter-spacing:-.5px}.growth-preview p{font-size:11px;color:#9b8875;line-height:1.9;margin:12px 0}.growth-mini-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:19px 0 12px}.growth-mini-days>div{display:flex;flex-direction:column;gap:7px;align-items:center;background:#fff;border:1px solid #eadcc9;border-radius:5px;padding:11px 2px}.growth-mini-days b{font-size:15px;color:#a36b38}.growth-mini-days small{font-size:8px;color:#ae9b87}.growth-preview-award{font-size:10px;background:#fff0da;color:#aa753c;padding:11px;border-radius:5px;line-height:1.8;margin-bottom:17px}.growth-preview .btn{width:100%;background:#ffead3!important;color:#a67b51!important;border-color:#eecfa9!important}.growth-preview-note{font-size:10px;line-height:1.9;color:#a38e78;padding:15px 20px;background:#fff5e6;border-top:1px solid #f0dfc7}.growth-pass-rows{display:flex;flex-direction:column;border:1px solid #e4e8ed;border-radius:8px;overflow:hidden}.growth-pass-row{display:grid;grid-template-columns:145px minmax(0,1fr) 60px;gap:16px;align-items:center;padding:16px;border-bottom:1px solid #e9edf1}.growth-pass-row:last-child{border-bottom:0}.growth-pass-row>div{display:grid;grid-template-columns:29px 1fr;gap:4px 9px;align-items:center}.growth-week-number{grid-row:1/3;width:27px;height:27px;display:grid;place-items:center;background:#f8ead9;color:#b17b40;font-size:13px;border-radius:7px}.growth-pass-row strong{font-size:12px;color:#5c6b78}.growth-pass-row small{font-size:9px;color:#9ca6af}.growth-pass-row .growth-field>span{font-size:10px}.growth-row-unit{font-size:10px;white-space:nowrap;color:#9aa4ad;text-align:right}.growth-fixed-rules{display:grid;gap:9px;margin-top:23px;padding:17px;background:#f8f9fb;border-radius:7px}.growth-fixed-rules h4{font-size:11px;font-weight:550;color:#6f7d89}.growth-fixed-rules p{font-size:10px;color:#939fa9;line-height:1.9;margin-bottom:6px}.growth-mini-pass{display:flex;flex-direction:column;gap:7px;padding:13px;background:#fff;border:1px solid #eddfcc;border-radius:7px;margin-top:10px}.growth-mini-pass>small{font-size:9px;color:#b59672}.growth-mini-pass strong{font-size:12px;color:#856649}.growth-mini-pass>span{font-size:9px;color:#af9a83}.growth-stage-table{border:1px solid #e4e8ed;border-radius:8px;overflow:hidden}.growth-stage-head,.growth-stage-row{display:grid;grid-template-columns:minmax(160px,1.5fr) minmax(80px,1fr) minmax(80px,1fr);gap:12px;padding:12px 15px;align-items:center}.growth-stage-head{font-size:10px;color:#8e9ba7;background:#f7f9fb}.growth-stage-row{border-top:1px solid #e9edf1}.growth-stage-row>strong{display:flex;gap:10px;align-items:center;font-size:11px;font-weight:500;color:#667582;line-height:1.8}.growth-stage-row>strong b{font-size:10px;font-weight:500;background:#f3f5f8;padding:3px 7px;border-radius:4px;color:#8c9aa6}.growth-stage-row>label{display:flex;align-items:center;gap:6px}.growth-stage-row input{width:100%;min-width:0;height:38px;border:1px solid #dce3e9;border-radius:5px;padding:8px;font-size:13px;color:#8d633d}.growth-stage-row small{font-size:9px;white-space:nowrap;color:#9aa6b0}.growth-invite-totals{display:flex;justify-content:flex-end;gap:26px;font-size:10px;color:#9aa3ad;padding:13px 0 8px}.growth-invite-totals b{color:#b7753a;font-size:15px;margin:0 3px}.growth-mini-invite{display:grid;grid-template-columns:1fr 52px 52px;align-items:center;gap:7px;padding:13px 0;border-top:1px solid #eddfcb}.growth-mini-invite>span{font-size:10px;color:#94775a}.growth-mini-invite strong{display:flex;flex-direction:column;gap:5px;font-size:16px;color:#ad7942}.growth-mini-invite small{font-size:8px;font-weight:400;color:#b19c84}.growth-paused-preview{text-align:center;padding:55px 10px;color:#a69078;font-size:14px;line-height:2.2}.growth-paused-preview small{font-size:11px}.growth-record-card{padding:24px}.growth-record-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}.growth-record-stats>div{display:flex;flex-direction:column;gap:10px;background:#f8f9fc;padding:18px;border:1px solid #eaedf2;border-radius:9px}.growth-record-stats span{font-size:11px;color:#8694a0}.growth-record-stats strong{font-size:27px;color:#5b6b7b;font-family:"Avenir Next",system-ui,sans-serif}.growth-record-stats small{font-size:9px;color:#a2acb5;line-height:1.8}.growth-record-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:16px;font-size:11px;color:#96a2ad}.growth-record-toolbar label{display:flex;align-items:center;gap:10px}.growth-record-toolbar select{border:1px solid #dfe5eb;border-radius:5px;background:#fff;padding:8px 13px;color:#758592;font-size:11px}.growth-record-table{width:100%;border-collapse:collapse;min-width:600px}.growth-record-table th,.growth-record-table td{text-align:left;font-size:11px;padding:14px 13px;border-bottom:1px solid #edf0f4;color:#778794}.growth-record-table th{font-weight:500;color:#8d9aa6;background:#f8f9fb}.growth-record-status{font-size:9px;padding:4px 7px;border-radius:4px;background:#eff6f1;color:#799981}.growth-record-empty{text-align:center;padding:32px 18px;color:#9ba6b1;font-size:12px;line-height:1.9}.growth-change-row{display:grid;grid-template-columns:130px 1fr 130px;gap:15px;padding:16px 0;border-top:1px solid #edf0f4;font-size:11px;line-height:1.9}.growth-change-row strong{font-weight:500;color:#7c8895}.growth-change-row span{color:#94a0aa}.growth-change-row small{font-size:10px;color:#a4adb6}.growth-section[hidden]{display:none!important}
+@media(min-width:1650px){.growth-editor-layout{grid-template-columns:minmax(0,1fr) 340px}.growth-form{padding:30px}.growth-preview>[id^=growth-preview-]{padding:28px 24px}}
+@media(max-width:1150px){.growth-editor-layout{grid-template-columns:minmax(0,1fr) 255px;gap:15px}.growth-form{padding:20px}.growth-day-inputs{gap:7px}.growth-pass-row{grid-template-columns:110px 1fr;gap:12px;padding:14px}.growth-row-unit{display:none}.growth-stage-head,.growth-stage-row{grid-template-columns:minmax(125px,1.2fr) minmax(65px,1fr) minmax(65px,1fr);gap:9px;padding:12px}.growth-stage-row small{display:none}.growth-summary{gap:20px}.growth-header-actions .btn{font-size:11px}.admin-tabs button{padding-left:13px;padding-right:13px}}
+@media(max-width:950px){.growth-editor-layout{grid-template-columns:1fr}.growth-preview{position:static;max-width:none}.growth-preview>[id^=growth-preview-]{padding:22px}.growth-mini-days{max-width:360px}.growth-preview h3 br{display:none}.growth-preview .btn{max-width:300px}.growth-preview-note{padding:14px 22px}.growth-mini-pass{max-width:500px}.growth-mini-invite{max-width:500px}.growth-summary>small{width:100%;margin-left:0}.growth-info-line span:last-child{margin-left:0}.growth-pass-row{grid-template-columns:150px 1fr 70px}.growth-row-unit{display:block}.growth-stage-head,.growth-stage-row{grid-template-columns:minmax(150px,1.5fr) 1fr 1fr}}
+@media(max-width:600px){.admin-hero>div:first-child{min-width:0}.admin-hero{align-items:flex-start}.admin-role-pill{display:none}.growth-header-actions{width:100%}.growth-header-actions .btn{flex:1}.growth-summary{padding:14px;gap:14px}.growth-summary>div{font-size:11px;gap:6px}.growth-summary>div>span:last-child{font-size:10px}.growth-form{padding:17px}.growth-form-heading{gap:10px}.growth-form-heading h3{font-size:17px}.growth-scope-label{display:none}.growth-field-grid{grid-template-columns:1fr;gap:18px}.growth-block-heading{align-items:flex-start}.growth-block-heading>span{font-size:9px}.growth-day-inputs{gap:5px}.growth-day-inputs>label{padding:11px 4px;gap:8px}.growth-day-inputs input{font-size:16px;padding:7px 1px;appearance:textfield;-moz-appearance:textfield}.growth-day-inputs input::-webkit-inner-spin-button{display:none}.growth-day-inputs label>span{font-size:10px}.growth-pass-row{grid-template-columns:95px minmax(0,1fr);padding:13px 10px;gap:9px}.growth-row-unit{display:none}.growth-pass-row>div{grid-template-columns:22px 1fr;gap:5px}.growth-week-number{width:21px;height:25px;font-size:11px}.growth-pass-row small{font-size:8px}.growth-field select{font-size:11px;padding:9px 6px}.growth-stage-head,.growth-stage-row{grid-template-columns:minmax(115px,1.4fr) minmax(55px,1fr) minmax(55px,1fr);gap:6px;padding:12px 8px}.growth-stage-row>strong{font-size:10px;gap:6px}.growth-stage-row>strong b{padding:2px 5px;font-size:9px}.growth-stage-head{font-size:9px}.growth-stage-row input{font-size:12px;padding:7px 4px}.growth-invite-totals{gap:18px;justify-content:space-between;font-size:9px}.growth-record-card{padding:17px}.growth-record-stats{gap:7px}.growth-record-stats>div{padding:13px 9px;gap:8px}.growth-record-stats span{font-size:9px}.growth-record-stats strong{font-size:22px}.growth-record-stats small{font-size:8px}.growth-change-row{grid-template-columns:1fr;gap:5px}.growth-info-line{font-size:10px}.growth-info-line strong{font-size:10px}.growth-form-footer{align-items:center}.admin-tabs{gap:4px}.admin-tabs button{font-size:11px;min-height:42px}.growth-help{padding:11px;font-size:10px}}
+.growth-activity-switch>input{z-index:2;cursor:pointer;scroll-margin-top:100px}.growth-toggle{pointer-events:none}.growth-form input,.growth-form select{scroll-margin-top:100px}
+.admin-shop-table th:nth-child(5){width:180px}
+.admin-shop-table .admin-product-price small{display:inline;margin:0 0 0 6px;white-space:nowrap}
+.growth-section+.growth-section{margin-top:20px}#panel-operations .growth-section{margin-top:22px}
+
+.growth-discount-form{padding:22px;margin:0 0 20px}.growth-discount-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}.growth-discount-fields label{display:grid;gap:8px}.growth-discount-fields span{font-size:11px;color:#677684}.growth-discount-fields input{min-height:40px;padding:9px 11px;border:1px solid #dce3e9;border-radius:5px;font-size:12px}.growth-discount-fields small{font-size:10px;color:#a1a9b1}
+.growth-week-editor{display:grid;gap:14px}.growth-week-card{display:grid;grid-template-columns:125px minmax(0,1fr);gap:16px;align-items:start;padding:15px;border:1px solid #e6e9ed;border-radius:8px;background:#fcfcfd}.growth-week-card>div:first-child{display:flex;align-items:center;gap:10px}.growth-week-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.growth-week-fields label{display:grid;gap:7px;min-width:0}.growth-week-fields span{font-size:10px;color:#7e8b96}.growth-week-fields input{width:100%;min-height:38px;padding:8px 10px;border:1px solid #dce3e9;border-radius:5px;font-size:12px}.growth-week-fields small{font-size:9px;color:#a1a9b1}
+@media(max-width:950px){.growth-week-card{grid-template-columns:1fr}.growth-week-fields{grid-template-columns:1fr}}@media(max-width:600px){.growth-discount-fields{grid-template-columns:1fr}.growth-discount-form{padding:16px}}
+
+/* Wider admin configuration forms */
+.growth-editor-layout{grid-template-columns:minmax(0,1fr)!important}
+.growth-preview{display:none!important}
+.growth-week-editor{gap:22px}
+.growth-week-card{grid-template-columns:minmax(220px,250px) minmax(0,1fr)!important;gap:28px!important;align-items:center!important;padding:22px 26px!important;border-radius:12px!important}
+.growth-week-card>div:first-child{gap:14px;align-items:center;flex-wrap:nowrap}.growth-week-card>div:first-child>strong,.growth-week-card>div:first-child>small{flex:0 0 auto;white-space:nowrap}
+.growth-week-fields{grid-template-columns:minmax(0,1.3fr) minmax(0,1.15fr) minmax(120px,170px)!important;gap:22px!important}
+.growth-week-fields input{min-height:46px!important;font-size:14px!important;padding:10px 14px!important}
+.growth-week-fields label{gap:9px}
+.growth-week-fields span{font-size:12px}
+.growth-week-fields small{font-size:11px}
+@media(max-width:950px){.growth-week-card{grid-template-columns:1fr!important;gap:18px!important;padding:22px!important}.growth-week-card>div:first-child{flex-wrap:wrap}.growth-week-card>div:first-child>strong,.growth-week-card>div:first-child>small{white-space:normal}.growth-week-fields{grid-template-columns:1fr!important;gap:18px!important}}
+.growth-week-fields input{height:46px!important;min-height:46px!important;max-height:46px!important}
+.growth-week-fields label{align-content:start}
+
+.growth-week-fields .growth-week-link{grid-column:1/-1}.growth-week-fields .growth-week-link input{font-size:12px}.growth-week-fields .growth-week-link small{color:#677684}
+
+.btn.save-success{background:#eef7f1!important;border-color:#c9d9cd!important;color:#4d7c5f!important;box-shadow:none!important}.btn.save-error{background:#fff3f2!important;border-color:#e3b6b2!important;color:#a84942!important;box-shadow:none!important}.growth-form-footer span.is-dirty{color:#a85b23}.growth-form-footer span.is-saved{color:#4d7c5f}
+
+</style>
 </head>
 <body>
   <svg class="symbols" aria-hidden="true"><defs>
@@ -2667,7 +3018,7 @@ const icon=name=>`<svg class="icon" aria-hidden="true"><use href="#i-${name}"></
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-US');
 const money=cents=>`¥${(cents/100).toFixed(2)}`;
-const STORE='gene-cloud-shell-exchange-v1';
+const STORE='gene-cloud-weekly-supply-prototype-v3';
 const CHECKIN_REWARDS=[5,5,10,5,15,5,25];
 const RECHARGE_PLANS=[
  {id:'p10',yuan:10,bonus:0}, {id:'p50',yuan:50,bonus:10},
@@ -2720,7 +3071,7 @@ const invoiceOrders=()=>rechargeOrders().filter(isInvoiceEligible);
 const inviteRecords=()=>[...(state.invites||[]),...(state.inviteExamples||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));
 const orderById=id=>[...exchangeOrders(),...rechargeOrders()].find(o=>o.id===id);
 const firstRechargeAvailable=()=>true;
-const sourceLabel=source=>({recharge:'充值得云贝',checkin:'签到得云贝',invite:'邀请好友得云贝',drawing:'云贝绘图',exchange:'权益兑换',legacy:'历史入账'}[source]||'云贝变动');
+const sourceLabel=source=>({recharge:'充值得云贝',bonus:'充值赠送云贝',checkin:'签到得云贝',invite:'邀请好友得云贝',drawing:'云贝绘图',exchange:'权益兑换',legacy:'历史入账'}[source]||'云贝变动');
 function weekStart(key=today()){const d=new Date(key+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10);}
 function uid(prefix){return prefix+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase();}
 function rechargeBonusRatio(){return Math.min(200,Math.max(0,Math.round(Number(state.config?.rechargeBonusRatio??10)||0)));}
@@ -3737,5 +4088,399 @@ document.addEventListener('click',event=>{
 });
 
   </script>
+<script>
+
+(() => {
+ const initial={checks:[],perks:[],friends:[],usage:[],pass:null,offset:0};
+ const s=state.supply=Object.assign(initial,state.supply||{});
+ const day=()=>dateKey(new Date(Date.now()+s.offset*86400000));
+ const start=()=>weekStart(day());
+ const clone=v=>JSON.parse(JSON.stringify(v));
+ const definitions={volcano:{name:'高级火山图体验',unit:'次'},palette:{name:'科研配色模板包',unit:'份'},export:{name:'矢量图导出体验',unit:'次'},ai:{name:'AI 分析报告体验',unit:'次'},consult:{name:'科研顾问 1 对 1',unit:'次'},report:{name:'结题报告导出包',unit:'次'}};
+ const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[5,5,10,10,40],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级科研图表体验',desc:'火山图、热图等高级图表模板 + 示例数据',uses:1,kind:'volcano',link:''},{name:'AI 分析报告体验',desc:'上传结果表，AI 生成 1 份图文解读报告',uses:1,kind:'ai'},{name:'结题报告导出包',desc:'把本项目图表、AI解读和结论整理成 1 份可交付报告',uses:1,kind:'report'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
+ if(!state.config.supplyRules)state.config.supplyRules=clone(defaults);
+ const cfg=()=>state.config.supplyRules;if(cfg().invite.monthlyCap===undefined||cfg().invite.monthlyCap>0)cfg().invite.monthlyCap=0;
+ const rechargeDiscounts=()=>{const d=state.config.rechargeDiscounts||{},num=v=>Number.isFinite(Number(v))?Math.min(9,Math.max(1,Math.round(Number(v)*10)/10)):undefined;return {first:num(d.first)??8,second:num(d.second)??8.8,later:num(d.later)??9};};
+ const normalizeWeek=v=>{const kind=typeof v==='string'?v:(v.kind||'volcano'),def=definitions[kind]||definitions.volcano,uses=Math.max(1,Math.round(Number(typeof v==='string'?1:v.uses)||1));return {name:String(typeof v==='string'?def.name:v.name||def.name),desc:String(typeof v==='string'?def.name:v.desc||def.name),uses,kind,link:String(typeof v==='string'?'':v.link||'').trim()};};
+ const RECHARGE_STAGE_RESET='2026-11-17-first-discount';if(state.rechargeStageReset!==RECHARGE_STAGE_RESET){state.paidRechargeCount=0;state.rechargeStageReset=RECHARGE_STAGE_RESET;}state.paidRechargeCount=Math.max(0,Math.min(99,Math.round(Number(state.paidRechargeCount)||0)));
+ const rechargeStage=()=>((Math.max(0,Math.round(Number(state.paidRechargeCount)||0)))%4);
+ const inviteExamples=[['林同学',1,1],['陈同学',2,4],['周同学',3,9]].map(([name,stage,age],i)=>({id:'DEMO-SUPPLY-'+i,name,created:shiftedDay(day(),-age),stage,reward:defaults.invite.inviter.slice(0,stage).reduce((a,b)=>a+b,0),friendReward:defaults.invite.friend.slice(0,stage).reduce((a,b)=>a+b,0),rules:clone(defaults.invite),demo:true}));
+ s.weekRules=s.weekRules||{};s.events=s.events||[];s.configHistory=s.configHistory||[];
+ const rule=()=>s.weekRules[start()]||cfg().checkin;
+ const log=(who,source,kind,amount,reference='')=>s.events.unshift({id:uid('AW'),day:day(),who,source,kind,amount,reference});
+ const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return id;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);return id;};
+ const legacyGifts=['科研配色模板包','矢量图导出体验','专家图表美化服务'];
+cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.length===3?cfg().recharge.weeks.map((week,i)=>legacyGifts.includes(week.name)||['expert','consult'].includes(week.kind)?clone(defaults.recharge.weeks[i]):week):clone(defaults.recharge.weeks)).slice(0,3).map(normalizeWeek);
+ if(s.pass)s.pass.weeks=(Array.isArray(s.pass.weeks)&&s.pass.weeks.length===3?s.pass.weeks:clone(cfg().recharge.weeks)).slice(0,3).map(normalizeWeek);
+ s.perks.forEach(p=>{if(!p.totalUses){p.totalUses=1;p.usedUses=p.used?1:0;}p.used=p.usedUses>=p.totalUses;});
+ let activePerkId=null;
+
+ const checks=()=>s.checks.filter(c=>c.day>=start()&&c.day<=shiftedDay(start(),6));
+ const done=()=>checks().some(c=>c.day===day());
+ const put=()=>persist();
+ const button=(action,label,disabled=false)=>`<button type="button" class="btn primary" data-supply="${action}" ${disabled?'disabled':''}>${label}</button>`;
+ function trialSvg(){let dots='';for(let i=0;i<84;i++){const x=61+(i*61%462),y=267-((i*43%190));const dx=(x-292)/90;const sig=y<184&&Math.abs(dx)>1;dots+=`<circle cx="${x}" cy="${y}" r="${sig?4.5:3.5}" fill="${sig?(dx>0?'#e79a5e':'#699bb8'):'#c2ccd3'}" opacity=".85"/>`;}return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 340"><rect width="580" height="340" fill="white"/><text x="290" y="30" text-anchor="middle" font-size="17" fill="#344454">Volcano plot · Example data</text><path d="M55 55V280H540" fill="none" stroke="#9eaab5"/><path d="M55 184H540M202 55V280M382 55V280" stroke="#dce3e8" stroke-dasharray="5 5"/>${dots}<text x="290" y="321" text-anchor="middle" font-size="13" fill="#71818e">log2 fold change</text><text x="18" y="170" transform="rotate(-90 18 170)" text-anchor="middle" font-size="12" fill="#71818e">−log10 adjusted P</text></svg>`;}
+ function perkRemaining(p){return Math.max(0,(p.totalUses||1)-(p.usedUses||0));}
+ function useTrial(perkId=null){
+  const perk=perkId?s.perks.find(p=>p.id===perkId&&perkRemaining(p)>0):null;
+  if(perkId&&!perk){toast('这份权益次数已用完。');return;}
+  if(perk?.link){const win=window.open(perk.link,'_blank','noopener');if(win){toast('已打开'+perk.name+'对应页面。');return;}openModal('打开'+perk.name,`<p class="supply-modal-note">浏览器拦截了自动跳转，请点击下方链接。</p><div class="modal-actions"><a class="btn primary" href="${esc(perk.link)}" target="_blank" rel="noopener">去使用</a></div>`);return;}
+  activePerkId=perk?.id||null;
+  const palette=perk?.kind==='palette',ai=perk?.kind==='ai',consult=perk?.kind==='consult',report=perk?.kind==='report';
+  const aiArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">AI Research Report</text><rect x="40" y="72" width="500" height="14" rx="7" fill="#dce3e8"/><rect x="40" y="100" width="360" height="14" rx="7" fill="#e9edf1"/><rect x="40" y="138" width="180" height="112" rx="10" fill="#fff3e4" stroke="#f0d8b6"/><rect x="240" y="138" width="140" height="112" rx="10" fill="#eef6ff" stroke="#d7e7f5"/><rect x="400" y="138" width="140" height="112" rx="10" fill="#f0f7f2" stroke="#d7e9dc"/><text x="130" y="202" text-anchor="middle" font-size="14" fill="#b17b40">Result</text><text x="310" y="202" text-anchor="middle" font-size="14" fill="#3f7cae">Insight</text><text x="470" y="202" text-anchor="middle" font-size="14" fill="#328365">Next</text></svg>`;
+  const reportArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">Final Research Report</text><rect x="40" y="72" width="250" height="168" rx="10" fill="#f4f6f8" stroke="#dfe5eb"/><rect x="58" y="94" width="90" height="58" rx="8" fill="#e6eef4"/><rect x="158" y="94" width="90" height="58" rx="8" fill="#e6eef4"/><rect x="58" y="164" width="190" height="10" rx="5" fill="#dce3e8"/><rect x="58" y="184" width="150" height="10" rx="5" fill="#e9edf1"/><rect x="58" y="204" width="170" height="10" rx="5" fill="#eef1f4"/><rect x="310" y="72" width="230" height="168" rx="10" fill="#fff5e6" stroke="#f0d8b6"/><rect x="330" y="94" width="190" height="12" rx="6" fill="#f3dab8"/><rect x="330" y="118" width="160" height="10" rx="5" fill="#fae8ce"/><rect x="330" y="138" width="180" height="10" rx="5" fill="#fff0d8"/><rect x="330" y="158" width="140" height="10" rx="5" fill="#fae8ce"/><rect x="330" y="178" width="120" height="40" rx="8" fill="#ffedd2"/><text x="390" y="204" text-anchor="middle" font-size="12" fill="#b17b40">结论 &amp; 建议</text></svg>`;
+  const consultArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">1-on-1 Research Review</text><rect x="40" y="78" width="230" height="150" rx="12" fill="#f4f6f8" stroke="#dfe5eb"/><rect x="60" y="102" width="190" height="10" rx="5" fill="#dce3e8"/><rect x="60" y="126" width="150" height="10" rx="5" fill="#e9edf1"/><rect x="60" y="150" width="120" height="44" rx="8" fill="#e6eef4"/><text x="120" y="178" text-anchor="middle" font-size="12" fill="#6f8492">你的图 / 思路</text><rect x="310" y="78" width="230" height="150" rx="12" fill="#fff5e6" stroke="#f0d8b6"/><rect x="330" y="102" width="190" height="10" rx="5" fill="#f3dab8"/><rect x="330" y="126" width="160" height="10" rx="5" fill="#fae8ce"/><rect x="330" y="150" width="120" height="44" rx="8" fill="#ffedd2"/><text x="390" y="178" text-anchor="middle" font-size="12" fill="#b17b40">顾问建议</text><path d="M272 153h34" stroke="#e79a5e" stroke-width="3"/><path d="M300 147l8 6-8 6" fill="none" stroke="#e79a5e" stroke-width="3"/></svg>`;
+  const art=palette?`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 270"><rect width="580" height="270" fill="white"/><text x="34" y="40" font-size="18" fill="#344454">Research color palette</text>${['#699bb8','#e79a5e','#92b29e','#ae9bc3','#d0ad6d'].map((c,i)=>`<rect x="${34+i*104}" y="72" width="90" height="118" rx="8" fill="${c}"/><text x="${79+i*104}" y="216" text-anchor="middle" font-size="13" fill="#53616f">${c}</text>`).join('')}</svg>`:ai?aiArt:report?reportArt:consult?consultArt:trialSvg();
+  const remaining=perk?perkRemaining(perk):0;
+  openModal(perk?.name||'示例绘图体验',`<p class="supply-modal-note">${esc(perk?.desc||'')}</p><div class="supply-chart" id="supply-chart">${art}</div><p class="supply-modal-note">${perk?`本次消耗 1 次使用额度 · 剩余 ${remaining}/${perk.totalUses} 次。`:'当前为免费示例，用于体验操作流程。'}</p><div class="modal-actions">${button('export',palette?'下载配色模板':ai?'导出分析报告，完成体验':report?'导出结题报告，完成体验':consult?'预约顾问咨询，完成体验':'导出示例图，完成体验')}</div>`);
+ }
+ function exportTrial(){
+  const art=$('#supply-chart svg');if(!art)return;
+  const perk=activePerkId?s.perks.find(p=>p.id===activePerkId&&perkRemaining(p)>0):null;
+  const url=URL.createObjectURL(new Blob([art.outerHTML],{type:'image/svg+xml'}));const a=document.createElement('a');a.href=url;a.download=(perk?.name||'基因云-示例火山图')+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  s.usage.push({day:day(),id:uid('USE')});if(perk){perk.usedUses=(perk.usedUses||0)+1;perk.used=perkRemaining(perk)<1;log('当前用户','权益使用',perk.name+'（第'+perk.usedUses+'次）',1,perk.id);}activePerkId=null;put();closeModal();renderAll();toast(perk&&!perk.used?'使用成功，还剩 '+perkRemaining(perk)+' 次。':'文件已导出，本次体验已完成。');
+ }
+ function track(){
+  const r=rule(),n=checks().length,total=r.rewards.reduce((a,b)=>a+b,0),earned=checks().reduce((a,c)=>a+c.reward,0);
+  if(!cfg().checkin.enabled)return '<div class="supply-paused">签到暂未开放，已获得的云贝保留。</div>';
+  return `<div class="supply-track-head"><strong>本周签到进度 ${n}/5</strong><span>${earned}/${total} 云贝</span></div><div class="supply-days">${r.rewards.map((v,i)=>`<div class="supply-day ${i<n?'done':''}"><b>${i<n?'✓':'+'+v}</b><span>第${i+1}次</span></div>`).join('')}</div><div class="supply-track-bottom"><span>${n>=5?'本周奖励已领满，下周继续。':'再签到 '+(5-n)+' 次，领满 '+total+' 云贝。'}</span>${button('check',n>=5?'本周已领满':done()?'今日已签到':'签到领云贝',n>=5||done())}</div>`;
+ }
+ function sign(){
+  if(!cfg().checkin.enabled){toast('签到暂未开放。');return;}
+  const n=checks().length;if(done()||n>=5)return showCheck();
+  if(!s.weekRules[start()])s.weekRules[start()]=clone(cfg().checkin);
+  const r=rule(),reward=r.rewards[n];s.checks.push({day:day(),reward});addCredit(reward,'checkin','签到得云贝 · 本周第 '+(n+1)+' 次签到');log('当前用户','签到奖励','云贝',reward,start());put();renderAll();showCheck(reward);
+ }
+ function showCheck(reward=0){const r=rule(),total=r.rewards.reduce((a,b)=>a+b,0);openModal('签到得云贝',`${reward?`<div class="supply-award">签到成功，${reward} 云贝已到账。</div>`:''}${track()}<p class="supply-modal-note" style="margin-top:18px">每周任选 5 天参与，无需连续，第 5 次累计领满 ${total} 云贝。周一开启新一轮，已获得的云贝保留。</p>`);}
+ const rechargePanel=$('#panel-recharge');
+  const nativeQuote=rechargeQuote;
+ rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:10;const label=stage===0?'首充 '+formatZhe(d.first):stage===1?'第2次 '+formatZhe(d.second):stage===2?'第3次 '+formatZhe(d.later):'第4次 原价';return {...q,first:stage===0,rechargeStage:stage,discountExhausted:false,discountZhe:zhe,discountLabel:label,paidCents:Math.round(q.faceCents*zhe/10)};};
+ const nativeComplete=completeRecharge;
+ completeRecharge=function(q){const order=nativeComplete(q);if(order){state.paidRechargeCount=Math.min(99,(Number(state.paidRechargeCount)||0)+1);if(order.bonus){state.wallet.paid-=order.bonus;state.wallet.reward+=order.bonus;const row=state.ledger.find(r=>r.orderId===order.id&&r.label==='充值赠送云贝');if(row)row.source='bonus';}if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
+ const passLabels={unpaid:'首充后开启',future:'待开启',task:'完成使用后可领',ready:'可领取',claimed:'已领取',expired:'已过期'};
+ function renderRechargePass(){
+  const card=$('#supply-recharge-pass');if(!card)return;
+  const enabled=cfg().recharge.enabled,weeks=s.pass?s.pass.weeks:cfg().recharge.weeks;
+  card.hidden=!enabled;
+  if(!enabled)return;
+  const status=s.pass?passStatus(0):'unpaid';
+  $('#supply-pass-state').textContent=!s.pass?'未开启':['claimed','expired'].every(v=>[0,1,2].some(i=>passStatus(i)===v))?'已完成':status==='expired'?'部分已过期':'进行中';
+  $('#supply-pass-grid').innerHTML=weeks.map((week,i)=>{
+   const st=passStatus(i);
+   const action=st==='ready'?button('claim-open-'+i,'领取权益'):'';
+   return `<article class="supply-pass-item status-${st}"><div class="supply-pass-week"><b>${i+1}</b><span>第 ${i+1} 周</span><small>充值后第 ${i*7+1}—${i*7+7} 天</small></div><strong>${esc(week.name)}</strong><p>${esc(week.desc||'')} · 可用 ${week.uses} 次</p><div class="supply-pass-foot"><em>${passLabels[st]}</em>${action}</div></article>`;
+  }).join('');
+ }
+ const nativeRecharge=renderRecharge;
+ renderRecharge=function(){nativeRecharge();const ladder=$('#supply-discount-ladder');if(ladder)ladder.remove();const q=rechargeQuote();if(!q)return;$('#plans-offer-title').textContent=q.discountLabel+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
+ const nativePay=payRecharge;
+ payRecharge=function(){
+  const previousOrder=state.recharges[0]?.id,previousPass=s.pass;
+  nativePay();
+  const order=state.recharges[0];
+  if(!order||order.id===previousOrder||order.status!=='paid')return;
+  const passStarted=order.first&&s.pass&&s.pass!==previousPass;
+  $('#modal-content').innerHTML=`<div class="supply-payment-success">
+   <div class="supply-payment-result"><div class="success-icon">${icon('check')}</div><h3>${fmt(order.total)} <span>云贝已到账</span></h3><p>充值 ${fmt(order.principal)} 云贝${order.bonus?' + 赠送 '+fmt(order.bonus)+' 云贝':''}</p></div>
+   <div class="supply-payment-summary"><div><span>本次实付</span><strong>${money(order.paidCents)}</strong></div><div><span>当前可用云贝</span><strong>${fmt(state.balance)} <small>云贝</small></strong></div></div>
+   ${passStarted?`<div class="supply-payment-pass">${icon('gift')}<div><strong>三周进阶补给已开启</strong><p>每周完成一次绘图或分析，即可领取当周权益。</p><small>本周可领：${esc(s.pass.weeks[0].name)}（${s.pass.weeks[0].uses} 次）</small></div></div>`:''}
+   <div class="supply-payment-receipt"><div class="supply-payment-order"><span>充值订单号</span><strong>${esc(order.id)}</strong></div><div class="supply-payment-invoice"><div><span>可开票金额 <b>${money(order.paidCents)}</b></span><small>赠送云贝不计入开票金额</small></div><button type="button" class="supply-payment-link" data-invoice-order="${esc(order.id)}">申请充值发票</button></div></div>
+   <div class="supply-payment-links">${passStarted?'<button type="button" class="supply-payment-link" data-tab="shop">去兑换权益</button>':''}<button type="button" class="supply-payment-link" data-tab="ledger">云贝明细</button></div>
+   <div class="modal-actions supply-payment-actions"><button type="button" class="btn" data-action="close">完成</button>${passStarted?button('trial','去完成本周绘图'):'<button type="button" class="btn primary" data-tab="shop">去兑换权益</button>'}</div>
+  </div>`;
+ };
+ function passStatus(i){if(!s.pass)return 'unpaid';const from=shiftedDay(s.pass.start,i*7),to=shiftedDay(from,6);if(s.pass.claimed.includes(i))return 'claimed';if(day()<from)return 'future';if(day()>to)return 'expired';return s.usage.slice(s.pass.usageStart).some(u=>u.day>=from&&u.day<=to)?'ready':'task';}
+ function claimOpen(i){
+  const week=s.pass?.weeks[i],st=passStatus(i);if(!week||st!=='ready')return;
+  openModal('领取第 '+(i+1)+' 周权益',`<div class="supply-award">${esc(week.name)} · 可用 ${week.uses} 次</div><p class="supply-modal-note">${esc(week.desc||'')}</p><p class="supply-modal-note">领取后立即打开对应体验，本次使用会计入权益次数。</p><div class="modal-actions"><button type="button" class="btn" data-supply="close-modal">稍后再领</button><button type="button" class="btn primary" data-supply="claim-confirm-${i}">去使用</button></div>`);
+ }
+ function claim(i){if(passStatus(i)!=='ready')return;const perkId=grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');s.pass.claimed.push(i);put();renderAll();const perk=s.perks.find(p=>p.id===perkId);if(perk&&perkRemaining(perk)>0){useTrial(perkId);toast('已领取，正在打开'+perk.name+'。');}else{toast('本周进阶补给已领取，可在“我的科研补给”查看。');}}
+ function friendAdd(){
+  if(!cfg().invite.enabled){toast('邀请活动暂未开放。');return;}
+  const month=day().slice(0,7);const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(month)).length>=cap){toast('已达到本月有效邀请名额。');return;}
+  openModal('体验邀请同门',`<p class="supply-modal-note">模拟未注册的新好友通过你的链接注册。后续奖励按本次邀请创建时的规则执行。</p><form id="supply-invite-form"><div class="field"><label>好友昵称<input name="friend" maxlength="24" required placeholder="例如：小林同学"></label></div><div class="field"><label>模拟好友账号<input name="account" maxlength="60" pattern="[A-Za-z0-9@._-]{3,60}" required placeholder="例如：researcher01"></label></div><div class="modal-error" id="supply-friend-error" hidden></div><div class="modal-actions"><button class="btn primary" type="submit">模拟好友注册</button></div></form>`);
+ }
+ function friendAdvance(id){
+  const f=s.friends.find(x=>x.id===id);if(!f||f.stage>=3)return;
+  const r=f.rules||cfg().invite;
+  if(f.stage===2&&day()<shiftedDay(f.created,r.returnDays)){toast('回访奖励尚未解锁：注册满 '+r.returnDays+' 天后再次使用可领取。');return;}
+  const index=f.stage;f.stage++;f.reward+=r.inviter[index];f.friendReward+=r.friend[index];const label=f.stage===2?'首次完成绘图':'次周再次使用';
+  addCredit(r.inviter[index],'invite','同门邀请 · '+label,f.id);log('当前用户','邀请奖励','云贝',r.inviter[index],f.id);log('受邀好友：'+f.name,'好友奖励','云贝',r.friend[index],f.id);put();renderAll();toast('奖励已发放：邀请人 +'+r.inviter[index]+'，好友 +'+r.friend[index]+' 云贝。');
+ }
+ function inviteTable(friends,r){
+  const rows=friends.map(f=>{
+   const fr=f.rules||r,stage=Math.min(3,Math.max(1,f.stage));
+   const status={1:'等待完成首图',2:'等待次周回访',3:'全部解锁'}[stage];
+   const reward=(amount,total)=>`<strong class="supply-invite-reward">${fmt(amount)}</strong><span class="supply-invite-limit"> / ${fmt(total)} 云贝</span>`;
+   const action=f.demo?'<span class="supply-invite-action-note">—</span>':stage<3?button('friend-'+f.id,stage===1?'模拟好友完成首图':'模拟好友回访使用'):'<span class="supply-invite-action-note">已完成</span>';
+   return `<tr class="supply-invite-row" data-supply-example="${f.demo?'true':'false'}">
+    <td><div class="supply-invite-person"><strong title="${esc(f.name)}">${esc(f.name)}</strong>${f.demo?'<span class="supply-example-tag">示例</span>':''}</div></td>
+    <td class="supply-invite-date">${esc(f.created.replaceAll('-','.'))}</td>
+    <td><span class="supply-invite-progress stage-${stage}"><i aria-hidden="true"></i>${status}</span></td>
+    <td>${reward(f.reward,fr.inviter.reduce((a,b)=>a+b,0))}</td>
+    <td>${reward(f.friendReward,fr.friend.reduce((a,b)=>a+b,0))}</td>
+    <td>${action}</td>
+   </tr>`;
+  }).join('');
+  return `<article class="surface supply-invite-records">
+   <div class="supply-heading"><div><h3>同门成长进度</h3><p class="supply-invite-count">共 ${friends.length} 位好友 · 含 3 条示例记录</p></div></div>
+   <div class="supply-invite-table-wrap" tabindex="0" role="region" aria-label="邀请好友进度表，可横向滚动">
+    <table class="supply-invite-table" aria-label="同门成长进度">
+     <colgroup><col class="invite-col-person"><col class="invite-col-date"><col class="invite-col-progress"><col class="invite-col-reward"><col class="invite-col-reward"><col class="invite-col-action"></colgroup>
+     <thead><tr><th scope="col">好友昵称</th><th scope="col">注册时间</th><th scope="col">成长进度</th><th scope="col">我获得奖励</th><th scope="col">好友获得奖励</th><th scope="col">操作</th></tr></thead>
+     <tbody>${rows||'<tr><td colspan="6" class="supply-empty">还没有邀请记录，送同门一份绘图体验吧。</td></tr>'}</tbody>
+    </table>
+   </div><p class="supply-invite-scroll-hint">左右滑动，查看完整奖励与操作</p>
+  </article>`;
+ }
+ function inviteView(){
+  const r=cfg().invite,friends=[...s.friends,...inviteExamples],earned=friends.reduce((n,f)=>n+f.reward,0),max=r.inviter.reduce((a,b)=>a+b,0),friendMax=r.friend.reduce((a,b)=>a+b,0),link=new URL('https://www.genescloud.cn/home');link.searchParams.set('inviteCode',state.inviteCode||'');
+  $('#panel-invite').innerHTML=`<section class="supply-invite-hero"><div><span class="supply-kicker">送同门一份科研见面礼</span><h2>这张图，<br>你也可以做。</h2><p>分享同款模板、示例数据和新人绘图体验。<br>一起做出第一张图，再一起解锁下一份补给。</p><div class="supply-badge" style="display:inline-block;margin-top:16px">${r.enabled?'每位有效新用户：邀请人最高 '+max+' 云贝，好友最高 '+friendMax+' 云贝':'邀请活动暂未开放，已有邀请按原规则继续'}</div></div><div class="supply-gift"><h3>你的科研见面礼</h3><span>火山图同款模板 + 示例数据</span><span>新人绘图体验 1 次</span><input readonly id="supply-link" aria-label="邀请体验链接" value="${esc(link.href)}">${button('copy','复制邀请体验链接',!r.enabled)}<small class="supply-status">已邀请 ${friends.length} 位 · 累计获得 ${earned} 云贝</small></div></section><div class="supply-perks">${['好友完成注册','好友完成第一张图','好友回访再次使用'].map((name,i)=>`<article class="supply-invite-step"><b>+${r.inviter[i]} <small style="font-size:12px">云贝 / 邀请人</small></b><h3>${name}</h3><p>好友同步获得 ${r.friend[i]} 云贝${i===2?'；注册满 '+r.returnDays+' 天后再次使用。':'。'}</p></article>`).join('')}</div>${inviteTable(friends,r)}`;
+ }
+ renderInvites=inviteView;
+ checkin=sign;earn=showCheck;actions.checkin=sign;actions.earn=()=>showCheck();
+ actions.rules=()=>{const c=cfg(),r=rule();openModal('科研补给规则',`<div class="rule"><h3>每周签到</h3><p>每日一次，无需连续。累计 ${r.unlockAt} 天解锁 ${definitions[r.perk].name}，5 天累计 ${r.rewards.reduce((a,b)=>a+b,0)} 云贝。周一开启新一轮，已获奖励保留。</p></div><div class="rule"><h3>首充补给</h3><p>首充享 ${state.config.rechargeDiscounts?.first??8} 折，后续优惠由系统自动匹配，不做公开阶梯展示。额外补给${c.recharge.enabled?'已开启':'暂未开放'}；开启后以充值日为起点，每 7 天一个周期，共 3 周。三周内容为 ${cfg().recharge.weeks.map(w=>`${w.name}（${w.uses} 次）`).join('、')}；每周期完成一次绘图或分析可领取当周权益，当期逾期未领不补发，已领取权益按配置次数使用。</p></div><div class="rule"><h3>邀请奖励</h3><p>注册、首次绘图、回访三个阶段，邀请人分别得 ${c.invite.inviter.join('、')} 云贝，好友分别得 ${c.invite.friend.join('、')} 云贝。回访需注册满 ${c.invite.returnDays} 天后再次使用；每位邀请人不限邀请人数。已开始的邀请按原规则完成。</p></div><div class="rule"><h3>原型说明</h3><p>支付、好友行为和绘图均为演示，数据仅在当前浏览器保存。云贝即时到账，发票按充值实付金额计算。</p></div>`);};
+ pageInfo.recharge[1]='';pageInfo.invite[1]='送同门一份科研见面礼，一起使用，分阶段解锁奖励。';
+ function update(){const n=checks().length,currentRule=rule(),enabled=cfg().checkin.enabled,checked=done()||n>=5;$('#wallet-checkin-label').textContent=!enabled?'签到暂未开放':n>=5?'本周已领满':done()?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin').disabled=enabled&&!checked;$('#wallet-checkin').classList.toggle('is-signed',checked);$('#wallet-checkin use').setAttribute('href',checked?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+n+'/5 天 · 已获 '+checks().reduce((v,c)=>v+c.reward,0)+' 云贝';$('#wallet-checkin-bonus').hidden=!enabled||checked;$('#wallet-checkin-bonus').textContent='+'+(rule().rewards[n]||0);$('#wallet-checkin').setAttribute('aria-label',!enabled?'签到暂未开放':checked?'查看本周签到进度':'每日签到领取 '+(currentRule.rewards[n]||0)+' 云贝');$('.wallet-week-link').title='每周最多 '+currentRule.rewards.reduce((a,b)=>a+b,0)+' 云贝，无需连续';}
+ const nativeAll=renderAll;renderAll=function(){nativeAll();update();};
+  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a==='close-modal')closeModal();else if(a.startsWith('claim-open-'))claimOpen(Number(a.slice(11)));else if(a.startsWith('claim-confirm-')){closeModal();claim(Number(a.slice(14)));}else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
+ document.addEventListener('submit',e=>{
+  if(e.target.id!=='supply-invite-form')return;e.preventDefault();if(!cfg().invite.enabled)return;
+  const data=new FormData(e.target),name=data.get('friend').trim(),account=data.get('account').trim().toLowerCase();if(!name||!account)return;
+  const fail=message=>{const el=$('#supply-friend-error');el.hidden=false;el.textContent=message;};
+  if(s.friends.some(f=>f.account===account))return fail('该账号已参与过邀请，每位新用户仅参与一次。');
+  const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(day().slice(0,7))).length>=cap)return fail('已达到本月有效邀请名额。');
+  const r=clone(cfg().invite),id=uid('FR');s.friends.push({id,name,account,created:day(),stage:1,reward:r.inviter[0],friendReward:r.friend[0],rules:r});
+  addCredit(r.inviter[0],'invite','邀请同门注册 · '+name,id);log('当前用户','邀请奖励','云贝',r.inviter[0],id);log('受邀好友：'+name,'好友奖励','云贝',r.friend[0],id);put();closeModal();renderAll();toast('注册奖励已分别记入邀请人和好友账户。');
+ });
+ window.YunbeiSupply={data:s,config:cfg,defaults,definitions,clone,escape:esc,day,refresh:()=>renderAll(),rule,showRules:()=>actions.rules()};
+ window.addEventListener('storage',e=>{if(e.key!==STORE||!e.newValue)return;try{const next=JSON.parse(e.newValue);if(!next||next.walletVersion!==2)return;const currentRole=state.role;const supply=s;Object.assign(state,next);state.role=currentRole;if(next.supply&&supply)Object.assign(supply,next.supply);renderAll();}catch{}});
+ put();renderAll();setTab(location.hash.slice(1)||'recharge',false);
+ if(new URLSearchParams(location.search).get('gift')==='volcano')openModal('同门送你一份绘图体验','<div class="supply-award">火山图同款模板 + 示例数据 + 新人体验 1 次</div><p class="supply-modal-note">这张图，你也可以做。用示例数据完成第一次绘图与导出，体验基因云的科研工具。</p><div class="modal-actions">'+button('trial','打开同款绘图体验')+'</div>');
+
+function ybTaskCfg(){const d={enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const c=cfg().yunbeiTasks||{};return {...d,...c,invite:{...d.invite,...(c.invite||{})},profile:{...d.profile,...(c.profile||{})},checkin:{...d.checkin,...(c.checkin||{})},wechat:{...d.wechat,...(c.wechat||{})},avatar:{...d.avatar,...(c.avatar||{})}};}
+function ensureTaskData(){if(!state.taskData)state.taskData={completed:[],checkinDate:'',invite:{date:'',count:0}};if(!Array.isArray(state.taskData.completed))state.taskData.completed=[];if(state.taskData.invite?.date!==day())state.taskData.invite={date:day(),count:0};}
+function taskCompleted(id){ensureTaskData();return state.taskData.completed.includes(id);}
+function inviteDailyCount(){ensureTaskData();return state.taskData.invite.count;}
+function inviteDailyLimit(){return Math.max(0,Number(ybTaskCfg().invite.daily)||0);}
+function inviteAllRecords(){return [...(state.invites||[]),...(state.inviteExamples||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
+function taskCard(id,title,desc,reward,status){const done=taskCompleted(id);return `<article class="task-card ${done?'done':''}"><div><span class="task-kind">${id==='invite'?'每日任务':'成长任务'}</span><h4>${esc(title)}</h4><p>${esc(desc)}</p><small>${esc(status)}</small></div><div><b>+${reward}</b><span>云贝</span><button class="btn ${done?'':'primary'}" type="button" data-supply-task="${id}" ${done?'disabled':''}>${done?'已完成':'去完成'}</button></div></article>`;}
+function renderTaskCenter(){
+ const box=$('#supply-task-center');if(!box)return;ensureTaskData();const c=ybTaskCfg(),limit=inviteDailyLimit(),count=inviteDailyCount(),records=inviteAllRecords(),link=inviteShareUrl();
+ const canInvite=limit===0||count<limit;
+ const cards=[taskCard('invite','邀请好友得云贝','只有未注册基因云的新账号有效，双方注册成功即得云贝。',`${c.invite.inviter}/${c.invite.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`),taskCard('profile','完善个人中心','补充昵称、研究方向和所在单位。',c.profile.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'),taskCard('checkin','签到得云贝','每天签到一次，完成即到账。',c.checkin.reward,state.taskData.checkinDate===day()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到'),taskCard('wechat','绑定微信','绑定后可同步消息和快捷登录。',c.wechat.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'),taskCard('avatar','上传个人图像','上传头像，让协作更亲切。',c.avatar.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励')];
+ const rows=records.slice(0,10).map(r=>`<tr><td class="record-title"><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">历史示例</span>':''}</div></div></td><td data-label="邀请码"><b>${esc(state.inviteCode)}</b></td><td data-label="我的奖励">+${r.reward||c.invite.inviter} 云贝</td><td data-label="好友奖励">+${r.friendReward||c.invite.friend} 云贝</td><td data-label="状态"><span class="tag success">${r.status==='rewarded'?'邀请成功':'已完成'}</span></td></tr>`).join('');
+ box.innerHTML=`<div class="task-hero"><div><span class="eyebrow">云贝任务</span><h2>完成任务，持续拿云贝</h2><p>签到、资料、微信、头像和邀请都集中在这里；邀请需使用你的专属邀请码。</p></div><div class="task-invite-code"><span>我的邀请码</span><strong>${esc(state.inviteCode)}</strong><input readonly value="${esc(link)}"><button class="btn primary" type="button" data-action="copy-invite-link">复制邀请链接</button></div></div><div class="task-grid">${cards.join('')}</div><article class="surface invite-records-card"><div class="surface-heading"><div><h3>邀请记录</h3><p>今日已成功 ${count} 位${limit===0?' · 不限人数':' / 上限 '+limit+' 位'}；仅未注册过基因云的新账号有效。</p></div></div><div class="table-wrap"><table><thead><tr><th>受邀好友</th><th>邀请码</th><th>我的奖励</th><th>好友奖励</th><th>状态</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;padding:40px">暂无邀请记录。</td></tr>'}</tbody></table></div></article>`;
+}
+function completeTask(id,reward,label){ensureTaskData();if(state.taskData.completed.includes(id))return;state.taskData.completed.push(id);addCredit(reward,'task',label);log('当前用户','任务奖励','云贝',reward);persist();renderAll();toast(label+'，'+reward+' 云贝已到账。');}
+function taskCheckin(){ensureTaskData();const c=ybTaskCfg();if(state.taskData.checkinDate===day())return toast('今天已完成签到任务。');state.taskData.checkinDate=day();addCredit(c.checkin.reward,'task','每日签到任务');log('当前用户','任务奖励','云贝',c.checkin.reward);persist();renderAll();toast('签到成功，'+c.checkin.reward+' 云贝已到账。');}
+function openTaskModal(id){
+ const c=ybTaskCfg();
+ if(id==='invite'){openModal('邀请好友注册',`<p class="modal-intro">邀请码 <b>${esc(state.inviteCode)}</b> 已绑定本次邀请；账号必须未注册过基因云。</p><form id="task-invite-form"><div class="field"><label for="task-friend-name">好友昵称</label><input id="task-friend-name" required maxlength="30" placeholder="例如：研究伙伴小林"></div><div class="field"><label for="task-friend-key">好友账号</label><input id="task-friend-key" required pattern="[A-Za-z0-9@._-]{3,60}" maxlength="60" placeholder="例如 researcher01"></div><div class="modal-error" id="modal-error" hidden></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">模拟注册成功</button></div></form>`);return;}
+ if(id==='profile'){openModal('完善个人中心',`<form id="task-profile-form"><div class="field"><label for="task-name">昵称</label><input id="task-name" required maxlength="30" placeholder="请填写昵称"></div><div class="field"><label for="task-org">所在单位</label><input id="task-org" required maxlength="60" placeholder="请填写单位或课题组"></div><div class="field"><label for="task-field">研究方向</label><input id="task-field" required maxlength="60" placeholder="如转录组分析"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">保存并领奖</button></div></form>`);return;}
+ if(id==='wechat'){openModal('绑定微信',`<form id="task-wechat-form"><div class="field"><label for="task-wechat">微信号</label><input id="task-wechat" required maxlength="40" placeholder="请填写微信号"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">确认绑定</button></div></form>`);return;}
+ if(id==='avatar'){openModal('上传个人图像',`<form id="task-avatar-form"><div class="field"><label for="task-avatar">选择头像</label><input id="task-avatar" type="file" accept="image/*" required></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">上传并领奖</button></div></form>`);return;}
+}
+function taskInviteSubmit(){
+ const name=$('#task-friend-name')?.value.trim(),account=$('#task-friend-key')?.value.trim().toLowerCase(),fail=message=>{const el=$('#modal-error');if(el){el.hidden=false;el.textContent=message;}};
+ if(!name||!account)return fail('请填写好友昵称和账号。');const limit=inviteDailyLimit();if(limit>0&&inviteDailyCount()>=limit)return fail('今日邀请人数已达上限。');const c=ybTaskCfg();const exists=inviteAllRecords().some(r=>String(r.friendKey||'').toLowerCase()===account);if(exists)return fail('该账号已在基因云注册过，只有新注册账号才能获得邀请奖励。');
+ const id=uid('INV');state.invites.unshift({id,friendKey:account,name,reward:c.invite.inviter,friendReward:c.invite.friend,created:nowIso(),status:'rewarded'});state.taskData.invite.count++;addCredit(c.invite.inviter,'invite','邀请好友注册 · '+name,id);log('受邀好友：'+name,'好友奖励','云贝',c.invite.friend,id);persist();closeModal();renderAll();toast('邀请成功，双方云贝已到账。');
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='checkin')return taskCheckin();openTaskModal(id);});
+document.addEventListener('submit',e=>{
+ if(e.target.id==='task-invite-form'){e.preventDefault();taskInviteSubmit();return;}
+ if(e.target.id==='task-profile-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('profile',ybTaskCfg().profile.reward,'个人中心已完善');}return;}
+ if(e.target.id==='task-wechat-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');}return;}
+ if(e.target.id==='task-avatar-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('avatar',ybTaskCfg().avatar.reward,'个人头像已上传');}return;}
+});
+renderInvites=function(){renderTaskCenter();};renderTaskCenter();
+pageInfo.invite[0]='云贝任务';pageInfo.invite[1]='完成每日任务和成长任务，持续获得云贝。';
+
+
+let rechargeOrderFilter='all',rechargeOrderPage=1,rechargeOrderKeyword='';
+function rechargeOrderRecords(){if(!Array.isArray(state.rechargeFailures))state.rechargeFailures=[{id:'CZFAIL20261001',kind:'recharge',name:'充值 100 元',faceCents:10000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-5),paymentMethod:'wechat',status:'failed',failReason:'支付超时',demo:true},{id:'CZFAIL20261002',kind:'recharge',name:'充值 50 元',faceCents:5000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-2),paymentMethod:'alipay',status:'failed',failReason:'用户取消支付',demo:true}];return [...(state.recharges||[]),...(state.rechargeExamples||[]),...(state.rechargeFailures||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
+function renderRechargeOrders(){
+ const body=$('#recharge-order-rows');if(!body)return;
+ const all=rechargeOrderRecords();const rows=all.filter(o=>{const ok=rechargeOrderFilter==='all'||o.status===rechargeOrderFilter;const kw=rechargeOrderKeyword.trim();return ok&&(!kw||o.id.toLowerCase().includes(kw.toLowerCase())||money(o.paidCents).includes(kw));});
+ const pages=Math.max(1,Math.ceil(rows.length/10));rechargeOrderPage=Math.max(1,Math.min(rechargeOrderPage,pages));
+ body.innerHTML=rows.slice((rechargeOrderPage-1)*10,rechargeOrderPage*10).map(o=>{const status=o.status||'paid';return `<tr class="${status==='failed'?'order-failed':''}"><td class="record-title" data-label="充值订单"><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}${o.demo?'<span class="table-demo">历史示例</span>':''}</div></td><td data-label="充值金额">${money(o.faceCents)}</td><td data-label="实付金额">${money(o.paidCents)}</td><td data-label="到账云贝">${status==='failed'?'0 云贝':fmt((o.principal||0)+(o.bonus||0))+' 云贝'}</td><td data-label="支付方式">${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</td><td data-label="状态"><span class="tag ${status==='failed'?'failed':'success'}">${status==='failed'?(o.failReason||'充值失败'):'充值成功'}</span></td><td data-label="操作"><button class="table-action" data-recharge-order="${esc(o.id)}">查看详情</button></td></tr>`;}).join('')||'<tr><td colspan="7" style="text-align:center;padding:40px">暂无符合条件的充值订单。</td></tr>';
+ $('#recharge-order-total').textContent=pageCaption(rows.length,rechargeOrderPage);$('#recharge-order-pagination').innerHTML=pager(pages,rechargeOrderPage,'recharge-order-page');
+}
+function rechargeOrderDetail(id){const o=rechargeOrderRecords().find(x=>x.id===id);if(!o)return;const failed=o.status==='failed';openModal('充值订单详情',`<div class="exchange-preview">${icon(failed?'file':'coin')}<div><h3>${esc(o.name)} · ${failed?'充值失败':'已支付'}</h3><p>${failed?esc(o.failReason||'支付未完成'):'云贝已到账'}</p></div></div><div class="detail-line"><span>充值订单号</span><strong style="font-size:11px">${esc(o.id)}</strong></div><div class="detail-line"><span>充值时间</span><strong>${displayDate(o.created,true)}</strong></div><div class="detail-line"><span>充值原价</span><strong>${money(o.faceCents)}</strong></div>${failed?'<div class="detail-line"><span>实付金额</span><strong>¥0.00</strong></div><div class="detail-line"><span>到账云贝</span><strong>0 云贝</strong></div>':`<div class="detail-line"><span>实付金额</span><strong>${money(o.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt((o.principal||0)+(o.bonus||0))} 云贝</strong></div>`}<div class="detail-line"><span>支付方式</span><strong>${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</strong></div>${failed?'<div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-tab="recharge">重新充值</button></div>':`<div class="detail-line"><span>可开票金额</span><strong>${money(o.invoiceCents||o.paidCents)}</strong></div><div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-invoice-order="${esc(o.id)}">申请开票</button></div>`}`);
+}
+document.addEventListener('click',e=>{const f=e.target.closest('[data-recharge-order-status]');if(f){rechargeOrderFilter=f.dataset.rechargeOrderStatus;rechargeOrderPage=1;$$('#recharge-order-filters .category').forEach(x=>x.classList.toggle('active',x===f));renderRechargeOrders();return;}const d=e.target.closest('[data-recharge-order]');if(d){rechargeOrderDetail(d.dataset.rechargeOrder);}});
+document.addEventListener('input',e=>{if(e.target.id==='recharge-order-search'){rechargeOrderKeyword=e.target.value;rechargeOrderPage=1;renderRechargeOrders();}});
+document.addEventListener('click',e=>{const page=e.target.closest('[data-recharge-order-page]');if(page){rechargeOrderPage=Number(page.dataset.rechargeOrderPage);renderRechargeOrders();}});
+const nativeAllOrders=renderAll;renderAll=function(){nativeAllOrders();renderRechargeOrders();};
+
+
+function aiTokenBalance(){if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;return state.orders.reduce((sum,o)=>sum+(Number(o.tokenAmount)||0),0)-state.tokenUsed;}
+const aiModels=[
+ {id:'deepseek-v4-flash',name:'DeepSeek V4 Flash',factor:.4,note:'高速通用'},
+ {id:'5.6-terra',name:'5.6 Terra',factor:.8,note:'均衡稳定'},
+ {id:'5.6-luna',name:'5.6 Luna',factor:.9,note:'轻量高效'},
+ {id:'5.6-sol',name:'5.6 Sol',factor:1.0,note:'主力推理'},
+ {id:'6-luna',name:'6 Luna',factor:1.1,note:'新一代通用'},
+ {id:'6-sol',name:'6 Sol',factor:1.3,note:'更强推理'},
+ {id:'6-astra',name:'6 Astra',factor:1.6,note:'旗舰能力'},
+ {id:'image-2',name:'Image-2',factor:1.4,note:'多模态辅助'}
+];
+function aiModel(id){return aiModels.find(m=>m.id===id)||aiModels[0];}
+function aiEstimateTokens(text,id){const m=aiModel(id);return Math.max(80,Math.round((String(text||'').length+45)*1.1*m.factor));}
+function ensureAiChat(){if(!state.aiChat)state.aiChat={model:'deepseek-v4-flash',messages:[{role:'assistant',text:'你好，我已就绪。你可以直接提问，也可以让我帮你梳理研究问题、分析思路或输出结构化结论。',tokens:0}]};if(!Array.isArray(state.aiChat.messages))state.aiChat.messages=[];if(!aiModels.some(m=>m.id===state.aiChat.model))state.aiChat.model='deepseek-v4-flash';}
+function aiChatCard(m){return `<div class="ai-message ${m.role}">${esc(m.text)}${m.tokens?`<small>消耗 ${fmt(m.tokens)} Token</small>`:''}</div>`;}
+function renderAiChat(){
+ const chat=$('#ai-chat-panel');if(!chat)return;const balance=aiTokenBalance();ensureAiChat();
+ chat.innerHTML=`<div class="ai-chat"><aside class="ai-chat-side"><h4>模型与额度</h4><div class="meta">剩余 Token<br><strong>${fmt(balance)}</strong><br>已消耗 ${fmt(state.tokenUsed||0)} Token</div><div class="ai-model-list">${aiModels.map(m=>`<button type="button" class="ai-model ${state.aiChat.model===m.id?'active':''}" data-ai-model="${esc(m.id)}"><span>${esc(m.name)}</span><small>${m.factor}x · ${esc(m.note)}</small></button>`).join('')}</div></aside><div class="ai-chat-main"><div class="ai-messages" id="ai-messages">${state.aiChat.messages.map(aiChatCard).join('')}</div><form class="ai-input" id="ai-chat-form"><textarea id="ai-chat-input" placeholder="输入你的问题，Enter 发送，Shift + Enter 换行" required></textarea><div class="ai-input-footer"><small>主流模型通用，不同模型按倍率扣减。</small><button class="btn primary" type="submit">发送</button></div></form></div></div>`;
+ requestAnimationFrame(()=>{const box=$('#ai-messages');if(box)box.scrollTop=box.scrollHeight;$('#ai-chat-input')?.focus();});
+}
+function openAiChat(){ensureAiChat();openModal('AI 对话','<div id="ai-chat-panel"></div>');renderAiChat();}
+function sendAiMessage(){
+ const input=$('#ai-chat-input');if(!input)return;const text=input.value.trim();if(!text)return;const cost=aiEstimateTokens(text,state.aiChat.model);if(aiTokenBalance()<cost){toast('Token 不足，请先兑换。');return;}
+ state.aiChat.messages.push({role:'user',text,tokens:cost});state.tokenUsed=(state.tokenUsed||0)+cost;
+ const model=aiModel(state.aiChat.model);const reply=text.length>40?`我已收到你的问题。基于 ${model.name}，我会先拆解关键信息，再给出可执行的分析建议。你可以继续补充数据背景、目标结论或输出格式。`:`我可以用 ${model.name} 帮你继续拆解「${text}」。你可以补充使用场景、数据类型和期望输出，我会给出更准确的建议。`;
+ state.aiChat.messages.push({role:'assistant',text:reply,tokens:0});persist();renderAiChat();renderOverview();renderProducts();renderOrders();toast(`已消耗 ${fmt(cost)} Token。`);
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-action="ai-chat"]')){e.preventDefault();openAiChat();return;}const model=e.target.closest('[data-ai-model]');if(model){ensureAiChat();state.aiChat.model=model.dataset.aiModel;persist();renderAiChat();}});
+document.addEventListener('submit',e=>{if(e.target.id==='ai-chat-form'){e.preventDefault();sendAiMessage();}});
+document.addEventListener('keydown',e=>{if(e.target.id==='ai-chat-input'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAiMessage();}});
+
+
+if(!state.config.catalog.some(p=>p.id==='token-100k')){state.config.catalog.unshift({id:'token-100k',name:'AI Token · 10万',category:'AI Token',price:100,desc:'可切换主流模型对话',unit:'10万 Token',kind:'aiToken',tokenAmount:100000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
+if(!state.config.catalog.some(p=>p.id==='token-500k')){state.config.catalog.splice(1,0,{id:'token-500k',name:'AI Token · 50万',category:'AI Token',price:450,desc:'批量对话更划算',unit:'50万 Token',kind:'aiToken',tokenAmount:500000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
+if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;
+
+})();
+(() => {
+ const A=window.YunbeiSupply;if(!A)return;
+ const labels={checkin:'签到配置',recharge:'首充配置',invite:'邀请配置'};
+ const drafts={checkin:A.clone(A.config().checkin),recharge:A.clone(A.config().recharge),invite:A.clone(A.config().invite)};
+ const adminModules=[['supply-checkin','签到配置'],['recharge','充值配置'],['tasks','任务配置'],['invoices','发票管理'],['supply-recharge','首充配置'],['supply-invite','邀请配置'],['shop','商城配置']];
+ const defs=A.definitions;
+ const options=value=>Object.entries(defs).map(([id,d])=>`<option value="${id}" ${id===value?'selected':''}>${d.name}</option>`).join('');
+ const input=(name,value,min=0,max=10000)=>`<input name="${name}" type="number" min="${min}" max="${max}" step="1" value="${value}" required>`;
+ const text=(name,value,max=80)=>`<input name="${name}" type="text" maxlength="${max}" value="${A.escape(value)}" required>`;
+ const switchField=(key,enabled,text)=>`<label class="growth-activity-switch"><input type="checkbox" name="enabled" ${enabled?'checked':''}><span class="growth-toggle"></span><strong>${text}</strong><small>${enabled?'已开启':'已暂停'}</small></label>`;
+ const formHeader=(title,description)=>`<div class="growth-form-heading"><div><h3>${title}</h3><p>${description}</p></div><span class="growth-scope-label">管理员配置</span></div>`;
+ const saveFooter=key=>`<div class="growth-form-footer"><span id="growth-dirty-${key}">配置已保存</span><button class="btn primary" type="submit">保存并生效</button></div>`;
+ const saveTimers=new WeakMap();
+ const saveFeedback={};
+ const clearSaveFeedback=form=>{clearTimeout(saveFeedback[form.dataset.growthForm||form.id]);delete saveFeedback[form.dataset.growthForm||form.id];};
+ const setSaveFeedback=(form,state)=>{const button=form.querySelector('button[type="submit"]');const status=form.id==='supply-discount-form'?form.querySelector('.growth-form-footer span'):$('#growth-dirty-'+form.dataset.growthForm);if(!button)return;if(state==='error'){button.disabled=false;button.classList.remove('save-success');button.classList.add('save-error');button.textContent='保存失败';if(status){status.textContent='请检查填写内容后重试';status.classList.remove('is-saved');status.classList.add('is-dirty');}}else{button.disabled=false;button.classList.remove('save-error');button.classList.add('save-success');button.textContent='已保存 ✓';if(status){status.textContent='保存成功，已立即生效';status.classList.remove('is-dirty');status.classList.add('is-saved');}}const id=form.dataset.growthForm||form.id;clearTimeout(saveFeedback[id]);saveFeedback[id]=setTimeout(()=>{button.classList.remove('save-success','save-error');button.textContent='保存并生效';if(status&&status.classList.contains('is-saved')){status.textContent='配置已保存';status.classList.remove('is-saved');}},1800);};
+ const preview=key=>`<aside class="growth-preview"><div class="growth-preview-heading"><span>用户端实时预览</span><small>根据左侧草稿变化</small></div><div id="growth-preview-${key}"></div><div class="growth-preview-note">${key==='checkin'?'新规则用于尚未开始的签到周；本周已有签到的用户沿用本周规则。':key==='recharge'?'保存后新发生的首充使用新规则；已开启的三周补给保持原有权益。':'保存后创建的新邀请使用新规则；已注册的受邀好友按原规则完成。'}</div></aside>`;
+ $('.admin-hero h2').textContent='云贝配置';
+ $('.admin-hero p').textContent='按模块管理充值、商城、签到、首充和邀请奖励；保存后按页面说明的范围生效。';
+ const adminTabs=$('.admin-tabs');
+ adminTabs.innerHTML=adminModules.map(([id,name])=>`<button type="button" data-admin-view="${id}">${name}</button>`).join('');
+ adminTabs.hidden=false;
+ $('.admin-hero').insertAdjacentHTML('beforeend','<div class="growth-header-actions"><button class="btn" type="button" <button class="btn" type="button" data-growth-action="rules">查看生效规则</button></div>');
+ let activityEditingId="";
+ const c=drafts.checkin,p=drafts.recharge,i=drafts.invite;
+ $('#panel-admin').insertAdjacentHTML('beforeend',`
+ <section id="admin-supply-checkin" class="growth-section" hidden><div class="growth-editor-layout"><form class="growth-form surface" data-growth-form="checkin">
+ ${formHeader('签到配置页面','')}${switchField('checkin',c.enabled,'开启每周签到奖励')}
+ <div class="growth-info-line"><span>统计周期</span><strong>北京时间 · 周一至周日</strong><span>累计参与，无需连续</span></div>
+ <div class="growth-block-heading"><h4>5 次累计签到奖励</h4><span>每日仅计 1 次</span></div>
+ <div class="growth-day-inputs">${c.rewards.map((v,n)=>`<label><span>第 ${n+1} 次</span>${input('reward-'+n,v)}<small>云贝</small></label>`).join('')}</div>
+ <div class="growth-budget"><span>每人每周最多获得</span><strong id="growth-week-total">70 <small>云贝</small></strong></div>
+${saveFooter('checkin')}</form></div></section>
+ <section id="admin-supply-recharge" class="growth-section" hidden><div class="growth-editor-layout"><form class="growth-form surface" data-growth-form="recharge">
+ ${formHeader('首充配置页面','')}${switchField('recharge',p.enabled,'开启首充三周奖励')}
+ <div class="growth-info-line"><span>参与资格</span><strong>每位用户首次成功充值</strong><span>每人仅 1 次</span></div>
+ <div class="growth-block-heading"><h4>3 周进阶权益</h4><span>名称、说明、跳转链接、次数可编辑</span></div>
+ <div class="growth-week-editor">${p.weeks.map((v,n)=>`<div class="growth-week-card"><div><span class="growth-week-number">${n+1}</span><strong>第 ${n+1} 周</strong><small>充值后第 ${n*7+1}—${n*7+7} 天</small></div><div class="growth-week-fields"><label><span>权益内容</span>${text('week-name-'+n,v.name,40)}</label><label><span>权益说明</span>${text('week-desc-'+n,v.desc,80)}</label><label><span>可用次数</span>${input('week-uses-'+n,v.uses,1,99)}<small>领取后可使用</small></label><label class="growth-week-link"><span>图表跳转链接</span><input name="week-link-${n}" type="url" maxlength="500" value="${A.escape(v.link||'')}" placeholder="https://www.genescloud.cn/..."><small>图表权益建议填写；留空则使用演示体验</small></label></div></div>`).join('')}</div>
+${saveFooter('recharge')}</form></div></section>
+ <section id="admin-supply-invite" class="growth-section" hidden><div class="growth-editor-layout"><form class="growth-form surface" data-growth-form="invite">
+ ${formHeader('邀请分阶段奖励','把注册、首次产出和回访分别配置，鼓励好友持续使用。')}${switchField('invite',i.enabled,'开启同门邀请活动')}
+ <div class="growth-info-line"><span>参与资格</span><strong>从未注册的新用户</strong><span>每位新用户仅参与 1 次</span></div>
+ <div class="growth-block-heading"><h4>双方分别获得的云贝</h4><span>达成后分别入账</span></div>
+ <div class="growth-stage-table"><div class="growth-stage-head"><span>好友完成的行为</span><span>邀请人奖励</span><span>新好友奖励</span></div>${['完成注册','首次完成绘图或分析','回访再次完成有效使用'].map((v,n)=>`<div class="growth-stage-row"><strong><b>${n+1}</b>${v}</strong><label>${input('inviter-'+n,i.inviter[n])}<small>云贝</small></label><label>${input('friend-'+n,i.friend[n])}<small>云贝</small></label></div>`).join('')}</div>
+ <div class="growth-invite-totals"><span>邀请人最高 <b id="growth-inviter-total">50</b> 云贝</span><span>新好友最高 <b id="growth-friend-total">50</b> 云贝</span></div>
+ <div class="growth-field-grid"><label class="growth-field"><span>回访最早解锁时间</span><div class="growth-input-unit">${input('returnDays',i.returnDays,1,90)}<em>天后</em></div><small>以好友注册日期为起点</small></label><label class="growth-field"><span>每位邀请人每月名额</span><div class="growth-input-unit">${input('monthlyCap',i.monthlyCap,0,999)}<em>位</em></div><small>填 0 表示不限人数</small></label></div>
+ <p class="growth-help">好友注册时锁定本次邀请规则；后续修改不影响已开始的邀请。关闭活动后不接受新邀请，已有邀请可以继续完成奖励。</p>${saveFooter('invite')}</form></div></section>
+ <section id="admin-supply-records" class="growth-section" hidden><article class="surface growth-record-card"><div class="growth-form-heading"><div><h3>奖励发放记录</h3><p>当前浏览器的交互演示记录；邀请人与受邀好友分别记账。</p></div><button class="btn" type="button" data-growth-action="export">导出记录</button></div><div class="growth-record-stats" id="growth-record-stats"></div><div class="growth-record-toolbar"><label>奖励来源 <select id="growth-log-filter"><option value="all">全部来源</option><option>签到补给</option><option>首充补给</option><option>邀请奖励</option><option>好友奖励</option><option>权益使用</option></select></label><span id="growth-record-count"></span></div><div class="table-wrap"><table class="growth-record-table"><thead><tr><th>日期</th><th>领取用户</th><th>来源</th><th>奖励 / 权益</th><th>数量</th><th>状态</th></tr></thead><tbody id="growth-record-body"></tbody></table></div></article><article class="surface growth-record-card" style="margin-top:18px"><div class="growth-form-heading"><div><h3>配置修改记录</h3><p>记录每次已保存的版本与生效范围。</p></div></div><div id="growth-change-history"></div></article></section>`);
+ const operationsPanel=$("#panel-operations"),recordsSection=$("#admin-supply-records");
+ if(operationsPanel&&recordsSection)operationsPanel.appendChild(recordsSection);
+ function readDraft(key){const form=document.querySelector(`[data-growth-form="${key}"]`);const d=new FormData(form);const enabled=d.has('enabled');if(key==='checkin')return {enabled,rewards:[0,1,2,3,4].map(n=>Number(d.get('reward-'+n))),unlockAt:A.config().checkin.unlockAt,perk:A.config().checkin.perk};if(key==='recharge')return {enabled,weeks:[0,1,2].map(n=>({name:String(d.get('week-name-'+n)||'').trim(),desc:String(d.get('week-desc-'+n)||'').trim(),uses:Math.round(Number(d.get('week-uses-'+n))),kind:(A.config().recharge.weeks[n]?.kind)||'volcano',link:String(d.get('week-link-'+n)||'').trim()}))};return {enabled,inviter:[0,1,2].map(n=>Number(d.get('inviter-'+n))),friend:[0,1,2].map(n=>Number(d.get('friend-'+n))),returnDays:Number(d.get('returnDays')),monthlyCap:Number(d.get('monthlyCap'))};}
+ function renderPreview(key){
+  const d=drafts[key],target=$('#growth-preview-'+key);let html='';
+  if(key==='checkin'){const total=d.rewards.reduce((a,b)=>a+b,0);if($('#growth-week-total'))$('#growth-week-total').innerHTML=total+' <small>云贝</small>';html=`<div class="growth-phone-tag">签到得云贝</div><h3>每周任选 5 天，<br>累计领云贝。</h3><p>第 5 天累计领取 ${total} 云贝。</p><div class="growth-mini-days">${d.rewards.map((v,n)=>`<div><b>+${v}</b><small>第 ${n+1} 次</small></div>`).join('')}</div><div class="growth-preview-award">累计奖励 ${total} 云贝</div><button type="button" class="btn primary" disabled>签到领云贝</button>`;}
+  if(key==='recharge')html=`<div class="growth-phone-tag">首充三周补给</div><h3>首充一次，<br>三周都有期待。</h3><p>首充折扣按档位配置；云贝与原有赠送即时到账。</p>${d.weeks.map((v,n)=>`<div class="growth-mini-pass"><small>第 ${n+1} 周</small><strong>${esc(v.name)}</strong><span>可用 ${v.uses} 次</span></div>`).join('')}`;
+  if(key==='invite'){const a=d.inviter.reduce((a,b)=>a+b,0),b=d.friend.reduce((a,b)=>a+b,0);if($('#growth-inviter-total'))$('#growth-inviter-total').textContent=a;if($('#growth-friend-total'))$('#growth-friend-total').textContent=b;html=`<div class="growth-phone-tag">送同门一份科研见面礼</div><h3>这张图，<br>你也可以做。</h3><p>邀请人最高 ${a} 云贝<br>新好友最高 ${b} 云贝</p>${['完成注册','首次完成绘图','回访再次使用'].map((v,n)=>`<div class="growth-mini-invite"><span>${v}</span><strong>+${d.inviter[n]}<small>邀请人</small></strong><strong>+${d.friend[n]}<small>好友</small></strong></div>`).join('')}<p>注册满 ${d.returnDays} 天后可解锁回访奖励<br>每位邀请人${d.monthlyCap?'每月最多 '+d.monthlyCap+' 位':'不限邀请人数'}</p>`;}
+  if(target)target.innerHTML=d.enabled?html:'<div class="growth-paused-preview">活动已暂停<br><small>已获得的奖励保留</small></div>';
+  const dirty=JSON.stringify(d)!==JSON.stringify(A.config()[key]);const indicator=$('#growth-dirty-'+key);if(indicator){indicator.textContent=dirty?'有未保存的修改':'配置已保存';indicator.classList.toggle('is-dirty',dirty);}
+  const control=document.querySelector(`[data-growth-form="${key}"] .growth-activity-switch small`);if(control)control.textContent=d.enabled?'已开启':'已暂停';
+ }
+ function filteredEvents(){const type=$('#growth-log-filter')?.value||'all';return A.data.events.filter(x=>type==='all'||x.source===type);}
+ function renderRecords(){const events=A.data.events,rows=filteredEvents();const coins=events.filter(x=>x.kind==='云贝').reduce((a,x)=>a+x.amount,0),perks=events.filter(x=>x.kind!=='云贝'&&x.source!=='权益使用').length,uses=events.filter(x=>x.source==='权益使用').length;$('#growth-record-stats').innerHTML=[['累计发放云贝',coins,'邀请人与好友奖励分别计入'],['累计发放权益',perks,'签到与首充补给'],['已使用权益',uses,'通过演示体验导出']].map(x=>`<div><span>${x[0]}</span><strong>${x[1]}</strong><small>${x[2]}</small></div>`).join('');$('#growth-record-count').textContent='共 '+rows.length+' 条';$('#growth-record-body').innerHTML=rows.length?rows.map(x=>`<tr><td>${x.day}</td><td>${esc(x.who)}</td><td>${esc(x.source)}</td><td>${esc(x.kind)}</td><td class="num">${x.amount}</td><td><span class="growth-record-status">${x.source==='权益使用'?'已使用':'已到账'}</span></td></tr>`).join(''):'<tr><td colspan="6" class="growth-record-empty">暂无发放记录。切换到用户端体验签到、首充和邀请后，记录会显示在这里。</td></tr>';$('#growth-change-history').innerHTML=A.data.configHistory.length?A.data.configHistory.slice(0,20).map(x=>`<div class="growth-change-row"><strong>v${x.version} · ${labels[x.key]}</strong><span>${esc(x.summary)}</span><small>${esc(x.time)}</small></div>`).join(''):'<div class="growth-record-empty">尚未修改配置，当前使用默认活动方案。</div>';}
+ const nativeSync=syncAdminView;syncAdminView=function(){nativeSync();const configVisible=activeTab==='admin'&&isAdmin(),moduleFor={'admin-supply-checkin':'supply-checkin','admin-supply-recharge':'supply-recharge','admin-supply-tasks':'tasks','admin-invoices':'invoices','admin-supply-invite':'supply-invite'};$('#admin-recharge-panel').hidden=!configVisible||adminView!=='recharge';$('#admin-shop-panel').hidden=!configVisible||adminView!=='shop';$$('.growth-section').forEach(el=>el.hidden=el.id==='admin-supply-records'?false:!configVisible||moduleFor[el.id]!==adminView);};
+ const nativeLists=renderAdminLists;
+ renderAdminLists=function(){renderRechargeActivities();renderTaskAdmin();const quote=rechargeQuote;try{rechargeQuote=function(id=selectedPlan){const q=quote(id),p=state.config.rechargePlans.find(x=>x.id===id);if(!q||!p)return q;const z=Number(p.discountZhe)||8;return {...q,first:true,discountZhe:z,paidCents:Number.isFinite(Number(p.paidCents))?Number(p.paidCents):Math.round(p.yuan*100*z/10)};};nativeLists();const h=$('#admin-plan-list .admin-list-header');if(h){h.children[3].textContent='首充折扣';h.children[4].textContent='首充实付';}}finally{rechargeQuote=quote;}};
+ const nativeAdmin=renderAdmin;renderAdmin=function(){nativeAdmin();renderRecords();};
+ const headerActions=$('.growth-header-actions');headerActions.id='growth-main-actions';headerActions.hidden=true;$('.page-head-actions').append(headerActions);
+ 
+ const nativeSetTab=setTab;setTab=function(...args){nativeSetTab(...args);headerActions.hidden=activeTab!=='admin'||!isAdmin();};
+
+ const discountLabel=$('#plan-discount')?.closest('label');if(discountLabel){discountLabel.querySelector('.admin-line-label').textContent='首充折扣';discountLabel.querySelector('small').textContent='仅首充享折扣，复充按原价计算';}
+ document.addEventListener('input',e=>{const form=e.target.closest('[data-growth-form]');if(!form)return;const key=form.dataset.growthForm;drafts[key]=readDraft(key);renderPreview(key);});
+ document.addEventListener('change',e=>{const form=e.target.closest('[data-growth-form]');if(form){const key=form.dataset.growthForm;drafts[key]=readDraft(key);renderPreview(key);}if(e.target.id==='growth-log-filter')renderRecords();});
+ document.addEventListener('submit',e=>{
+  if(e.target.id==='supply-discount-form'){e.preventDefault();if(!isAdmin()){toast('请使用管理员账号保存。');return;}if(!e.target.reportValidity()){return;}setSaveFeedback(e.target,'saved');const d=new FormData(e.target),read=n=>Math.round(Number(d.get(n))*10)/10,values={first:read('first'),second:read('second'),later:read('later')};if(Object.values(values).some(v=>!Number.isFinite(v)||v<1||v>9)){setSaveFeedback(e.target,'error');toast('折扣需填写 1–9，可保留一位小数。');return;}const ratio=Math.round(Number(d.get('bonusRatio')));if(!Number.isFinite(ratio)||ratio<0||ratio>200){setSaveFeedback(e.target,'error');toast('赠送比例需填写 0–200 的整数。');return;}state.config.rechargeDiscounts=values;state.config.rechargeBonusRatio=ratio;try{persist();renderAdminLists();renderAll();if(typeof updateAdminPlanForm==='function')updateAdminPlanForm('paid');setSaveFeedback(e.target,'saved');toast('充值折扣和赠送比例已保存。');}catch(err){setSaveFeedback(e.target,'error');throw err;}return;}
+  const form=e.target.closest('[data-growth-form]');if(!form)return;e.preventDefault();if(!isAdmin()){toast('请使用管理员账号保存。');return;}if(!form.reportValidity())return;setSaveFeedback(form,'saved');const key=form.dataset.growthForm,next=readDraft(key);const ints=key==='checkin'?next.rewards:key==='invite'?[...next.inviter,...next.friend,next.returnDays,next.monthlyCap]:key==='recharge'?next.weeks.map(v=>v.uses):[];if(ints.some(n=>!Number.isSafeInteger(n)||n<0)){setSaveFeedback(form,'error');toast('奖励数量需填写非负整数。');return;}const published=A.clone(A.config());published[key]=next;published.version++;published.updatedAt=new Date().toISOString();state.config.supplyRules=published;if(key==='checkin')A.data.weekRules[A.day()]=A.clone(next);if(key==='recharge'&&A.data.pass){next.weeks.forEach((v,n)=>{if(A.data.pass.weeks[n])A.data.pass.weeks[n].link=v.link;});}drafts[key]=A.clone(next);const summary=key==='checkin'?'每周 '+next.rewards.reduce((a,b)=>a+b,0)+' 云贝；第 '+next.unlockAt+' 次解锁'+defs[next.perk].name:key==='recharge'?next.weeks.map(v=>`${v.name} × ${v.uses}${v.link?' · 已配置跳转':''}`).join(' → '):'邀请人 '+next.inviter.join('/')+'；好友 '+next.friend.join('/')+' 云贝';A.data.configHistory.unshift({key,version:published.version,time:displayDate(published.updatedAt,true),summary:(next.enabled?'开启 · ':'暂停 · ')+summary});try{persist();A.refresh();renderPreview(key);setSaveFeedback(form,'saved');toast(labels[key]+'配置已保存，按页面说明的范围生效。');}catch(err){setSaveFeedback(form,'error');throw err;}});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-growth-action]');if(!b||!isAdmin())return;const action=b.dataset.growthAction;if(action==='preview'){state.role='user';persist();renderAll();setTab('recharge');return;}if(action==='rules'){A.showRules();return;}if(action==='export')exportCsv('科研补给奖励记录.csv',[['日期','用户','来源','奖励','数量','状态'],...filteredEvents().map(x=>[x.day,x.who,x.source,x.kind,x.amount,x.source==='权益使用'?'已使用':'已到账'])]);});
+ rechargeActivities();applyRechargeActivity(activeRechargeActivity());renderRechargeActivities();renderTaskAdmin();
+Object.keys(drafts).forEach(renderPreview);renderRecords();syncAdminView();renderAdminLists();if(location.pathname.endsWith('admin.html')||location.pathname.includes('云贝科研补给-管理员原型.html'))activeTab='admin';setTab(activeTab,false);renderAll();
+function taskCfg(){const d={enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const c=state.config.yunbeiTasks||{};return {...d,...c,invite:{...d.invite,...(c.invite||{})},profile:{...d.profile,...(c.profile||{})},checkin:{...d.checkin,...(c.checkin||{})},wechat:{...d.wechat,...(c.wechat||{})},avatar:{...d.avatar,...(c.avatar||{})}};}
+function defaultRechargeActivity(){return {id:'act-default',name:'科研云贝充值活动',enabled:true,discounts:{first:8,second:8.8,later:9},bonusRatio:rechargeBonusRatio(),tiers:[{label:'10元档',yuan:10,enabled:true},{label:'50元档',yuan:50,enabled:true},{label:'100元档',yuan:100,enabled:true},{label:'自定金额',yuan:0,custom:true,enabled:true}]};}
+function rechargeActivities(){if(!Array.isArray(state.config.rechargeActivities)||!state.config.rechargeActivities.length)state.config.rechargeActivities=[defaultRechargeActivity()];return state.config.rechargeActivities;}
+function activeRechargeActivity(){return rechargeActivities().find(a=>a.enabled)||null;}
+function tierPaid(yuan,z){return Math.round(Number(yuan)*100*Number(z)/10);}
+function applyRechargeActivity(a){
+ if(!a){state.config.rechargeDiscounts={first:8,second:8.8,later:9};state.config.rechargeBonusRatio=10;state.config.rechargePlans=defaultRechargePlans();applyConfig();return;}
+ const z=a.discounts;
+ state.config.rechargeDiscounts={first:Math.max(1,Number(z.first)||8),second:Math.max(1,Number(z.second)||8.8),later:Math.max(1,Number(z.later)||9)};
+ state.config.rechargeBonusRatio=Math.max(0,Math.min(200,Math.round(Number(a.bonusRatio)||0)));
+ const tiers=Array.isArray(a.tiers)?a.tiers.filter(t=>t.enabled&&Number(t.yuan)>=0):[];
+ const plans=tiers.map((t,i)=>({id:`${a.id}-t${i}`,yuan:Math.max(0,Math.round(Number(t.yuan)||0)),principal:Math.round(Math.max(0,Number(t.yuan)||0)*10),bonus:0,discountZhe:state.config.rechargeDiscounts.first,paidCents:tierPaid(t.yuan,state.config.rechargeDiscounts.first),enabled:true}));
+ if(a.tiers?.some(t=>t.custom&&t.enabled))plans.push({id:'custom',yuan:0,principal:0,bonus:0,discountZhe:state.config.rechargeDiscounts.first,paidCents:0,enabled:true});
+ state.config.rechargePlans=plans;applyConfig();selectedPlan=RECHARGE_PLANS.some(p=>p.id===selectedPlan)?selectedPlan:RECHARGE_PLANS[0]?.id||'custom';
+}
+function tierChip(t){const label=t.custom?'自定金额':`¥${fmt(t.yuan)}`;return `<span class="activity-tier-chip ${t.enabled?'on':''}">${label}<b>${t.enabled?'显示':'隐藏'}</b></span>`;}
+function activityForm(a){const d=a.discounts;return `<form class="activity-editor" data-activity-form="${esc(a.id)}"><div class="activity-grid"><label><span>活动名称</span><input name="name" maxlength="40" value="${esc(a.name)}" required></label><label><span>首充折扣</span><input name="first" type="number" min="1" max="9" step="0.1" value="${d.first}" required><small>1–9 折</small></label><label><span>第二次折扣</span><input name="second" type="number" min="1" max="9" step="0.1" value="${d.second}" required></label><label><span>后续折扣</span><input name="later" type="number" min="1" max="9" step="0.1" value="${d.later}" required></label><label><span>赠送比例</span><input name="bonusRatio" type="number" min="0" max="200" step="1" value="${a.bonusRatio}" required><small>%</small></label></div><div class="activity-tier-grid">${a.tiers.map((t,i)=>`<label class="activity-tier ${t.enabled?'on':''}"><span><input type="checkbox" name="tier-${i}" ${t.enabled?'checked':''}><b>${esc(t.label)}</b></span><input name="yuan-${i}" type="number" min="0" max="100000" step="1" value="${t.yuan}" required><small>${t.custom?'用户可输入，0 也可添加':'按 ¥1 = 10 云贝换算'}</small></label>`).join('')}</div><div class="activity-actions"><button class="btn primary" type="submit">保存并生效</button><button class="btn" type="button" data-activity-action="cancel">取消</button></div></form>`;}
+function renderRechargeActivities(){
+ const box=$('#supply-activity-list');if(!box)return;
+ const list=rechargeActivities();
+ box.innerHTML=list.map((a,idx)=>{const form=activityEditingId===a.id?activityForm(a):'';const d=a.discounts;return `<article class="supply-activity-card ${a.enabled?'active':''}"><div class="activity-card-head"><div><span class="activity-status">${a.enabled?'已生效':'未生效'}</span><h4>${esc(a.name)}</h4><p>首充 ${formatZhe(d.first)} · 第二次 ${formatZhe(d.second)} · 后续 ${formatZhe(d.later)} · 赠送 ${a.bonusRatio}%</p></div><div class="activity-buttons"><button class="table-action" type="button" data-activity-action="edit" data-id="${esc(a.id)}">编辑</button><label class="admin-switch"><input type="checkbox" data-activity-enable="${esc(a.id)}" ${a.enabled?'checked':''}><span class="switch-track"><i></i></span><em>${a.enabled?'生效中':'已停用'}</em></label><button class="table-action danger" type="button" data-activity-action="delete" data-id="${esc(a.id)}">删除</button></div></div><div class="activity-tiers">${a.tiers.map(tierChip).join('')}</div>${form}</article>`;}).join('')||'<div class="admin-empty">暂无充值活动，点击上方创建活动。</div>';
+}
+$('#panel-admin').insertAdjacentHTML('beforeend',`<section id="admin-supply-tasks" class="growth-section" hidden><div class="growth-editor-layout"><form class="growth-form surface" id="supply-task-config">${formHeader('云贝任务配置','任务奖励和邀请规则保存后立即同步用户端。')}<div class="growth-info-line"><span>任务状态</span><strong>任务中心</strong><span>邀请好友页面已合并到云贝任务</span></div><div class="growth-day-inputs"><label><span>邀请好友 / 每天人数</span>${input('invite-daily',taskCfg().invite.daily)}<small>人 / 天</small></label><label><span>邀请人奖励</span>${input('invite-inviter',taskCfg().invite.inviter)}<small>云贝</small></label><label><span>被邀请人奖励</span>${input('invite-friend',taskCfg().invite.friend)}<small>云贝</small></label><label><span>完善个人中心</span>${input('profile-reward',taskCfg().profile.reward)}<small>云贝</small></label><label><span>每日签到</span>${input('checkin-reward',taskCfg().checkin.reward)}<small>云贝</small></label><label><span>绑定微信</span>${input('wechat-reward',taskCfg().wechat.reward)}<small>云贝</small></label><label><span>上传头像</span>${input('avatar-reward',taskCfg().avatar.reward)}<small>云贝</small></label></div>${saveFooter('tasks')}</form></div></section>`);
+function renderTaskAdmin(){const c=taskCfg(),form=$('#supply-task-config');if(!form)return;['invite-daily','invite-inviter','invite-friend','profile-reward','checkin-reward','wechat-reward','avatar-reward'].forEach(n=>{const map={ 'invite-daily':c.invite.daily,'invite-inviter':c.invite.inviter,'invite-friend':c.invite.friend,'profile-reward':c.profile.reward,'checkin-reward':c.checkin.reward,'wechat-reward':c.wechat.reward,'avatar-reward':c.avatar.reward};const input=form.querySelector(`[name="${n}"]`);if(input&&document.activeElement!==input)input.value=map[n];});}
+
+document.addEventListener('click',e=>{
+ const create=e.target.closest('[data-supply-activity-action="create"]');
+ if(create){if(!isAdmin())return;const n=rechargeActivities().length+1;const a={...defaultRechargeActivity(),id:uid('ACT'),name:`充值活动 ${n}`,enabled:false};rechargeActivities().unshift(a);activityEditingId=a.id;persist();renderAdminLists();toast('活动已创建，配置后启用即可同步用户端。');return;}
+ const action=e.target.closest('[data-activity-action]');
+ if(action){if(!isAdmin())return;const id=action.dataset.id,type=action.dataset.activityAction;
+  if(type==='edit'){activityEditingId=id;}
+  else if(type==='cancel'){activityEditingId='';}
+  else if(type==='delete'){const list=rechargeActivities(),a=list.find(x=>x.id===id);if(!a)return;state.config.rechargeActivities=list.filter(x=>x.id!==id);activityEditingId='';if(a.enabled)applyRechargeActivity(activeRechargeActivity());persist();renderAdminLists();renderAll();toast('充值活动已删除。');return;}
+  renderAdminLists();return;}
+ const enable=e.target.closest('[data-activity-enable]');
+ if(enable){if(!isAdmin())return;const a=rechargeActivities().find(x=>x.id===enable.dataset.activityEnable);if(!a)return;if(enable.checked){rechargeActivities().forEach(x=>x.enabled=x.id===a.id);applyRechargeActivity(a);}else{a.enabled=false;applyRechargeActivity(activeRechargeActivity());}persist();renderAdminLists();renderAll();toast(a.enabled?'充值活动已生效，用户端已同步。':'充值活动已停用。');}
+});
+document.addEventListener('submit',e=>{
+ if(e.target.matches('[data-activity-form]')){e.preventDefault();if(!isAdmin())return;if(!e.target.reportValidity())return;const id=e.target.dataset.activityForm,a=rechargeActivities().find(x=>x.id===id);if(!a)return;const d=new FormData(e.target);const read=n=>Math.round(Number(d.get(n))*10)/10;const name=String(d.get('name')||'').trim();const discounts={first:read('first'),second:read('second'),later:read('later')};const ratio=Math.round(Number(d.get('bonusRatio')));const tiers=a.tiers.map((t,i)=>({...t,yuan:Math.max(0,Math.round(Number(d.get(`yuan-${i}`))||0)),enabled:d.get(`tier-${i}`)==='on'}));if(Object.values(discounts).some(v=>!Number.isFinite(v)||v<1||v>9)){setSaveFeedback(e.target,'error');toast('折扣需填写 1–9，可保留一位小数。');return;}if(!Number.isFinite(ratio)||ratio<0||ratio>200){setSaveFeedback(e.target,'error');toast('赠送比例需填写 0–200。');return;}if(!name||!tiers.some(t=>t.enabled)){setSaveFeedback(e.target,'error');toast('请填写活动名称，并至少显示一个档位。');return;}Object.assign(a,{name,discounts,bonusRatio:ratio,tiers});activityEditingId='';applyRechargeActivity(a);persist();renderAdminLists();renderAll();toast('充值活动已保存并同步用户端。');return;}
+ if(e.target.id==='supply-task-config'){e.preventDefault();if(!isAdmin())return;if(!e.target.reportValidity())return;setSaveFeedback(e.target,'saved');const d=new FormData(e.target),num=n=>Math.max(0,Math.round(Number(d.get(n))||0));const values={enabled:true,invite:{daily:num('invite-daily'),inviter:num('invite-inviter'),friend:num('invite-friend')},profile:{reward:num('profile-reward')},checkin:{reward:num('checkin-reward')},wechat:{reward:num('wechat-reward')},avatar:{reward:num('avatar-reward')}};state.config.yunbeiTasks=values;try{persist();renderTaskAdmin();renderAll();setSaveFeedback(e.target,'saved');toast('云贝任务配置已保存并同步。');}catch(err){setSaveFeedback(e.target,'error');throw err;}return;}
+});
+window.addEventListener('storage',()=>{applyConfig();applyRechargeActivity(activeRechargeActivity());renderAll();});
+
+$('#panel-admin').insertAdjacentHTML('beforeend',`<section id="admin-invoices" class="growth-section" hidden><article class="surface admin-config-card"><div class="surface-heading"><div><h3>发票申请管理</h3><p>查看用户提交的单笔和合并开票申请</p></div><span class="growth-scope-label">管理员视图</span></div><div class="admin-list-heading"><h4>全部发票申请</h4><span id="admin-invoice-count">0 条</span></div><div class="table-wrap"><table><thead><tr><th>申请编号</th><th>申请人</th><th>抬头类型</th><th>发票抬头</th><th>订单数量</th><th>开票金额</th><th>状态</th><th>操作</th></tr></thead><tbody id="admin-invoice-rows"></tbody></table></div></article></section>`);
+function adminInvoiceRecords(){return rechargeOrders().filter(o=>o.invoice).sort((a,b)=>Date.parse(b.invoice.created)-Date.parse(a.invoice.created));}
+function renderAdminInvoices(){const rows=adminInvoiceRecords(),body=$('#admin-invoice-rows');if(!body)return;const count=$('#admin-invoice-count');if(count)count.textContent=rows.length+' 条';body.innerHTML=rows.map(o=>{const i=o.invoice;return `<tr><td class="record-title"><div class="order-name">${esc(i.id)}</div><div class="order-id">${esc(o.id)}</div></td><td>${o.demo?'示例用户':'当前用户'}</td><td>${i.type==='company'?'企业':'个人'}</td><td>${esc(i.title)}</td><td class="num">${fmt(i.orderIds?.length||1)}</td><td class="num">${money(i.totalCents)}</td><td><span class="tag ${i.status==='issued'?'success':i.status==='pending'?'pending':''}">${{available:'待开票',pending:'开票中',issued:'已开票'}[i.status]||'待开票'}</span></td><td><button class="table-action" data-admin-invoice-detail="${esc(o.id)}">查看详情</button></td></tr>`;}).join('')||'<tr><td colspan="8" style="text-align:center;padding:36px">暂无发票申请。</td></tr>';}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-admin-invoice-detail]');if(b)invoiceDetails(b.dataset.adminInvoiceDetail);});
+const beforeAdminInvoices=renderAdminLists;renderAdminLists=function(){beforeAdminInvoices();renderAdminInvoices();};
+
+})();
+</script>
+<script>state.role="user";renderAll();</script>
 </body>
 </html>

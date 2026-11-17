@@ -4293,7 +4293,7 @@ document.addEventListener('submit',e=>{
  if(e.target.id==='task-wechat-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');}return;}
  if(e.target.id==='task-avatar-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('avatar',ybTaskCfg().avatar.reward,'个人头像已上传');}return;}
 });
-renderInvites=function(){renderTaskCenter();};
+renderInvites=function(){renderTaskCenter();};renderTaskCenter();
 pageInfo.invite[0]='云贝任务';pageInfo.invite[1]='完成每日任务和成长任务，持续获得云贝。';
 
 
