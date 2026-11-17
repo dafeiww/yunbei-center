@@ -5,8 +5,8 @@
  const day=()=>dateKey(new Date(Date.now()+s.offset*86400000));
  const start=()=>weekStart(day());
  const clone=v=>JSON.parse(JSON.stringify(v));
- const definitions={volcano:{name:'高级火山图体验',unit:'次'},palette:{name:'科研配色模板包',unit:'份'},export:{name:'矢量图导出体验',unit:'次'}};
- const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[5,5,10,10,40],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级火山图体验',desc:'火山图同款模板 + 示例数据',uses:1,kind:'volcano'},{name:'科研配色模板包',desc:'可下载的可编辑配色模板',uses:1,kind:'palette'},{name:'矢量图导出体验',desc:'完成一次矢量图导出',uses:1,kind:'export'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
+ const definitions={volcano:{name:'高级火山图体验',unit:'次'},palette:{name:'科研配色模板包',unit:'份'},export:{name:'矢量图导出体验',unit:'次'},ai:{name:'AI 分析报告体验',unit:'次'},expert:{name:'专家图表美化服务',unit:'次'}};
+ const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[5,5,10,10,40],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级科研图表体验',desc:'火山图、热图等高级图表模板 + 示例数据',uses:1,kind:'volcano'},{name:'AI 分析报告体验',desc:'上传结果表，AI 生成 1 份图文解读报告',uses:1,kind:'ai'},{name:'专家图表美化服务',desc:'1 张图由生信顾问完成期刊级美化',uses:1,kind:'expert'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
  if(!state.config.supplyRules)state.config.supplyRules=clone(defaults);
  const cfg=()=>state.config.supplyRules;if(cfg().invite.monthlyCap===undefined||cfg().invite.monthlyCap>0)cfg().invite.monthlyCap=0;
  const rechargeDiscounts=()=>{const d=state.config.rechargeDiscounts||{},num=v=>Number.isFinite(Number(v))?Math.min(9,Math.max(1,Math.round(Number(v)*10)/10)):undefined;return {first:num(d.first)??8,second:num(d.second)??8.8,later:num(d.later)??9};};
@@ -17,7 +17,8 @@
  const rule=()=>s.weekRules[start()]||cfg().checkin;
  const log=(who,source,kind,amount,reference='')=>s.events.unshift({id:uid('AW'),day:day(),who,source,kind,amount,reference});
  const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);};
- cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.length===3?cfg().recharge.weeks:clone(defaults.recharge.weeks)).slice(0,3).map(normalizeWeek);
+ const legacyGifts=['科研配色模板包','矢量图导出体验'];
+cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.length===3?cfg().recharge.weeks.map((week,i)=>legacyGifts.includes(week.name)?clone(defaults.recharge.weeks[i]):week):clone(defaults.recharge.weeks)).slice(0,3).map(normalizeWeek);
  if(s.pass)s.pass.weeks=(Array.isArray(s.pass.weeks)&&s.pass.weeks.length===3?s.pass.weeks:clone(cfg().recharge.weeks)).slice(0,3).map(normalizeWeek);
  s.perks.forEach(p=>{if(!p.totalUses){p.totalUses=1;p.usedUses=p.used?1:0;}p.used=p.usedUses>=p.totalUses;});
  let activePerkId=null;
@@ -32,10 +33,12 @@
   const perk=perkId?s.perks.find(p=>p.id===perkId&&perkRemaining(p)>0):null;
   if(perkId&&!perk){toast('这份权益次数已用完。');return;}
   activePerkId=perk?.id||null;
-  const palette=perk?.kind==='palette';
-  const art=palette?`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 270"><rect width="580" height="270" fill="white"/><text x="34" y="40" font-size="18" fill="#344454">Research color palette</text>${['#699bb8','#e79a5e','#92b29e','#ae9bc3','#d0ad6d'].map((c,i)=>`<rect x="${34+i*104}" y="72" width="90" height="118" rx="8" fill="${c}"/><text x="${79+i*104}" y="216" text-anchor="middle" font-size="13" fill="#53616f">${c}</text>`).join('')}</svg>`:trialSvg();
+  const palette=perk?.kind==='palette',ai=perk?.kind==='ai',expert=perk?.kind==='expert';
+  const aiArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">AI Research Report</text><rect x="40" y="72" width="500" height="14" rx="7" fill="#dce3e8"/><rect x="40" y="100" width="360" height="14" rx="7" fill="#e9edf1"/><rect x="40" y="138" width="180" height="112" rx="10" fill="#fff3e4" stroke="#f0d8b6"/><rect x="240" y="138" width="140" height="112" rx="10" fill="#eef6ff" stroke="#d7e7f5"/><rect x="400" y="138" width="140" height="112" rx="10" fill="#f0f7f2" stroke="#d7e9dc"/><text x="130" y="202" text-anchor="middle" font-size="14" fill="#b17b40">Result</text><text x="310" y="202" text-anchor="middle" font-size="14" fill="#3f7cae">Insight</text><text x="470" y="202" text-anchor="middle" font-size="14" fill="#328365">Next</text></svg>`;
+  const expertArt=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300"><rect width="580" height="300" fill="white"/><text x="40" y="46" font-size="18" fill="#344454">Before → Journal-ready</text><rect x="40" y="78" width="220" height="150" rx="10" fill="#f4f6f8" stroke="#dfe5eb"/><path d="M66 198h150M66 108v90" stroke="#b6c0c9"/><circle cx="100" cy="150" r="6" fill="#c9d2d8"/><circle cx="130" cy="172" r="6" fill="#c9d2d8"/><circle cx="170" cy="132" r="6" fill="#c9d2d8"/><text x="150" y="250" text-anchor="middle" font-size="12" fill="#90a0ac">原始图</text><rect x="320" y="78" width="220" height="150" rx="10" fill="#fff6ec" stroke="#f0d8b6"/><path d="M346 198h150M346 108v90" stroke="#d8b98d"/><circle cx="386" cy="146" r="7" fill="#e79a5e"/><circle cx="422" cy="168" r="7" fill="#699bb8"/><circle cx="466" cy="128" r="7" fill="#92b29e"/><text x="430" y="250" text-anchor="middle" font-size="12" fill="#b17b40">专家美化图</text></svg>`;
+  const art=palette?`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 270"><rect width="580" height="270" fill="white"/><text x="34" y="40" font-size="18" fill="#344454">Research color palette</text>${['#699bb8','#e79a5e','#92b29e','#ae9bc3','#d0ad6d'].map((c,i)=>`<rect x="${34+i*104}" y="72" width="90" height="118" rx="8" fill="${c}"/><text x="${79+i*104}" y="216" text-anchor="middle" font-size="13" fill="#53616f">${c}</text>`).join('')}</svg>`:ai?aiArt:expert?expertArt:trialSvg();
   const remaining=perk?perkRemaining(perk):0;
-  openModal(perk?.name||'示例绘图体验',`<p class="supply-modal-note">${esc(perk?.desc||'')}</p><div class="supply-chart" id="supply-chart">${art}</div><p class="supply-modal-note">${perk?`本次消耗 1 次使用额度 · 剩余 ${remaining}/${perk.totalUses} 次。`:'当前为免费示例，用于体验操作流程。'}</p><div class="modal-actions">${button('export',palette?'下载配色模板':'导出示例图，完成体验')}</div>`);
+  openModal(perk?.name||'示例绘图体验',`<p class="supply-modal-note">${esc(perk?.desc||'')}</p><div class="supply-chart" id="supply-chart">${art}</div><p class="supply-modal-note">${perk?`本次消耗 1 次使用额度 · 剩余 ${remaining}/${perk.totalUses} 次。`:'当前为免费示例，用于体验操作流程。'}</p><div class="modal-actions">${button('export',palette?'下载配色模板':ai?'导出分析报告，完成体验':expert?'确认收到美化图，完成体验':'导出示例图，完成体验')}</div>`);
  }
  function exportTrial(){
   const art=$('#supply-chart svg');if(!art)return;
