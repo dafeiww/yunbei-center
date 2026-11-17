@@ -4022,7 +4022,7 @@ document.addEventListener('click',event=>{
  s.weekRules=s.weekRules||{};s.events=s.events||[];s.configHistory=s.configHistory||[];
  const rule=()=>s.weekRules[start()]||cfg().checkin;
  const log=(who,source,kind,amount,reference='')=>s.events.unshift({id:uid('AW'),day:day(),who,source,kind,amount,reference});
- const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);};
+ const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return id;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);return id;};
  const legacyGifts=['科研配色模板包','矢量图导出体验','专家图表美化服务'];
 cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.length===3?cfg().recharge.weeks.map((week,i)=>legacyGifts.includes(week.name)||['expert','consult'].includes(week.kind)?clone(defaults.recharge.weeks[i]):week):clone(defaults.recharge.weeks)).slice(0,3).map(normalizeWeek);
  if(s.pass)s.pass.weeks=(Array.isArray(s.pass.weeks)&&s.pass.weeks.length===3?s.pass.weeks:clone(cfg().recharge.weeks)).slice(0,3).map(normalizeWeek);
@@ -4081,7 +4081,7 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   $('#supply-pass-state').textContent=!s.pass?'未开启':['claimed','expired'].every(v=>[0,1,2].some(i=>passStatus(i)===v))?'已完成':status==='expired'?'部分已过期':'进行中';
   $('#supply-pass-grid').innerHTML=weeks.map((week,i)=>{
    const st=passStatus(i);
-   const action=st==='ready'?button('claim-'+i,'领取权益'):'';
+   const action=st==='ready'?button('claim-open-'+i,'领取权益'):'';
    return `<article class="supply-pass-item status-${st}"><div class="supply-pass-week"><b>${i+1}</b><span>第 ${i+1} 周</span><small>充值后第 ${i*7+1}—${i*7+7} 天</small></div><strong>${esc(week.name)}</strong><p>${esc(week.desc||'')} · 可用 ${week.uses} 次</p><div class="supply-pass-foot"><em>${passLabels[st]}</em>${action}</div></article>`;
   }).join('');
  }
@@ -4104,7 +4104,11 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   </div>`;
  };
  function passStatus(i){if(!s.pass)return 'unpaid';const from=shiftedDay(s.pass.start,i*7),to=shiftedDay(from,6);if(s.pass.claimed.includes(i))return 'claimed';if(day()<from)return 'future';if(day()>to)return 'expired';return s.usage.slice(s.pass.usageStart).some(u=>u.day>=from&&u.day<=to)?'ready':'task';}
- function claim(i){if(passStatus(i)!=='ready')return;s.pass.claimed.push(i);grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');put();renderAll();toast('本周进阶补给已领取，可在“我的科研补给”查看。');}
+ function claimOpen(i){
+  const week=s.pass?.weeks[i],st=passStatus(i);if(!week||st!=='ready')return;
+  openModal('领取第 '+(i+1)+' 周权益',`<div class="supply-award">${esc(week.name)} · 可用 ${week.uses} 次</div><p class="supply-modal-note">${esc(week.desc||'')}</p><p class="supply-modal-note">领取后立即打开对应体验，本次使用会计入权益次数。</p><div class="modal-actions"><button type="button" class="btn" data-supply="close-modal">稍后再领</button><button type="button" class="btn primary" data-supply="claim-confirm-${i}">去使用</button></div>`);
+ }
+ function claim(i){if(passStatus(i)!=='ready')return;const perkId=grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');s.pass.claimed.push(i);put();renderAll();const perk=s.perks.find(p=>p.id===perkId);if(perk&&perkRemaining(perk)>0){useTrial(perkId);toast('已领取，正在打开'+perk.name+'。');}else{toast('本周进阶补给已领取，可在“我的科研补给”查看。');}}
  function friendAdd(){
   if(!cfg().invite.enabled){toast('邀请活动暂未开放。');return;}
   const month=day().slice(0,7);const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(month)).length>=cap){toast('已达到本月有效邀请名额。');return;}
@@ -4153,7 +4157,7 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  pageInfo.recharge[1]='';pageInfo.invite[1]='送同门一份科研见面礼，一起使用，分阶段解锁奖励。';
  function update(){const n=checks().length,currentRule=rule(),enabled=cfg().checkin.enabled,checked=done()||n>=5;$('#wallet-checkin-label').textContent=!enabled?'签到暂未开放':n>=5?'本周已领满':done()?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin').disabled=enabled&&!checked;$('#wallet-checkin').classList.toggle('is-signed',checked);$('#wallet-checkin use').setAttribute('href',checked?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+n+'/5 天 · 已获 '+checks().reduce((v,c)=>v+c.reward,0)+' 云贝';$('#wallet-checkin-bonus').hidden=!enabled||checked;$('#wallet-checkin-bonus').textContent='+'+(rule().rewards[n]||0);$('#wallet-checkin').setAttribute('aria-label',!enabled?'签到暂未开放':checked?'查看本周签到进度':'每日签到领取 '+(currentRule.rewards[n]||0)+' 云贝');$('.wallet-week-link').title='签到 '+currentRule.unlockAt+' 天解锁'+definitions[currentRule.perk].name+'；每周最多 '+currentRule.rewards.reduce((a,b)=>a+b,0)+' 云贝，无需连续';}
  const nativeAll=renderAll;renderAll=function(){nativeAll();update();};
-  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
+  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a==='close-modal')closeModal();else if(a.startsWith('claim-open-'))claimOpen(Number(a.slice(11)));else if(a.startsWith('claim-confirm-')){closeModal();claim(Number(a.slice(14)));}else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
  document.addEventListener('submit',e=>{
   if(e.target.id!=='supply-invite-form')return;e.preventDefault();if(!cfg().invite.enabled)return;
   const data=new FormData(e.target),name=data.get('friend').trim(),account=data.get('account').trim().toLowerCase();if(!name||!account)return;
