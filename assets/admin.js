@@ -8,7 +8,7 @@ function confirmAdminPublish(kind,id){
  closeProductUnitMenu();
  const product=kind==='product',item=(product?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);if(!item)return;
  const quote=product?null:rechargeQuote(id);
- const content=product?`<div class="detail-line"><span>商品名称</span><strong>${esc(item.name)}</strong></div><div class="detail-line"><span>兑换单位</span><strong>${esc(item.unit)}</strong></div><div class="detail-line"><span>所需云贝</span><strong>${fmt(item.price)} 云贝</strong></div>`:`<div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div>`;
+ const content=product?`<div class="detail-line"><span>商品名称</span><strong>${esc(item.name)}</strong></div><div class="detail-line"><span>兑换单位</span><strong>${esc(item.unit||'—')}</strong></div><div class="detail-line"><span>所需云贝</span><strong>${fmt(item.price)} 云贝</strong></div><div class="detail-line"><span>对应金额</span><strong>${money(productAmountCents(item.price))}</strong></div>`:`<div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div>`;
  openModal(product?'确认上架商品':'确认启用充值档位',`<p class="modal-intro">${product?'上架后，用户可以在兑换商城看到并兑换该商品。':'启用后，用户可以在充值页面选择并购买该档位。'}</p>${content}<div class="modal-actions"><button type="button" class="btn" data-action="close">取消</button><button type="button" class="btn primary" id="confirm-admin-publish">${product?'确认上架':'确认启用'}</button></div>`);
  pendingAdminPublish={kind,id};
 }
@@ -48,14 +48,35 @@ function selectProductUnit(unit){
 }
 
 function renderRole(){
- const label=$('#role-switch-label'),nav=$('#tab-admin');
- if(label)label.textContent=isAdmin()?'管理员':'普通用户';
+ const nav=$('#tab-admin');
+ $$('.role-switcher [data-set-role]').forEach(button=>{
+  const selected=button.dataset.setRole===state.role;
+  button.classList.toggle('active',selected);
+  button.setAttribute('aria-pressed',String(selected));
+ });
  if(nav)nav.hidden=!isAdmin();
  const operationsNav=$('#tab-operations');if(operationsNav)operationsNav.hidden=!isAdmin();
+ $$('.sidebar [data-tab]').forEach(item=>{item.hidden=isAdmin()?!['admin','operations'].includes(item.dataset.tab):false;});
  document.body.classList.toggle('is-admin',isAdmin());
 }
 
 function formatZhe(value){const n=Math.round(Number(value)*10)/10;return `${Number.isInteger(n)?n:n.toFixed(1)}折`;}
+function productAmountCents(price){return Math.max(0,Math.round((Number(price)||0)*10));}
+function focusAdminProductRow(id){
+ const row=$(`[data-product-row="${CSS.escape(id)}"]`);
+ if(!row)return;
+ row.classList.add('admin-new-row');
+ row.scrollIntoView({behavior:'smooth',block:'center'});
+ setTimeout(()=>row.classList.remove('admin-new-row'),2200);
+}
+function focusAdminPlanRow(id){
+ const row=$(`[data-plan-row="${CSS.escape(id)}"]`);
+ if(!row)return;
+ row.classList.add('admin-new-row');
+ row.scrollIntoView({behavior:'smooth',block:'center'});
+ setTimeout(()=>row.classList.remove('admin-new-row'),2200);
+}
+function updateProductPriceBinding(){const price=Math.max(0,Math.round(Number($('#product-price')?.value)||0));const moneyInput=$('#product-money');if(moneyInput)moneyInput.value=(productAmountCents(price)/100).toFixed(2);}
 
 function syncAdminView(){
  $$('[data-admin-view]').forEach(b=>b.classList.toggle('active',b.dataset.adminView===adminView));
@@ -86,34 +107,34 @@ function renderAdminLists(){
  const plans=$('#admin-plan-list'),shop=$('#admin-shop-list');
  if(!plans||!shop)return;
  const planCount=$('#admin-plan-count'),productCount=$('#admin-product-count');
- if(planCount)planCount.textContent=`${state.config.rechargePlans.length} 条`;
+ if(planCount)planCount.textContent=`${state.config.rechargePlans.filter(p=>p.enabled!==false).length}/${state.config.rechargePlans.length} 条`;
  if(productCount)productCount.textContent=`${state.config.catalog.length} 条`;
 
  const planHeader=`<div class="admin-list-header recharge-header"><span>充值金额(原价)</span><span>云贝</span><span>赠送云贝</span><span>折扣</span><span>实付金额</span><span>获得云贝</span><span>状态 / 操作</span></div>`;
  plans.innerHTML=planHeader+(state.config.rechargePlans.map(p=>{
   const quote=rechargeQuote(p.id),enabled=p.enabled!==false;
   return `
-  <article class="admin-item-row plan-row ${enabled?'':'disabled'}">
-    <div class="admin-list-cell primary"><strong>¥${p.yuan}</strong></div>
+  <article class="admin-item-row plan-row ${enabled?'':'disabled'}" data-plan-row="${esc(p.id)}">
+    <div class="admin-list-cell primary"><strong>¥${p.yuan}</strong><small>${enabled?'用户端显示':'用户端隐藏'}</small></div>
     <div class="admin-list-cell"><b>${fmt(quote.principal)}</b></div>
     <div class="admin-list-cell"><b>${fmt(quote.bonus)}</b></div>
     <div class="admin-list-cell"><b>${formatZhe(quote.discountZhe)}</b></div>
     <div class="admin-list-cell"><b>${money(quote.paidCents)}</b></div>
     <div class="admin-list-cell total"><b class="num">${fmt(quote.total)}</b></div>
     <div class="admin-row-actions">
-      <label class="admin-switch" aria-label="${enabled?'关闭充值档位':'启用充值档位'}"><input type="checkbox" data-admin-plan-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'启用':'关闭'}</em></label>
+      <label class="admin-switch" aria-label="${enabled?'隐藏充值档位':'显示充值档位'}"><input type="checkbox" data-admin-plan-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'显示':'隐藏'}</em></label>
       <button type="button" class="table-action danger" data-admin-delete-plan="${esc(p.id)}">删除</button>
     </div>
   </article>`;
  }).join('')||'<div class="admin-empty">暂无充值档位，请在上方添加。</div>');
 
- shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${state.config.catalog.map(p=>{
+ shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝 / 金额</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${state.config.catalog.map(p=>{
   const enabled=p.enabled!==false;
   return `<tr data-product-row="${esc(p.id)}" class="${enabled?'':'product-offline'}">
    <td><div class="admin-table-cover">${p.cover?`<img src="${esc(p.cover)}" alt="${esc(p.name)} 封面">`:`${icon(p.icon||'gift')}<span>默认封面</span>`}</div></td>
    <td class="admin-product-name">${esc(p.name)}</td>
-   <td>${esc(p.category)}</td><td>${esc(p.unit||'份')}</td>
-   <td class="num admin-product-price">${fmt(p.price)}<small>云贝</small></td>
+   <td>${esc(p.category)}</td><td>${esc(p.unit||'—')}</td>
+   <td class="num admin-product-price">${fmt(p.price)}<small>云贝 / ${money(productAmountCents(p.price))}</small></td>
    <td><label class="admin-switch"><input type="checkbox" aria-label="${enabled?'下架':'上架'} ${esc(p.name)}" data-admin-product-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'上架':'下架'}</em></label></td>
    <td><button type="button" class="table-action danger" data-admin-delete-product="${esc(p.id)}" aria-label="删除 ${esc(p.name)}">删除</button></td>
   </tr>`;
@@ -129,7 +150,7 @@ function readAdminPlanForm(source='paid'){
  const yuanCents=Math.round(yuan*100);
  const effectiveZhe=source==='discount'?discountZhe:yuanCents>0?Math.round((paidCents/yuanCents)*100)/10:0;
  const valid=yuan>=1&&paidCents>0&&effectiveZhe>=1&&effectiveZhe<=9;
- return {yuan,paid:paidCents/100,bonus:Math.max(0,Math.round(Number($('#plan-bonus')?.value)||0)),paidCents,discountZhe:effectiveZhe,valid};
+ return {yuan,paid:paidCents/100,bonus:bonusByRatio(Math.round(yuan*10)),paidCents,discountZhe:effectiveZhe,valid};
 }
 
 function updateAdminPlanForm(source='paid'){
@@ -146,6 +167,7 @@ function updateAdminPlanForm(source='paid'){
    alert.hidden=false;
   }else alert.hidden=true;
  }
+ const ratio=$('#plan-bonus');if(ratio)ratio.value=String(rechargeBonusRatio());
  const preview=$('#admin-plan-preview');if(preview)preview.innerHTML=`<span>合计到账<strong class="num">${fmt(Math.round(data.yuan*10)+data.bonus)}</strong><small>云贝</small></span><span>实付<strong class="num">${money(data.paidCents)}</strong></span>`;
  if(button)button.disabled=!data.valid;
 }
@@ -154,7 +176,7 @@ function resetAdminPlanForm(){
  const yuan=$('#plan-yuan'),paid=$('#plan-paid'),bonus=$('#plan-bonus'),discount=$('#plan-discount');
  if(yuan)yuan.value='10';
  if(paid)paid.value='8';
- if(bonus)bonus.value='0';
+ if(bonus)bonus.value=String(rechargeBonusRatio());
  if(discount)discount.value='8';
  updateAdminPlanForm('paid');
 }
@@ -182,7 +204,7 @@ function readAdminProductForm(){
 
 function resetAdminProductForm(category='存储空间'){
  const set=(id,value)=>{const el=$('#'+id);if(el)el.value=value;};
- set('product-name','');set('product-price','');set('product-unit','份');closeProductUnitMenu();
+ set('product-name','');set('product-price','');set('product-unit','');closeProductUnitMenu();updateProductPriceBinding();
  const select=$('#product-category');if(select&&[...select.options].some(o=>o.value===category))select.value=category;const categoryNew=$('#product-category-new');if(categoryNew){categoryNew.hidden=true;categoryNew.value='';}
  adminShopCover='';
  const preview=$('#admin-shop-cover-preview'),state=$('#admin-shop-cover-state');
@@ -207,9 +229,9 @@ document.addEventListener('submit',event=>{
   event.preventDefault();
   const data=readAdminPlanForm();
   if(!data.valid){updateAdminPlanForm('paid');showAdminAlert('admin-plan-alert','请检查充值金额和实付金额，折扣需在 1–9 折之间。');return;}
-  if(state.config.rechargePlans.length>=6){toast('最多可添加 6 个充值档位。');return;}
-  state.config.rechargePlans.push({id:uid('P'),yuan:data.yuan,principal:Math.round(data.yuan*10),bonus:data.bonus,discountZhe:data.discountZhe,paidCents:data.paidCents,enabled:false});
-  persist();applyConfig();renderAdmin();renderAll();resetAdminPlanForm();toast('充值档位已保存，暂未启用。');
+  const planId=uid('P');
+  state.config.rechargePlans.push({id:planId,yuan:data.yuan,principal:Math.round(data.yuan*10),bonus:data.bonus,discountZhe:data.discountZhe,paidCents:data.paidCents,enabled:false});
+  persist();applyConfig();renderAdmin();renderAll();resetAdminPlanForm();focusAdminPlanRow(planId);toast('充值档位已保存，暂未启用。');
   return;
  }
  if(event.target.id==='admin-product-form'){
@@ -217,13 +239,24 @@ document.addEventListener('submit',event=>{
   const d=readAdminProductForm();
   if(!d.name){showAdminAlert('admin-product-alert','请填写权益名称。');return;}
   if(!Number.isSafeInteger(d.price)||d.price<1){showAdminAlert('admin-product-alert','所需云贝需填写大于 0 的整数。');return;}
-  if(!d.unit){showAdminAlert('admin-product-alert','请选择或输入兑换单位。');return;}
+  $('#product-unit')?.classList.remove('admin-invalid');
+  $('#product-unit')?.removeAttribute('aria-invalid');
+  const productId=uid('P');
   state.config.catalog.push({
-   id:uid('P'),name:d.name,category:d.category,price:d.price,unit:d.unit,
+   id:productId,name:d.name,category:d.category,price:d.price,unit:d.unit,
    cover:adminShopCover,enabled:false,kind:'generic',icon:'gift',color:'peach',
    badge:d.category||'权益扩展'
   });
-  persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');toast('商品已保存，暂未上架。');
+  persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');focusAdminProductRow(productId);toast('商品已保存，暂未上架。');
+ }
+});
+
+document.addEventListener('input',event=>{
+ if(event.target.id==='product-price')updateProductPriceBinding();
+ if(event.target.id==='product-unit'){
+  event.target.classList.remove('admin-invalid');
+  event.target.removeAttribute('aria-invalid');
+  showAdminAlert('admin-product-alert','');
  }
 });
 
@@ -232,7 +265,7 @@ document.addEventListener('click',event=>{
   if(!isAdmin()||!pendingAdminPublish)return;
   const {kind,id}=pendingAdminPublish,item=(kind==='product'?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);
   if(!item){closeModal();toast('该记录已不存在，请刷新列表。');return;}
-  item.enabled=true;pendingAdminPublish=null;closeModal();persist();applyConfig();renderAll();toast(kind==='product'?'商品已上架，用户现在可以兑换。':'充值档位已启用，用户现在可以充值。');return;
+  item.enabled=true;pendingAdminPublish=null;closeModal();persist();applyConfig();renderAll();setTab(kind==='product'?'shop':'recharge');toast(kind==='product'?'商品已上架，用户现在可以兑换。':'充值档位已启用，用户现在可以充值。');return;
  }
  const viewBtn=event.target.closest('[data-admin-view]');
  if(viewBtn){closeProductUnitMenu();adminView=viewBtn.dataset.adminView;syncAdminView();return;}
@@ -269,7 +302,7 @@ document.addEventListener('change',event=>{
  if(planSwitch){
   const plan=state.config.rechargePlans.find(p=>p.id===planSwitch.dataset.adminPlanEnabled);
   if(plan&&planSwitch.checked){planSwitch.checked=false;confirmAdminPublish('plan',plan.id);return;}
-  if(plan){plan.enabled=planSwitch.checked;persist();applyConfig();renderAdminLists();renderAll();toast(plan.enabled?'充值档位已启用。':'充值档位已关闭。');}
+  if(plan){plan.enabled=planSwitch.checked;persist();applyConfig();renderAdminLists();renderAll();toast(plan.enabled?'充值档位已显示。':'充值档位已隐藏。');}
   return;
  }
  const productSwitch=event.target.closest('[data-admin-product-enabled]');

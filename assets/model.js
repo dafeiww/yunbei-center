@@ -22,7 +22,7 @@ const defaultRechargePlans=()=>[{id:'p10',yuan:10,principal:100,bonus:0,discount
 const defaultCatalog=()=>[{id:'storage',name:'50 GB 云存储扩容包',category:'存储空间',price:400,desc:'给数据、图表和分析结果更多空间',duration:'365 天有效',kind:'storage',days:365,amount:50,unit:'GB',badge:'空间扩容',icon:'storage',color:'blue',cover:''},{id:'share',name:'项目分享 +5 人扩容包',category:'项目分享',price:500,desc:'为项目增加 5 个可邀请成员席位',duration:'365 天有效',kind:'share',days:365,amount:5,unit:'人',badge:'团队扩展',icon:'users',color:'peach'},skillBundleProduct()];
 let rechargeDiscountPercent=80;
 function syncCatalog(){Object.keys(productsById).forEach(key=>{delete productsById[key];});Object.assign(productsById,Object.fromEntries(catalog.map(p=>[p.id,p])));}
-function applyConfig(){const cfg=state.config||{};const rawPlans=Array.isArray(cfg.rechargePlans)&&cfg.rechargePlans.length?cfg.rechargePlans:defaultRechargePlans();const plans=rawPlans.map(p=>({...p,principal:Math.max(0,Math.round((Number(p.yuan)||0)*10)),bonus:Number.isFinite(Number(p.bonus))?Math.max(0,Math.round(Number(p.bonus))):Math.max(0,Math.round((Number(p.yuan)||0)*10*(Number(p.bonusPercent)||0)/100)),discountZhe:Number(p.discountZhe)!==undefined&&p.discountZhe!==''&&Number.isFinite(Number(p.discountZhe))?Math.min(9,Math.max(1,Number(p.discountZhe))):Number(p.discountPercent)!==undefined&&p.discountPercent!==''&&Number.isFinite(Number(p.discountPercent))?(Number(p.discountPercent)>9?Math.min(9,Math.max(1,Math.round(Number(p.discountPercent)/10))):Math.min(9,Math.max(1,Number(p.discountPercent)))):8,enabled:p.enabled!==false}));const shop=(Array.isArray(cfg.catalog)?cfg.catalog:defaultCatalog()).map(p=>({...p,unit:p.unit==='可叠加扩容'?'GB':p.unit==='+5 个分享席位'?'人':p.unit}));const customCategories=Array.isArray(cfg.customCategories)?cfg.customCategories.map(v=>String(v||'').trim()).filter(Boolean):[];state.config={...cfg,rechargePlans:plans,catalog:shop,customCategories};RECHARGE_PLANS.length=0;RECHARGE_PLANS.push(...plans);catalog.length=0;catalog.push(...shop);syncCatalog();}
+function applyConfig(){const cfg=state.config||{};const rawPlans=Array.isArray(cfg.rechargePlans)&&cfg.rechargePlans.length?cfg.rechargePlans:defaultRechargePlans();const bonusRatio=Math.min(200,Math.max(0,Math.round(Number(cfg.rechargeBonusRatio??10)||0)));const plans=rawPlans.map(p=>{const principal=Math.max(0,Math.round((Number(p.yuan)||0)*10));return {...p,principal,bonus:Math.max(0,Math.round(principal*bonusRatio/100)),discountZhe:Number(p.discountZhe)!==undefined&&p.discountZhe!==''&&Number.isFinite(Number(p.discountZhe))?Math.min(9,Math.max(1,Number(p.discountZhe))):Number(p.discountPercent)!==undefined&&p.discountPercent!==''&&Number.isFinite(Number(p.discountPercent))?(Number(p.discountPercent)>9?Math.min(9,Math.max(1,Math.round(Number(p.discountPercent)/10))):Math.min(9,Math.max(1,Number(p.discountPercent)))):8,enabled:p.enabled!==false};});const shop=(Array.isArray(cfg.catalog)?cfg.catalog:defaultCatalog()).map(p=>({...p,unit:p.unit==='可叠加扩容'?'GB':p.unit==='+5 个分享席位'?'人':p.unit}));const customCategories=Array.isArray(cfg.customCategories)?cfg.customCategories.map(v=>String(v||'').trim()).filter(Boolean):[];state.config={...cfg,rechargeBonusRatio:bonusRatio,rechargePlans:plans,catalog:shop,customCategories};RECHARGE_PLANS.length=0;RECHARGE_PLANS.push(...plans);catalog.length=0;catalog.push(...shop);syncCatalog();}
 
 const seed=()=>({version:1,balance:3000,earned:4000,spent:1000,lastCheckin:'',checkins:[],orders:[
  {id:'YB202610190002',kind:'exchange',productId:'storage',name:'50 GB 云存储扩容包',price:400,created:'2026-10-19T09:42:00+08:00',expires:'2027-10-19T09:42:00+08:00'},
@@ -32,7 +32,7 @@ const seed=()=>({version:1,balance:3000,earned:4000,spent:1000,lastCheckin:'',ch
  {id:'L002',label:'兑换高级图表通行证',delta:-600,balance:3400,created:'2026-10-19T09:30:00+08:00',orderId:'YB202610190001',source:'exchange',category:'高级图表'},
  {id:'L001',label:'历史账户云贝入账',delta:4000,balance:4000,created:'2026-10-18T10:00:00+08:00',orderId:'—',source:'legacy'}
 ]});
-const defaultConfig=()=>({discountZhe:8,rechargePlans:defaultRechargePlans(),catalog:defaultCatalog()});
+const defaultConfig=()=>({discountZhe:8,rechargeBonusRatio:10,rechargePlans:defaultRechargePlans(),catalog:defaultCatalog()});
 let state;
 try{const saved=JSON.parse(localStorage.getItem(STORE));state=saved?.version===1&&Array.isArray(saved.orders)&&Array.isArray(saved.ledger)&&Number.isFinite(saved.balance)&&saved.balance>=0?saved:seed();}catch{state=seed();}
 let activeTab='recharge',category='全部权益',sortMode=0,orderStatus='all',orderPage=1,ledgerFilter='all',ledgerSource='all',ledgerPage=1,invoiceFilter='all',invoicePage=1,rechargePage=1;
@@ -60,11 +60,13 @@ const firstRechargeAvailable=()=>true;
 const sourceLabel=source=>({recharge:'充值得云贝',checkin:'签到得云贝',invite:'邀请好友得云贝',drawing:'云贝绘图',exchange:'权益兑换',legacy:'历史入账'}[source]||'云贝变动');
 function weekStart(key=today()){const d=new Date(key+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10);}
 function uid(prefix){return prefix+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase();}
+function rechargeBonusRatio(){return Math.min(200,Math.max(0,Math.round(Number(state.config?.rechargeBonusRatio??10)||0)));}
+function bonusByRatio(principal){return Math.max(0,Math.round((Number(principal)||0)*rechargeBonusRatio()/100));}
 function rechargeQuote(planId=selectedPlan){
- if(planId==='custom'){const yuan=Math.max(0,Math.min(100000,Math.floor(Number(customRechargeAmount)||0)));return {planId:'custom',first:true,discountZhe:8,faceCents:yuan*100,paidCents:Math.round(yuan*80),principal:yuan*10,bonus:0,total:yuan*10};}
- const plan=RECHARGE_PLANS.find(p=>p.id===planId);if(!plan)return null;
+ if(planId==='custom'){const yuan=Math.max(0,Math.min(100000,Math.floor(Number(customRechargeAmount)||0))),principal=yuan*10,bonus=bonusByRatio(principal);return {planId:'custom',first:true,discountZhe:8,faceCents:yuan*100,paidCents:Math.round(yuan*80),principal,bonus,total:principal+bonus};}
+  const plan=RECHARGE_PLANS.find(p=>p.id===planId);if(!plan)return null;
  const first=true,discountZhe=Number.isFinite(Number(plan.discountZhe))?Math.min(9,Math.max(1,Number(plan.discountZhe))):8,faceCents=plan.yuan*100,paidCents=Number.isFinite(Number(plan.paidCents))?Math.max(0,Math.round(Number(plan.paidCents))):Math.round(faceCents*discountZhe/10);
- const principal=Math.max(1,Math.round((Number(plan.yuan)||0)*10)),bonus=Math.max(0,Math.round(Number(plan.bonus)||0));
+ const principal=Math.max(1,Math.round((Number(plan.yuan)||0)*10)),bonus=bonusByRatio(principal);
  return {planId,first,discountZhe,faceCents,paidCents,principal,bonus,total:principal+bonus};
 }
 function prepareState(){

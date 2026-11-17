@@ -202,3 +202,24 @@
  .sidebar .module-nav-parent,.sidebar .admin-parent{min-height:48px;padding:0 16px}
  .sidebar .module-nav-item,.sidebar .admin-nav{min-height:44px}
 }
+
+/* First recharge three-week supply below recharge layout */
+.supply-pass-card{margin-top:20px;padding:24px}
+.supply-pass-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
+.supply-pass-head h3{margin:5px 0 6px;font-size:19px;color:#34445a}
+.supply-pass-head p{margin:0;color:#7b8b99;font-size:12px}
+.supply-pass-state{flex-shrink:0;padding:6px 10px;border-radius:6px;background:#fff1df;border:1px solid #edc9a1;color:#9c5a23;font-size:11px}
+.supply-pass-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.supply-pass-item{min-width:0;padding:18px;border:1px solid #e7e9ed;border-radius:10px;background:#fcfcfd}
+.supply-pass-item.status-ready{background:#f4fbff;border-color:#a6d9ff}
+.supply-pass-item.status-ready em{color:#0b8ff0}
+.supply-pass-item.status-claimed{background:#f7fbf8;border-color:#d7e7dc}
+.supply-pass-week{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.supply-pass-week b{display:grid;place-items:center;width:24px;height:24px;border-radius:6px;background:#ffe5c5;color:#a4551e;font-size:12px}
+.supply-pass-week span{color:#425666;font-weight:600;font-size:14px}
+.supply-pass-week small{margin-left:auto;color:#8895a3;font-size:10px}
+.supply-pass-item strong{display:block;color:#35455a;font-size:15px}
+.supply-pass-item p{margin:6px 0 14px;color:#7f8c99;font-size:12px;line-height:1.7}
+.supply-pass-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #e9ecef;padding-top:12px}
+.supply-pass-foot em{font-style:normal;color:#9c5a23;font-size:11px}
+@media(max-width:900px){.supply-pass-grid{grid-template-columns:1fr}.supply-pass-head{flex-direction:column}.supply-pass-state{align-self:flex-start}}

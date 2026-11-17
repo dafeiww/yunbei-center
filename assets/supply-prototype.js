@@ -61,8 +61,22 @@
  rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),exhausted=stage>=3,zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:d.first;return {...q,first:stage===0,rechargeStage:stage,discountExhausted:exhausted,discountZhe:zhe,paidCents:Math.round(q.faceCents*zhe/10)};};
  const nativeComplete=completeRecharge;
  completeRecharge=function(q){const order=nativeComplete(q);if(order){if(order.bonus){state.wallet.paid-=order.bonus;state.wallet.reward+=order.bonus;const row=state.ledger.find(r=>r.orderId===order.id&&r.label==='充值赠送云贝');if(row)row.source='bonus';}if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
+ const passLabels={unpaid:'首充后开启',future:'待开启',task:'完成使用后可领',ready:'可领取',claimed:'已领取',expired:'已过期'};
+ function renderRechargePass(){
+  const card=$('#supply-recharge-pass');if(!card)return;
+  const enabled=cfg().recharge.enabled,weeks=s.pass?s.pass.weeks:cfg().recharge.weeks;
+  card.hidden=!enabled;
+  if(!enabled)return;
+  const status=s.pass?passStatus(0):'unpaid';
+  $('#supply-pass-state').textContent=!s.pass?'未开启':['claimed','expired'].every(v=>[0,1,2].some(i=>passStatus(i)===v))?'已完成':status==='expired'?'部分已过期':'进行中';
+  $('#supply-pass-grid').innerHTML=weeks.map((week,i)=>{
+   const st=passStatus(i);
+   const action=st==='ready'?button('claim-'+i,'领取权益'):'';
+   return `<article class="supply-pass-item status-${st}"><div class="supply-pass-week"><b>${i+1}</b><span>第 ${i+1} 周</span><small>充值后第 ${i*7+1}—${i*7+7} 天</small></div><strong>${esc(week.name)}</strong><p>${esc(week.desc||'')} · 可用 ${week.uses} 次</p><div class="supply-pass-foot"><em>${passLabels[st]}</em>${action}</div></article>`;
+  }).join('');
+ }
  const nativeRecharge=renderRecharge;
- renderRecharge=function(){nativeRecharge();const heading=$('.recharge-plans-surface .surface-heading');let ladder=$('#supply-discount-ladder');if(heading&&!ladder){heading.insertAdjacentHTML('afterend','<div class="supply-discount-ladder" id="supply-discount-ladder"></div>');ladder=$('#supply-discount-ladder');}const q=rechargeQuote();if(!q)return;const d=rechargeDiscounts();let stages=[];if(q.rechargeStage===1)stages=[['第2次',d.second],['第3次起',d.later]];if(ladder){ladder.style.display=stages.length&&!q.discountExhausted?'':'none';ladder.innerHTML=stages.map(([name,zhe],i)=>`<span class="${(q.rechargeStage===1&&i===0)||(q.rechargeStage===2&&i===1)?'active':''}"><small>${name}</small><b>${formatZhe(zhe)}</b></span>`).join('');}$('#plans-offer-title').textContent=q.discountExhausted?'充值':(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+formatZhe(q.discountZhe)+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');$('#checkout-first-tag').textContent=(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+q.discountZhe+' 折';$('.quote-discount').hidden=q.discountZhe>=10||q.discountExhausted;$('#checkout-first-tag').hidden=q.discountExhausted;$$('.plan-rate').forEach(e=>e.hidden=q.discountExhausted);};
+ renderRecharge=function(){nativeRecharge();const heading=$('.recharge-plans-surface .surface-heading');let ladder=$('#supply-discount-ladder');if(heading&&!ladder){heading.insertAdjacentHTML('afterend','<div class="supply-discount-ladder" id="supply-discount-ladder"></div>');ladder=$('#supply-discount-ladder');}const q=rechargeQuote();if(!q)return;const d=rechargeDiscounts();let stages=[];if(q.rechargeStage===1)stages=[['第2次',d.second],['第3次起',d.later]];if(ladder){ladder.style.display=stages.length&&!q.discountExhausted?'':'none';ladder.innerHTML=stages.map(([name,zhe],i)=>`<span class="${(q.rechargeStage===1&&i===0)||(q.rechargeStage===2&&i===1)?'active':''}"><small>${name}</small><b>${formatZhe(zhe)}</b></span>`).join('');}$('#plans-offer-title').textContent=q.discountExhausted?'充值':(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+formatZhe(q.discountZhe)+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');$('#checkout-first-tag').textContent=(q.first?'首充 ':q.rechargeStage===1?'第2次 ':'复充 ')+q.discountZhe+' 折';$('.quote-discount').hidden=q.discountZhe>=10||q.discountExhausted;$('#checkout-first-tag').hidden=q.discountExhausted;$$('.plan-rate').forEach(e=>e.hidden=q.discountExhausted);renderRechargePass();};
  const nativePay=payRecharge;
  payRecharge=function(){
   const previousOrder=state.recharges[0]?.id,previousPass=s.pass;

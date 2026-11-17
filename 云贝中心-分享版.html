@@ -465,7 +465,7 @@ body:has(#panel-admin:not([hidden])) .page-head{display:none!important}
 .admin-list-cell{min-width:0;display:grid;gap:2px}
 .admin-list-cell span{color:#87979f;font-size:10px}
 .admin-list-cell b{color:#41586a;font-size:13px}
-.admin-list-cell.primary strong{font-size:15px;color:#33475a}
+.admin-list-cell.primary strong{font-size:15px;color:#33475a}.admin-list-cell.primary small{display:block;margin-top:4px;font-size:10px;color:#8d99a5}
 .admin-list-cell.total b.num{font-size:16px;color:#b45a22}
 .admin-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
 .admin-row-actions .admin-switch{width:auto;min-width:82px;min-height:32px;padding:3px 8px;border-radius:8px}
@@ -1320,6 +1320,10 @@ textarea:focus-visible {
   <div class="recharge-layout"><div class="wallet recharge-wallet"><div class="wallet-inner"><div class="wallet-label"><img class="wallet-brand-coin" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTYgMTA0IiBmaWxsPSJub25lIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0icmltIiB4MT0iMjciIHkxPSIyIiB4Mj0iODIiIHkyPSIxMDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZmMWJkIi8+PHN0b3Agb2Zmc2V0PSIuNDgiIHN0b3AtY29sb3I9IiNmZmU1YTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmN2M2NmMiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZXZlbCIgeDE9IjU4IiB5MT0iMTMiIHgyPSI1OCIgeTI9IjkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI2Y1YzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZDc4NCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZhY2UiIHgxPSIzNiIgeTE9IjIwIiB4Mj0iNzYiIHkyPSI4NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU5YWEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmRjODgiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0aWNrIiB4MT0iNDUiIHkxPSI0OCIgeDI9Ijc2IiB5Mj0iNjgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZjZiMzY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWU5NjQyIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTU4IDRDMjkgNCA3IDI4IDMgNTJjLTIgMTIgMiAxOSAxMyAyNmwzMSAyMWM3IDUgMTUgNSAyMiAwbDMxLTIxYzExLTcgMTUtMTQgMTMtMjZDMTA5IDI4IDg3IDQgNTggNFoiIGZpbGw9IiNlYWIxNWIiLz4KICA8cGF0aCBkPSJNNTggMkMyOSAyIDcgMjYgMyA1MGMtMiAxMiAyIDE5IDEzIDI2bDMxIDIxYzcgNSAxNSA1IDIyIDBsMzEtMjFjMTEtNyAxNS0xNCAxMy0yNkMxMDkgMjYgODcgMiA1OCAyWiIgZmlsbD0idXJsKCNyaW0pIiBzdHJva2U9IiNmZmYwYjkiIHN0cm9rZS13aWR0aD0iMS40Ii8+CiAgPHBhdGggZD0iTTU4IDEyYy0yNCAwLTQzIDIwLTQ3IDQwLTIgMTAgMiAxNSAxMCAyMWwyOSAxOWM1IDQgMTEgNCAxNiAwbDI5LTE5YzgtNiAxMi0xMSAxMC0yMS00LTIwLTIzLTQwLTQ3LTQwWiIgZmlsbD0idXJsKCNiZXZlbCkiLz4KICA8cGF0aCBkPSJNNTggMjBjLTIwIDAtMzYgMTctNDAgMzQtMiA3IDEgMTEgNyAxNWwyNyAxOGM0IDMgOCAzIDEyIDBsMjctMThjNi00IDktOCA3LTE1LTQtMTctMjAtMzQtNDAtMzRaIiBmaWxsPSJ1cmwoI2ZhY2UpIi8+CiAgPHBhdGggZD0iTTIwIDYzYy0zLTQtMy04LTEtMTQgNS0xNiAyMC0yOSAzOS0yOSIgc3Ryb2tlPSIjZmZmM2NiIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0ibTQ1IDUwIDEwIDEwIDIwLTIxIiBzdHJva2U9InVybCgjdGljaykiIHN0cm9rZS13aWR0aD0iNi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="" aria-hidden="true">我的可用云贝</div><div class="balance-row"><strong class="num" id="balance">3,000</strong><span>云贝</span></div><div class="wallet-breakdown"><span>充值余额<b class="num" id="wallet-paid">0</b></span><span>奖励云贝<b class="num" id="wallet-reward">3,000</b></span></div><div class="wallet-under"><button class="btn primary" id="wallet-checkin" data-action="checkin" aria-label="每日签到领取 5 云贝"><svg class="icon"><use href="#i-gift"></use></svg><span id="wallet-checkin-label">签到领云贝</span><span class="checkin-bonus" id="wallet-checkin-bonus">+5</span></button><button class="wallet-link" data-tab="ledger">查看明细<svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="wallet-bottom"><span>累计获得<b class="num" id="earned">4,000</b></span><span class="divider"></span><span>累计使用<b class="num" id="spent">1,000</b></span><span class="divider"></span><button class="wallet-week-link" data-action="earn" aria-label="查看本周累计签到"><span id="wallet-checkin-hint">本周签到 0/7 天</span><svg class="icon"><use href="#i-chevron"></use></svg></button></div></div>
           
         </div><article class="surface recharge-plans-surface"><div class="surface-heading"><div><h3>选择充值档位</h3><p>选择适合你的档位，优惠与赠送一起享</p></div><span class="plans-offer-tag"><b id="plans-offer-title">首充 8 折</b></span></div><div id="recharge-plans" class="recharge-plans" role="group" aria-label="充值档位"></div></article><aside class="surface checkout-summary"><div class="surface-heading"><h3>支付确认</h3><span class="tag" id="checkout-first-tag">充值折扣</span></div><div class="quote-line"><span>充值原价</span><strong id="quote-face">¥100.00</strong></div><div class="quote-line quote-discount"><span>档位优惠</span><strong id="quote-discount">−¥20.00</strong></div><div class="quote-line"><span>云贝</span><strong id="quote-principal">1,000</strong></div><div class="quote-line"><span>额外赠送</span><strong class="positive" id="quote-bonus">+50</strong></div><div class="quote-total"><span>合计到账</span><strong class="num" id="quote-total">1,050<small>云贝</small></strong></div><div class="quote-pay"><span>实付金额</span><strong class="num" id="quote-paid">¥80.00</strong></div><div class="payment-qr-panel"><div class="payment-countdown" id="payment-countdown" aria-live="polite">支付倒计时 05:00</div><div class="payment-qr" id="payment-qr"></div><div class="payment-methods" aria-label="支持的支付方式"><span class="payment-method wechat">微信支付</span><span class="payment-method alipay">支付宝</span></div><p class="payment-qr-method" id="payment-method-label">微信 / 支付宝均可扫码支付</p><button class="btn primary recharge-submit" id="simulate-pay">确认支付</button><p class="payment-demo"></p></div></aside></div>
+<article class="surface supply-pass-card" id="supply-recharge-pass" hidden aria-labelledby="supply-pass-title">
+  <div class="supply-pass-head"><div><span class="supply-kicker">首次充值赠送</span><h3 id="supply-pass-title">三周进阶补给</h3><p>首充成功后自动开启；每周完成一次有效绘图或分析，即可领取当周权益。</p></div><span class="supply-pass-state" id="supply-pass-state">未开启</span></div>
+  <div class="supply-pass-grid" id="supply-pass-grid"></div>
+</article>
 
 </section>
 <section class="page-panel" id="panel-invite" role="region" aria-labelledby="page-title" hidden>
@@ -1353,7 +1357,7 @@ textarea:focus-visible {
             <form id="admin-plan-form" class="admin-add-form" novalidate>
               <label class="admin-line-field"><span class="admin-line-label">充值金额(原价)</span><span class="admin-line-input"><input id="plan-yuan" type="number" min="0" step="1" value="10" required><i>元</i></span><small>套餐的面值</small></label>
               <label class="admin-line-field"><span class="admin-line-label">云贝</span><span class="admin-line-input"><input id="plan-principal" type="number" min="10" step="1" value="100" readonly><i>个</i></span><small class="locked">按原价金额 × 10 计算</small></label>
-              <label class="admin-line-field"><span class="admin-line-label">赠送云贝</span><span class="admin-line-input"><input id="plan-bonus" type="number" min="0" step="1" value="0"><i>个</i></span><small>额外送的，填 0 则不显示</small></label>
+              <label class="admin-line-field"><span class="admin-line-label">赠送比例</span><span class="admin-line-input"><input id="plan-bonus" type="number" min="0" max="200" step="1" value="10" readonly><i>%</i></span><small>全局比例，自动计算赠送</small></label>
               <label class="admin-line-field"><span class="admin-line-label">折扣</span><span class="admin-line-input"><input id="plan-discount" type="number" min="1" max="9" step="0.1" value="8" required><i>折</i></span><small>输入 1–9 折，实付金额自动更新</small></label>
               <label class="admin-line-field"><span class="admin-line-label">实付金额</span><span class="admin-line-input"><input id="plan-paid" type="number" min="0" step="0.01" value="8" required><i>元</i></span><small>输入实付金额，折扣自动更新</small></label>
               <p class="admin-form-alert" id="admin-plan-alert" hidden></p>
@@ -2691,7 +2695,7 @@ const defaultRechargePlans=()=>[{id:'p10',yuan:10,principal:100,bonus:0,discount
 const defaultCatalog=()=>[{id:'storage',name:'50 GB 云存储扩容包',category:'存储空间',price:400,desc:'给数据、图表和分析结果更多空间',duration:'365 天有效',kind:'storage',days:365,amount:50,unit:'GB',badge:'空间扩容',icon:'storage',color:'blue',cover:''},{id:'share',name:'项目分享 +5 人扩容包',category:'项目分享',price:500,desc:'为项目增加 5 个可邀请成员席位',duration:'365 天有效',kind:'share',days:365,amount:5,unit:'人',badge:'团队扩展',icon:'users',color:'peach'},skillBundleProduct()];
 let rechargeDiscountPercent=80;
 function syncCatalog(){Object.keys(productsById).forEach(key=>{delete productsById[key];});Object.assign(productsById,Object.fromEntries(catalog.map(p=>[p.id,p])));}
-function applyConfig(){const cfg=state.config||{};const rawPlans=Array.isArray(cfg.rechargePlans)&&cfg.rechargePlans.length?cfg.rechargePlans:defaultRechargePlans();const plans=rawPlans.map(p=>({...p,principal:Math.max(0,Math.round((Number(p.yuan)||0)*10)),bonus:Number.isFinite(Number(p.bonus))?Math.max(0,Math.round(Number(p.bonus))):Math.max(0,Math.round((Number(p.yuan)||0)*10*(Number(p.bonusPercent)||0)/100)),discountZhe:Number(p.discountZhe)!==undefined&&p.discountZhe!==''&&Number.isFinite(Number(p.discountZhe))?Math.min(9,Math.max(1,Number(p.discountZhe))):Number(p.discountPercent)!==undefined&&p.discountPercent!==''&&Number.isFinite(Number(p.discountPercent))?(Number(p.discountPercent)>9?Math.min(9,Math.max(1,Math.round(Number(p.discountPercent)/10))):Math.min(9,Math.max(1,Number(p.discountPercent)))):8,enabled:p.enabled!==false}));const shop=(Array.isArray(cfg.catalog)?cfg.catalog:defaultCatalog()).map(p=>({...p,unit:p.unit==='可叠加扩容'?'GB':p.unit==='+5 个分享席位'?'人':p.unit}));const customCategories=Array.isArray(cfg.customCategories)?cfg.customCategories.map(v=>String(v||'').trim()).filter(Boolean):[];state.config={...cfg,rechargePlans:plans,catalog:shop,customCategories};RECHARGE_PLANS.length=0;RECHARGE_PLANS.push(...plans);catalog.length=0;catalog.push(...shop);syncCatalog();}
+function applyConfig(){const cfg=state.config||{};const rawPlans=Array.isArray(cfg.rechargePlans)&&cfg.rechargePlans.length?cfg.rechargePlans:defaultRechargePlans();const bonusRatio=Math.min(200,Math.max(0,Math.round(Number(cfg.rechargeBonusRatio??10)||0)));const plans=rawPlans.map(p=>{const principal=Math.max(0,Math.round((Number(p.yuan)||0)*10));return {...p,principal,bonus:Math.max(0,Math.round(principal*bonusRatio/100)),discountZhe:Number(p.discountZhe)!==undefined&&p.discountZhe!==''&&Number.isFinite(Number(p.discountZhe))?Math.min(9,Math.max(1,Number(p.discountZhe))):Number(p.discountPercent)!==undefined&&p.discountPercent!==''&&Number.isFinite(Number(p.discountPercent))?(Number(p.discountPercent)>9?Math.min(9,Math.max(1,Math.round(Number(p.discountPercent)/10))):Math.min(9,Math.max(1,Number(p.discountPercent)))):8,enabled:p.enabled!==false};});const shop=(Array.isArray(cfg.catalog)?cfg.catalog:defaultCatalog()).map(p=>({...p,unit:p.unit==='可叠加扩容'?'GB':p.unit==='+5 个分享席位'?'人':p.unit}));const customCategories=Array.isArray(cfg.customCategories)?cfg.customCategories.map(v=>String(v||'').trim()).filter(Boolean):[];state.config={...cfg,rechargeBonusRatio:bonusRatio,rechargePlans:plans,catalog:shop,customCategories};RECHARGE_PLANS.length=0;RECHARGE_PLANS.push(...plans);catalog.length=0;catalog.push(...shop);syncCatalog();}
 
 const seed=()=>({version:1,balance:3000,earned:4000,spent:1000,lastCheckin:'',checkins:[],orders:[
  {id:'YB202610190002',kind:'exchange',productId:'storage',name:'50 GB 云存储扩容包',price:400,created:'2026-10-19T09:42:00+08:00',expires:'2027-10-19T09:42:00+08:00'},
@@ -2701,7 +2705,7 @@ const seed=()=>({version:1,balance:3000,earned:4000,spent:1000,lastCheckin:'',ch
  {id:'L002',label:'兑换高级图表通行证',delta:-600,balance:3400,created:'2026-10-19T09:30:00+08:00',orderId:'YB202610190001',source:'exchange',category:'高级图表'},
  {id:'L001',label:'历史账户云贝入账',delta:4000,balance:4000,created:'2026-10-18T10:00:00+08:00',orderId:'—',source:'legacy'}
 ]});
-const defaultConfig=()=>({discountZhe:8,rechargePlans:defaultRechargePlans(),catalog:defaultCatalog()});
+const defaultConfig=()=>({discountZhe:8,rechargeBonusRatio:10,rechargePlans:defaultRechargePlans(),catalog:defaultCatalog()});
 let state;
 try{const saved=JSON.parse(localStorage.getItem(STORE));state=saved?.version===1&&Array.isArray(saved.orders)&&Array.isArray(saved.ledger)&&Number.isFinite(saved.balance)&&saved.balance>=0?saved:seed();}catch{state=seed();}
 let activeTab='recharge',category='全部权益',sortMode=0,orderStatus='all',orderPage=1,ledgerFilter='all',ledgerSource='all',ledgerPage=1,invoiceFilter='all',invoicePage=1,rechargePage=1;
@@ -2729,11 +2733,13 @@ const firstRechargeAvailable=()=>true;
 const sourceLabel=source=>({recharge:'充值得云贝',checkin:'签到得云贝',invite:'邀请好友得云贝',drawing:'云贝绘图',exchange:'权益兑换',legacy:'历史入账'}[source]||'云贝变动');
 function weekStart(key=today()){const d=new Date(key+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10);}
 function uid(prefix){return prefix+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase();}
+function rechargeBonusRatio(){return Math.min(200,Math.max(0,Math.round(Number(state.config?.rechargeBonusRatio??10)||0)));}
+function bonusByRatio(principal){return Math.max(0,Math.round((Number(principal)||0)*rechargeBonusRatio()/100));}
 function rechargeQuote(planId=selectedPlan){
- if(planId==='custom'){const yuan=Math.max(0,Math.min(100000,Math.floor(Number(customRechargeAmount)||0)));return {planId:'custom',first:true,discountZhe:8,faceCents:yuan*100,paidCents:Math.round(yuan*80),principal:yuan*10,bonus:0,total:yuan*10};}
- const plan=RECHARGE_PLANS.find(p=>p.id===planId);if(!plan)return null;
+ if(planId==='custom'){const yuan=Math.max(0,Math.min(100000,Math.floor(Number(customRechargeAmount)||0))),principal=yuan*10,bonus=bonusByRatio(principal);return {planId:'custom',first:true,discountZhe:8,faceCents:yuan*100,paidCents:Math.round(yuan*80),principal,bonus,total:principal+bonus};}
+  const plan=RECHARGE_PLANS.find(p=>p.id===planId);if(!plan)return null;
  const first=true,discountZhe=Number.isFinite(Number(plan.discountZhe))?Math.min(9,Math.max(1,Number(plan.discountZhe))):8,faceCents=plan.yuan*100,paidCents=Number.isFinite(Number(plan.paidCents))?Math.max(0,Math.round(Number(plan.paidCents))):Math.round(faceCents*discountZhe/10);
- const principal=Math.max(1,Math.round((Number(plan.yuan)||0)*10)),bonus=Math.max(0,Math.round(Number(plan.bonus)||0));
+ const principal=Math.max(1,Math.round((Number(plan.yuan)||0)*10)),bonus=bonusByRatio(principal);
  return {planId,first,discountZhe,faceCents,paidCents,principal,bonus,total:principal+bonus};
 }
 function prepareState(){
@@ -3210,33 +3216,23 @@ function renderAdminLists(){
  const plans=$('#admin-plan-list'),shop=$('#admin-shop-list');
  if(!plans||!shop)return;
  const planCount=$('#admin-plan-count'),productCount=$('#admin-product-count');
- if(planCount)planCount.textContent=`${state.config.rechargePlans.length} 条`;
+ if(planCount)planCount.textContent=`${state.config.rechargePlans.filter(p=>p.enabled!==false).length}/${state.config.rechargePlans.length} 条`;
  if(productCount)productCount.textContent=`${state.config.catalog.length} 条`;
 
  const planHeader=`<div class="admin-list-header recharge-header"><span>充值金额(原价)</span><span>云贝</span><span>赠送云贝</span><span>折扣</span><span>实付金额</span><span>获得云贝</span><span>状态 / 操作</span></div>`;
- const adminPlans=state.config.rechargePlans.filter(p=>p.id!=='p10').concat([{id:'custom',enabled:true}]);
+ const adminPlans=state.config.rechargePlans;
  plans.innerHTML=planHeader+(adminPlans.map(p=>{
-  if(p.id==='custom')return `
-  <article class="admin-item-row plan-row custom-plan-row" data-plan-row="custom">
-    <div class="admin-list-cell primary"><strong>自定义金额</strong></div>
-    <div class="admin-list-cell"><b>0</b></div>
-    <div class="admin-list-cell"><b>0</b></div>
-    <div class="admin-list-cell"><b>8折</b></div>
-    <div class="admin-list-cell"><b>¥0.00</b></div>
-    <div class="admin-list-cell total"><b class="num">0</b></div>
-    <div class="admin-row-actions"><label class="admin-switch" aria-label="自定义充值已启用"><input type="checkbox" checked disabled><span class="switch-track"><i></i></span><em>启用</em></label></div>
-  </article>`;
   const quote=rechargeQuote(p.id),enabled=p.enabled!==false;
   return `
   <article class="admin-item-row plan-row ${enabled?'':'disabled'}" data-plan-row="${esc(p.id)}">
-    <div class="admin-list-cell primary"><strong>¥${p.yuan}</strong></div>
+    <div class="admin-list-cell primary"><strong>¥${p.yuan}</strong><small>${enabled?'用户端显示':'用户端隐藏'}</small></div>
     <div class="admin-list-cell"><b>${fmt(quote.principal)}</b></div>
     <div class="admin-list-cell"><b>${fmt(quote.bonus)}</b></div>
     <div class="admin-list-cell"><b>${formatZhe(quote.discountZhe)}</b></div>
     <div class="admin-list-cell"><b>${money(quote.paidCents)}</b></div>
     <div class="admin-list-cell total"><b class="num">${fmt(quote.total)}</b></div>
     <div class="admin-row-actions">
-      <label class="admin-switch" aria-label="${enabled?'关闭充值档位':'启用充值档位'}"><input type="checkbox" data-admin-plan-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'启用':'关闭'}</em></label>
+      <label class="admin-switch" aria-label="${enabled?'隐藏充值档位':'显示充值档位'}"><input type="checkbox" data-admin-plan-enabled="${esc(p.id)}" ${enabled?'checked':''}><span class="switch-track"><i></i></span><em>${enabled?'显示':'隐藏'}</em></label>
       <button type="button" class="table-action danger" data-admin-delete-plan="${esc(p.id)}">删除</button>
     </div>
   </article>`;
@@ -3264,7 +3260,7 @@ function readAdminPlanForm(source='paid'){
  const yuanCents=Math.round(yuan*100);
  const effectiveZhe=source==='discount'?discountZhe:yuanCents>0?Math.round((paidCents/yuanCents)*100)/10:(paidCents===0?1:0);
  const valid=yuan>=0&&paidCents>=0&&paidCents<=yuanCents&&effectiveZhe>=1&&effectiveZhe<=9;
- return {yuan,paid:paidCents/100,bonus:Math.max(0,Math.round(Number($('#plan-bonus')?.value)||0)),paidCents,discountZhe:effectiveZhe,valid};
+ return {yuan,paid:paidCents/100,bonus:bonusByRatio(Math.round(yuan*10)),paidCents,discountZhe:effectiveZhe,valid};
 }
 
 function updateAdminPlanForm(source='paid'){
@@ -3281,6 +3277,7 @@ function updateAdminPlanForm(source='paid'){
    alert.hidden=false;
   }else alert.hidden=true;
  }
+ const ratio=$('#plan-bonus');if(ratio)ratio.value=String(rechargeBonusRatio());
  const preview=$('#admin-plan-preview');if(preview)preview.innerHTML=`<span>合计到账<strong class="num">${fmt(Math.round(data.yuan*10)+data.bonus)}</strong><small>云贝</small></span><span>实付<strong class="num">${money(data.paidCents)}</strong></span>`;
  if(button)button.disabled=!data.valid;
 }
@@ -3289,7 +3286,7 @@ function resetAdminPlanForm(){
  const yuan=$('#plan-yuan'),paid=$('#plan-paid'),bonus=$('#plan-bonus'),discount=$('#plan-discount');
  if(yuan)yuan.value='10';
  if(paid)paid.value='8';
- if(bonus)bonus.value='0';
+ if(bonus)bonus.value=String(rechargeBonusRatio());
  if(discount)discount.value='8';
  updateAdminPlanForm('paid');
 }
@@ -3343,10 +3340,7 @@ document.addEventListener('submit',event=>{
   const data=readAdminPlanForm();
   if(!data.valid){updateAdminPlanForm('paid');showAdminAlert('admin-plan-alert','请检查充值金额和实付金额，折扣需在 1–9 折之间。');return;}
   const planId=uid('P'),newPlan={id:planId,yuan:data.yuan,principal:Math.round(data.yuan*10),bonus:data.bonus,discountZhe:data.discountZhe,paidCents:data.paidCents,enabled:false};
-  const p10Index=state.config.rechargePlans.findIndex(p=>p.id==='p10');
-  if(p10Index>=0)state.config.rechargePlans.splice(p10Index,1,newPlan);
-  else if(state.config.rechargePlans.length>=5){toast('最多可添加 6 个充值档位，自定义充值已占用 1 个。');return;}
-  else state.config.rechargePlans.push(newPlan);
+  state.config.rechargePlans.push(newPlan);
   persist();applyConfig();renderAdmin();renderAll();resetAdminPlanForm();focusAdminPlanRow(planId);toast('充值档位已保存，暂未启用。');
   return;
  }
@@ -3418,7 +3412,7 @@ document.addEventListener('change',event=>{
  if(planSwitch){
   const plan=state.config.rechargePlans.find(p=>p.id===planSwitch.dataset.adminPlanEnabled);
   if(plan&&planSwitch.checked){planSwitch.checked=false;confirmAdminPublish('plan',plan.id);return;}
-  if(plan){plan.enabled=planSwitch.checked;persist();applyConfig();renderAdminLists();renderAll();toast(plan.enabled?'充值档位已启用。':'充值档位已关闭。');}
+  if(plan){plan.enabled=planSwitch.checked;persist();applyConfig();renderAdminLists();renderAll();toast(plan.enabled?'充值档位已显示。':'充值档位已隐藏。');}
   return;
  }
  const productSwitch=event.target.closest('[data-admin-product-enabled]');
@@ -3597,7 +3591,7 @@ function renderRecharge(){
  }
 
  const offer=$('#plans-offer-title');if(offer)offer.textContent=(q.first?'首充 ':'充值 ')+formatZhe(Math.min(...visiblePlans.map(p=>rechargeQuote(p.id).discountZhe)));
- $('#recharge-plans').innerHTML=visiblePlans.map(p=>{const quote=rechargeQuote(p.id);if(p.id==='custom'){const amount=Number(customRechargeAmount)||0,points=Math.floor(amount)*10;return `<div class="recharge-plan custom-plan ${p.id===selectedPlan?'selected':''}" data-plan="custom" data-custom-plan="1" role="button" tabindex="0" aria-pressed="${p.id===selectedPlan}" aria-label="自定义充值金额"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${fmt(points)}<small>云贝</small></strong><span class="plan-amount">自定义金额 ¥${fmt(amount||0)}</span><label class="custom-recharge-field"><span>充值金额</span><input id="custom-recharge-amount" type="number" min="0" max="100000" step="1" value="${points?Math.floor(amount):''}" placeholder="请输入金额"></label><span class="plan-bonus">¥1 = 10 云贝</span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></div>`;}return `<button class="recharge-plan ${p.id===selectedPlan?'selected':''}" data-plan="${p.id}" aria-pressed="${p.id===selectedPlan}" aria-label="${fmt(quote.principal)}云贝，赠送${fmt(quote.bonus)}云贝，${formatZhe(quote.discountZhe)}，实付${money(quote.paidCents)}"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${fmt(quote.principal)}<small>云贝</small></strong><span class="plan-amount">原价 <del>${money(quote.faceCents)}</del></span><span class="plan-bonus ${quote.bonus?'':'empty'}">${quote.bonus?'额外赠送 '+fmt(quote.bonus)+' 云贝':'无额外赠送'}</span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></button>`;}).join('');
+ $('#recharge-plans').innerHTML=visiblePlans.map(p=>{const quote=rechargeQuote(p.id);if(p.id==='custom'){const amount=Number(customRechargeAmount)||0,points=Math.floor(amount)*10;return `<div class="recharge-plan custom-plan ${p.id===selectedPlan?'selected':''}" data-plan="custom" data-custom-plan="1" role="button" tabindex="0" aria-pressed="${p.id===selectedPlan}" aria-label="自定义充值金额"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${fmt(points)}<small>云贝</small></strong><span class="plan-amount">自定义金额 ¥${fmt(amount||0)}</span><label class="custom-recharge-field"><span>充值金额</span><input id="custom-recharge-amount" type="number" min="0" max="100000" step="1" value="${points?Math.floor(amount):''}" placeholder="请输入金额"></label><span class="plan-bonus">¥1 = 10 云贝 · 赠送${rechargeBonusRatio()}%${quote.bonus?' · +'+fmt(quote.bonus):''}</span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></div>`;}return `<button class="recharge-plan ${p.id===selectedPlan?'selected':''}" data-plan="${p.id}" aria-pressed="${p.id===selectedPlan}" aria-label="${fmt(quote.principal)}云贝，赠送${fmt(quote.bonus)}云贝，${formatZhe(quote.discountZhe)}，实付${money(quote.paidCents)}"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${fmt(quote.principal)}<small>云贝</small></strong><span class="plan-amount">原价 <del>${money(quote.faceCents)}</del></span><span class="plan-bonus ${quote.bonus?'':'empty'}">${quote.bonus?'额外赠送 '+fmt(quote.bonus)+' 云贝':'无额外赠送'}</span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></button>`;}).join('');
  $('#quote-face').textContent=money(q.faceCents);updatePaymentQr(q);pendingRecharge=q;if($('#simulate-pay')){$('#simulate-pay').disabled=q.paidCents<=0;$('#simulate-pay').textContent='确认支付';}startPaymentCountdown();$('#quote-discount').textContent='−'+money(q.faceCents-q.paidCents);$('.quote-discount span').textContent=q.discountZhe+'折优惠';$('#checkout-first-tag').textContent='充值 '+q.discountZhe+' 折';$('.quote-discount').hidden=false;$('#checkout-first-tag').hidden=false;$('#quote-principal').textContent=fmt(q.principal);$('#quote-bonus').textContent='+'+fmt(q.bonus);$('#quote-total').innerHTML=fmt(q.total)+'<small>云贝</small>';$('#quote-paid').textContent=money(q.paidCents);
 }
 function qrSvg(text,size=240){if(!window.QRCode)return '<div class="qr-fallback">二维码生成失败</div>';const qr=new QRCode(-1,1);qr.addData(text);qr.make();const n=qr.getModuleCount(),unit=size/n;let path='';for(let row=0;row<n;row++){for(let col=0;col<n;col++){if(qr.isDark(row,col))path+=`M${(col*unit).toFixed(2)} ${(row*unit).toFixed(2)}h${unit.toFixed(2)}v${unit.toFixed(2)}h-${unit.toFixed(2)}z`;}}return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="支付二维码"><rect width="${size}" height="${size}" fill="#fff"></rect><path d="${path}" fill="#111827"></path></svg>`;}
@@ -3637,7 +3631,7 @@ function orderDetails(id){
  openModal('兑换详情',`<div class="exchange-preview">${icon(p.icon||'gift')}<div><h3>${esc(o.name)}</h3><p>${esc(p.unit)} · ${!o.expires?'已兑换':isActive(o)?'生效中':'已到期'}</p></div></div><div class="detail-line"><span>兑换订单</span><strong style="font-size:11px">${esc(o.id)}</strong></div><div class="detail-line"><span>兑换时间</span><strong>${displayDate(o.created,true)}</strong></div>${o.expires?`<div class="detail-line"><span>权益到期</span><strong>${displayDate(o.expires,true)}</strong></div>`:''}<div class="detail-line"><span>消耗云贝</span><strong>${fmt(o.price)} 云贝</strong></div>${o.funding?`<div class="detail-line"><span>扣减明细</span><strong>奖励 ${fmt(o.funding.reward)} + 充值 ${fmt(o.funding.paid)} 云贝</strong></div>`:''}<p class="payment-demo">权益兑换不重复开票。发票仅支持已支付充值订单，按充值实付金额申请。</p><div class="modal-actions"><button class="btn primary" data-action="close">关闭</button></div>`);
 }
 function checkin(){const week=checkinWeek();if(week.checkedIn||week.count>=7){earn();return;}const reward=week.nextReward;state.lastCheckin=today();state.checkins.push({day:today(),reward});addCredit(reward,'checkin',`本周第 ${week.count+1} 次签到奖励`);persist();renderAll();earn(reward);toast('签到成功，'+reward+' 云贝已到账。');}
-function showRules(){openModal('云贝使用规则',`<div class="rule"><h3>如何获得云贝？</h3><p>充值按 ¥1 = 10 云贝到账；充值享八折，云贝仍按原价发放，可叠加档位赠送。签到每周最多 70 云贝。邀请好友注册不限人数，邀请人得 10 云贝，好友也得 10 云贝。</p></div><div class="rule"><h3>充值与奖励余额</h3><p>余额分为充值余额和奖励余额；签到、充值赠送与邀请所得计入奖励余额。使用时优先扣减奖励云贝，再扣减充值余额，已有历史余额保留在奖励余额中。</p></div><div class="rule"><h3>只有充值订单可以开票</h3><p>按充值实付金额开票。八折优惠减免与赠送云贝不计入金额；权益兑换、签到与邀请奖励均不支持开票，避免重复申请。</p></div><div class="rule"><h3>使用记录</h3><p>可在“云贝明细”按时间筛选查看收入与支出明细。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
+function showRules(){openModal('云贝使用规则',`<div class="rule"><h3>如何获得云贝？</h3><p>充值按 ¥1 = 10 云贝到账；充值享八折，云贝仍按原价发放，可叠加 ${rechargeBonusRatio()}% 档位赠送。签到每周最多 70 云贝。邀请好友注册不限人数，邀请人得 10 云贝，好友也得 10 云贝。</p></div><div class="rule"><h3>充值与奖励余额</h3><p>余额分为充值余额和奖励余额；签到、充值赠送与邀请所得计入奖励余额。使用时优先扣减奖励云贝，再扣减充值余额，已有历史余额保留在奖励余额中。</p></div><div class="rule"><h3>只有充值订单可以开票</h3><p>按充值实付金额开票。八折优惠减免与赠送云贝不计入金额；权益兑换、签到与邀请奖励均不支持开票，避免重复申请。</p></div><div class="rule"><h3>使用记录</h3><p>可在“云贝明细”按时间筛选查看收入与支出明细。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
 function invoiceRules(){openModal('充值开票说明',`<div class="rule"><h3>哪些订单可以开票？</h3><p>仅限已支付的充值订单；可单笔申请或合并开票。权益兑换、签到奖励、邀请奖励和充值赠送均不可开票。</p></div><div class="rule"><h3>发票金额怎么算？</h3><p>发票金额等于订单实付金额。例如充值 ¥100，享八折实付 ¥80，即可申请 ¥80 发票；到账 1,000 云贝及 50 赠送云贝不改变开票金额。</p></div><div class="rule"><h3>如何查询和下载？</h3><p>待开票订单填写抬头和邮箱后提交；开票中不可重复提交，已开票可下载 PDF。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
 function renderAll(){refreshShopCategories();renderOverview();renderProducts();renderOrders();renderLedger();renderInvoices();renderRecharge();renderInvites();renderDashboard();renderAdmin();renderRole();renderOperations();}
 const pageInfo={
@@ -3692,7 +3686,6 @@ const actions={
  profile:()=>openModal('个人中心',`<div class="exchange-preview">${icon('user')}<div><h3>科研探索者</h3><p>科研工作空间</p></div></div><div class="detail-line"><span>当前云贝</span><strong>${fmt(state.balance)} 云贝</strong></div><div class="detail-line"><span>专属邀请码</span><strong>${state.inviteCode}</strong></div><div class="modal-actions"><button class="btn primary" data-action="close">关闭</button></div>`)
 };
 document.addEventListener('click',event=>{
- const customCard=event.target.closest('[data-custom-plan]');if(customCard&&!event.target.closest('input')){selectedPlan='custom';renderRecharge();return;}
  const b=event.target.closest('button');if(!b||b.disabled)return;
  if(b.dataset.userModule){setTab(b.dataset.userModule==='spend'?'shop':'recharge');return;}
  if(b.dataset.tab){if(!$('#overlay').hidden)closeModal();setTab(b.dataset.tab);return;}
@@ -3727,8 +3720,8 @@ document.addEventListener('submit',event=>{
  if(event.target.id==='invoice-form')submitInvoice(event);
  if(event.target.id==='invite-demo-form'){event.preventDefault();const result=registerInvitedFriend($('#invite-friend-key').value,$('#invite-friend-name').value);if(result.error){showError(result.error);return;}closeModal();renderAll();toast('双方奖励已到账：邀请人 +10 云贝，好友 +10 云贝。');}
 });
-document.addEventListener('input',event=>{if(event.target.id==='custom-recharge-amount'){customRechargeAmount=event.target.value;selectedPlan='custom';renderRecharge();requestAnimationFrame(()=>{const input=$('#custom-recharge-amount');if(input){input.focus();const end=input.value.length;input.setSelectionRange(end,end);}});}});$('#product-search').addEventListener('input',renderProducts);$('#order-search').addEventListener('input',()=>{orderPage=1;renderOrders();});$('#sort-select').addEventListener('change',e=>{sortMode=Number(e.target.value);renderProducts();});$('#ledger-source-filter').addEventListener('change',e=>{ledgerSource=e.target.value;ledgerPage=1;renderLedger();});
-document.addEventListener('input',event=>{if(event.target.closest('#invoice-form')&&event.target.id!=='invoice-note')fieldError(event.target.id,'');});
+$('#product-search').addEventListener('input',renderProducts);$('#order-search').addEventListener('input',()=>{orderPage=1;renderOrders();});$('#sort-select').addEventListener('change',e=>{sortMode=Number(e.target.value);renderProducts();});$('#ledger-source-filter').addEventListener('change',e=>{ledgerSource=e.target.value;ledgerPage=1;renderLedger();});
+document.addEventListener('input',event=>{if(event.target.id==='custom-recharge-amount'){customRechargeAmount=event.target.value;selectedPlan='custom';renderRecharge();requestAnimationFrame(()=>{const input=$('#custom-recharge-amount');if(input){input.focus();const end=input.value.length;input.setSelectionRange(end,end);}});}});document.addEventListener('input',event=>{if(event.target.closest('#invoice-form')&&event.target.id!=='invoice-note')fieldError(event.target.id,'');});
 document.addEventListener('change',event=>{if(event.target.dataset.invoiceCheck){const id=event.target.dataset.invoiceCheck;if(event.target.checked)selectedInvoices.add(id);else selectedInvoices.delete(id);updateInvoiceSelection();}if(['select-all-invoices','select-all-invoices-mobile'].includes(event.target.id)){invoicePageItems().filter(o=>getInvoiceState(o)==='available').forEach(o=>{if(event.target.checked)selectedInvoices.add(o.id);else selectedInvoices.delete(o.id);});renderInvoices();}});
 function invoiceItems(){return invoiceOrders().filter(o=>invoiceFilter==='all'||getInvoiceState(o)===invoiceFilter);}
 function invoicePageItems(){return invoiceItems().slice((invoicePage-1)*10,invoicePage*10);}
