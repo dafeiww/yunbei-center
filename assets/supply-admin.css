@@ -41,3 +41,29 @@
 .task-admin-fields small{font-size:10px;color:#a1a9b1}.task-admin-link-field{grid-column:1/-1}.task-admin-link-field input{font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px}.task-admin-desc{margin:0;font-size:10px;color:#94a0aa}
 @media(max-width:1000px){.task-admin-grid{grid-template-columns:1fr}.task-admin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.task-admin-grid{margin-top:18px}.task-admin-card{padding:17px}.task-admin-fields{grid-template-columns:1fr}.task-admin-head{align-items:flex-start;flex-direction:column;gap:8px}}
+
+/* 充值档位列表与新增档位 */
+.activity-tier-list{margin:4px 0 0}
+.activity-tier-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#5a7080;margin-bottom:8px}
+.activity-tier-head span{font-weight:650;color:#445e73}
+.activity-tier-head small{color:#8a99a3}
+.activity-tier-row{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid #e4ebef;border-radius:10px;background:#fff;margin-bottom:8px}
+.tier-input-wrap{display:flex;align-items:center;background:#f7fafb;border:1px solid #dce4e9;border-radius:8px;padding:0 10px;gap:6px}
+.tier-input-wrap .tier-yuan{color:#8a99a3;font-size:12px}
+.tier-input-wrap input{border:0;outline:none;background:transparent;padding:7px 0;width:90px;font-size:13px;font-weight:600;color:#445e73}
+.tier-input-wrap input:focus{outline:none}
+.tier-input-wrap .tier-unit{font-size:12px;color:#697e8c}
+.tier-coins{font-size:12px;color:#ba5b20;font-weight:600;margin-right:auto}
+.activity-tier-row .table-action.danger{color:#c0563f}
+.activity-tier-add{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;background:#f7fafb;border:1px dashed #d3dde4;border-radius:10px;margin-top:10px}
+.activity-tier-add .add-label{font-size:12px;font-weight:650;color:#445e73}
+.activity-tier-add .add-input-wrap{display:flex;align-items:center;background:#fff;border:1px solid #dce4e9;border-radius:8px;padding:0 10px;gap:6px}
+.activity-tier-add .add-input-wrap .add-yuan{color:#8a99a3;font-size:12px}
+.activity-tier-add input{border:0;outline:none;background:transparent;padding:8px 0;width:110px;font-size:13px;color:#445e73}
+.activity-tier-add .btn{padding:8px 16px;font-size:12px}
+.activity-tier-add .add-hint{color:#8a99a3;font-size:11px}
+
+/* 活动表单：两个字段的两列布局 */
+.activity-editor .activity-grid{grid-template-columns:repeat(2,minmax(0,280px));}
+.activity-editor .activity-grid label input{width:100%}
+@media(max-width:900px){.activity-editor .activity-grid{grid-template-columns:1fr}}

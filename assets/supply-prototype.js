@@ -65,7 +65,7 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   const nativeQuote=rechargeQuote;
  rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:10;const label=stage===0?'首充 '+formatZhe(d.first):stage===1?'第2次 '+formatZhe(d.second):stage===2?'第3次 '+formatZhe(d.later):'第4次 原价';return {...q,first:stage===0,rechargeStage:stage,discountExhausted:false,discountZhe:zhe,discountLabel:label,paidCents:Math.round(q.faceCents*zhe/10)};};
  const nativeComplete=completeRecharge;
- completeRecharge=function(q){const order=nativeComplete(q);if(order){state.paidRechargeCount=Math.min(99,(Number(state.paidRechargeCount)||0)+1);if(order.bonus){state.wallet.paid-=order.bonus;state.wallet.reward+=order.bonus;const row=state.ledger.find(r=>r.orderId===order.id&&r.label==='充值赠送云贝');if(row)row.source='bonus';}if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
+ completeRecharge=function(q){const order=nativeComplete(q);if(order){state.paidRechargeCount=Math.min(99,(Number(state.paidRechargeCount)||0)+1);if(order.first&&!s.pass&&cfg().recharge.enabled)s.pass={start:day(),usageStart:s.usage.length,claimed:[],weeks:clone(cfg().recharge.weeks).map(normalizeWeek)};put();}return order;};
  const passLabels={unpaid:'首充后开启',future:'待开启',task:'完成使用后可领',ready:'可领取',claimed:'已领取',expired:'已过期'};
  function renderRechargePass(){
   const card=$('#supply-recharge-pass');if(!card)return;
@@ -81,92 +81,13 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   }).join('');
  }
  const nativeRecharge=renderRecharge;
- renderRecharge=function(){nativeRecharge();const ladder=$('#supply-discount-ladder');if(ladder)ladder.remove();const q=rechargeQuote();if(!q)return;$('#plans-offer-title').textContent=q.discountLabel+(q.first&&cfg().recharge.enabled?' · 送3周补给':'');const activityNote=$('#recharge-activity-note');if(activityNote){const active=state.config.rechargeActivities?.find(a=>a.enabled);activityNote.textContent=active?`当前活动：${active.name} · 赠送比例 ${active.bonusRatio}%`:'选择适合你的档位，优惠与赠送一起享';}$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
+ renderRecharge=function(){nativeRecharge();const q=rechargeQuote();if(!q)return;const nameTag=$('#plans-offer-title');const nameWrap=nameTag?.closest('.plans-offer-tag');const actName=String(state.config.rechargeActivityName||'').trim();if(nameTag){nameTag.textContent=actName;if(nameWrap)nameWrap.hidden=!actName;}$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
  const nativePay=payRecharge;
  payRecharge=function(){
-  const previousOrder=state.recharges[0]?.id,previousPass=s.pass;
-  nativePay();
-  const order=state.recharges[0];
-  if(!order||order.id===previousOrder||order.status!=='paid')return;
-  const passStarted=order.first&&s.pass&&s.pass!==previousPass;
-  $('#modal-content').innerHTML=`<div class="supply-payment-success">
-   <div class="supply-payment-result"><div class="success-icon">${icon('check')}</div><h3>${fmt(order.total)} <span>云贝已到账</span></h3><p>充值 ${fmt(order.principal)} 云贝${order.bonus?' + 赠送 '+fmt(order.bonus)+' 云贝':''}</p></div>
-   <div class="supply-payment-summary"><div><span>本次实付</span><strong>${money(order.paidCents)}</strong></div><div><span>当前可用云贝</span><strong>${fmt(state.balance)} <small>云贝</small></strong></div></div>
-   ${passStarted?`<div class="supply-payment-pass">${icon('gift')}<div><strong>三周进阶补给已开启</strong><p>每周完成一次绘图或分析，即可领取当周权益。</p><small>本周可领：${esc(s.pass.weeks[0].name)}（${s.pass.weeks[0].uses} 次）</small></div></div>`:''}
-   <div class="supply-payment-receipt"><div class="supply-payment-order"><span>充值订单号</span><strong>${esc(order.id)}</strong></div><div class="supply-payment-invoice"><div><span>可开票金额 <b>${money(order.paidCents)}</b></span><small>赠送云贝不计入开票金额</small></div><button type="button" class="supply-payment-link" data-invoice-order="${esc(order.id)}">申请充值发票</button></div></div>
-   <div class="supply-payment-links">${passStarted?'<button type="button" class="supply-payment-link" data-tab="shop">去兑换权益</button>':''}<button type="button" class="supply-payment-link" data-tab="ledger">云贝明细</button></div>
-   <div class="modal-actions supply-payment-actions"><button type="button" class="btn" data-action="close">完成</button>${passStarted?button('trial','去完成本周绘图'):'<button type="button" class="btn primary" data-tab="shop">去兑换权益</button>'}</div>
-  </div>`;
- };
- function passStatus(i){if(!s.pass)return 'unpaid';const from=shiftedDay(s.pass.start,i*7),to=shiftedDay(from,6);if(s.pass.claimed.includes(i))return 'claimed';if(day()<from)return 'future';if(day()>to)return 'expired';return s.usage.slice(s.pass.usageStart).some(u=>u.day>=from&&u.day<=to)?'ready':'task';}
- function claimOpen(i){
-  const week=s.pass?.weeks[i],st=passStatus(i);if(!week||st!=='ready')return;
-  openModal('领取第 '+(i+1)+' 周权益',`<div class="supply-award">${esc(week.name)} · 可用 ${week.uses} 次</div><p class="supply-modal-note">${esc(week.desc||'')}</p><p class="supply-modal-note">领取后立即打开对应体验，本次使用会计入权益次数。</p><div class="modal-actions"><button type="button" class="btn" data-supply="close-modal">稍后再领</button><button type="button" class="btn primary" data-supply="claim-confirm-${i}">去使用</button></div>`);
- }
- function claim(i){if(passStatus(i)!=='ready')return;const perkId=grant('pass-'+s.pass.start+'-'+i,s.pass.weeks[i],'首充补给');s.pass.claimed.push(i);put();renderAll();const perk=s.perks.find(p=>p.id===perkId);if(perk&&perkRemaining(perk)>0){useTrial(perkId);toast('已领取，正在打开'+perk.name+'。');}else{toast('本周进阶补给已领取，可在“我的科研补给”查看。');}}
- function friendAdd(){
-  if(!cfg().invite.enabled){toast('邀请活动暂未开放。');return;}
-  const month=day().slice(0,7);const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(month)).length>=cap){toast('已达到本月有效邀请名额。');return;}
-  openModal('体验邀请同门',`<p class="supply-modal-note">模拟未注册的新好友通过你的链接注册。后续奖励按本次邀请创建时的规则执行。</p><form id="supply-invite-form"><div class="field"><label>好友昵称<input name="friend" maxlength="24" required placeholder="例如：小林同学"></label></div><div class="field"><label>模拟好友账号<input name="account" maxlength="60" pattern="[A-Za-z0-9@._-]{3,60}" required placeholder="例如：researcher01"></label></div><div class="modal-error" id="supply-friend-error" hidden></div><div class="modal-actions"><button class="btn primary" type="submit">模拟好友注册</button></div></form>`);
- }
- function friendAdvance(id){
-  const f=s.friends.find(x=>x.id===id);if(!f||f.stage>=3)return;
-  const r=f.rules||cfg().invite;
-  if(f.stage===2&&day()<shiftedDay(f.created,r.returnDays)){toast('回访奖励尚未解锁：注册满 '+r.returnDays+' 天后再次使用可领取。');return;}
-  const index=f.stage;f.stage++;f.reward+=r.inviter[index];f.friendReward+=r.friend[index];const label=f.stage===2?'首次完成绘图':'次周再次使用';
-  addCredit(r.inviter[index],'invite','同门邀请 · '+label,f.id);log('当前用户','邀请奖励','云贝',r.inviter[index],f.id);log('受邀好友：'+f.name,'好友奖励','云贝',r.friend[index],f.id);put();renderAll();toast('奖励已发放：邀请人 +'+r.inviter[index]+'，好友 +'+r.friend[index]+' 云贝。');
- }
- function inviteTable(friends,r){
-  const rows=friends.map(f=>{
-   const fr=f.rules||r,stage=Math.min(3,Math.max(1,f.stage));
-   const status={1:'等待完成首图',2:'等待次周回访',3:'全部解锁'}[stage];
-   const reward=(amount,total)=>`<strong class="supply-invite-reward">${fmt(amount)}</strong><span class="supply-invite-limit"> / ${fmt(total)} 云贝</span>`;
-   const action=f.demo?'<span class="supply-invite-action-note">—</span>':stage<3?button('friend-'+f.id,stage===1?'模拟好友完成首图':'模拟好友回访使用'):'<span class="supply-invite-action-note">已完成</span>';
-   return `<tr class="supply-invite-row" data-supply-example="${f.demo?'true':'false'}">
-    <td><div class="supply-invite-person"><strong title="${esc(f.name)}">${esc(f.name)}</strong>${f.demo?'<span class="supply-example-tag">示例</span>':''}</div></td>
-    <td class="supply-invite-date">${esc(f.created.replaceAll('-','.'))}</td>
-    <td><span class="supply-invite-progress stage-${stage}"><i aria-hidden="true"></i>${status}</span></td>
-    <td>${reward(f.reward,fr.inviter.reduce((a,b)=>a+b,0))}</td>
-    <td>${reward(f.friendReward,fr.friend.reduce((a,b)=>a+b,0))}</td>
-    <td>${action}</td>
-   </tr>`;
-  }).join('');
-  return `<article class="surface supply-invite-records">
-   <div class="supply-heading"><div><h3>同门成长进度</h3><p class="supply-invite-count">共 ${friends.length} 位好友 · 含 3 条示例记录</p></div></div>
-   <div class="supply-invite-table-wrap" tabindex="0" role="region" aria-label="邀请好友进度表，可横向滚动">
-    <table class="supply-invite-table" aria-label="同门成长进度">
-     <colgroup><col class="invite-col-person"><col class="invite-col-date"><col class="invite-col-progress"><col class="invite-col-reward"><col class="invite-col-reward"><col class="invite-col-action"></colgroup>
-     <thead><tr><th scope="col">好友昵称</th><th scope="col">注册时间</th><th scope="col">成长进度</th><th scope="col">我获得奖励</th><th scope="col">好友获得奖励</th><th scope="col">操作</th></tr></thead>
-     <tbody>${rows||'<tr><td colspan="6" class="supply-empty">还没有邀请记录，送同门一份绘图体验吧。</td></tr>'}</tbody>
-    </table>
-   </div><p class="supply-invite-scroll-hint">左右滑动，查看完整奖励与操作</p>
-  </article>`;
- }
- function inviteView(){
-  const r=cfg().invite,friends=[...s.friends,...inviteExamples],earned=friends.reduce((n,f)=>n+f.reward,0),max=r.inviter.reduce((a,b)=>a+b,0),friendMax=r.friend.reduce((a,b)=>a+b,0),link=new URL('https://www.genescloud.cn/home');link.searchParams.set('inviteCode',state.inviteCode||'');
-  $('#panel-invite').innerHTML=`<section class="supply-invite-hero"><div><span class="supply-kicker">送同门一份科研见面礼</span><h2>这张图，<br>你也可以做。</h2><p>分享同款模板、示例数据和新人绘图体验。<br>一起做出第一张图，再一起解锁下一份补给。</p><div class="supply-badge" style="display:inline-block;margin-top:16px">${r.enabled?'每位有效新用户：邀请人最高 '+max+' 云贝，好友最高 '+friendMax+' 云贝':'邀请活动暂未开放，已有邀请按原规则继续'}</div></div><div class="supply-gift"><h3>你的科研见面礼</h3><span>火山图同款模板 + 示例数据</span><span>新人绘图体验 1 次</span><input readonly id="supply-link" aria-label="邀请体验链接" value="${esc(link.href)}">${button('copy','复制邀请体验链接',!r.enabled)}<small class="supply-status">已邀请 ${friends.length} 位 · 累计获得 ${earned} 云贝</small></div></section><div class="supply-perks">${['好友完成注册','好友完成第一张图','好友回访再次使用'].map((name,i)=>`<article class="supply-invite-step"><b>+${r.inviter[i]} <small style="font-size:12px">云贝 / 邀请人</small></b><h3>${name}</h3><p>好友同步获得 ${r.friend[i]} 云贝${i===2?'；注册满 '+r.returnDays+' 天后再次使用。':'。'}</p></article>`).join('')}</div>${inviteTable(friends,r)}`;
- }
- renderInvites=inviteView;
- checkin=sign;earn=showCheck;actions.checkin=sign;actions.earn=()=>showCheck();
- actions.rules=()=>{const c=cfg(),r=rule();openModal('科研补给规则',`<div class="rule"><h3>每周签到</h3><p>每周一至周日任选 5 天签到，不要求连续；第 1–5 次奖励分别为 ${r.rewards.join('、')} 云贝，累计 5 天最多 ${r.rewards.reduce((a,b)=>a+b,0)} 云贝。周一开启新一轮，已获奖励保留。</p></div><div class="rule"><h3>首充补给</h3><p>首充享 ${state.config.rechargeDiscounts?.first??8} 折，后续优惠由系统自动匹配，不做公开阶梯展示。额外补给${c.recharge.enabled?'已开启':'暂未开放'}；开启后以充值日为起点，每 7 天一个周期，共 3 周。三周内容为 ${cfg().recharge.weeks.map(w=>`${w.name}（${w.uses} 次）`).join('、')}；每周期完成一次绘图或分析可领取当周权益，当期逾期未领不补发，已领取权益按配置次数使用。</p></div><div class="rule"><h3>邀请奖励</h3><p>注册、首次绘图、回访三个阶段，邀请人分别得 ${c.invite.inviter.join('、')} 云贝，好友分别得 ${c.invite.friend.join('、')} 云贝。回访需注册满 ${c.invite.returnDays} 天后再次使用；每位邀请人不限邀请人数。已开始的邀请按原规则完成。</p></div><div class="rule"><h3>原型说明</h3><p>支付、好友行为和绘图均为演示，数据仅在当前浏览器保存。云贝即时到账，发票按充值实付金额计算。</p></div>`);};
- pageInfo.recharge[1]='';pageInfo.invite[1]='送同门一份科研见面礼，一起使用，分阶段解锁奖励。';
- function update(){const n=checks().length,currentRule=rule(),daily=Number(currentRule.rewards[0]||0),enabled=cfg().checkin.enabled,checked=done()||n>=5;$('#wallet-checkin-label').textContent=!enabled?'签到暂未开放':n>=5?'本周已领满':done()?'已签到 · 查看进度':'签到领云贝';$('#wallet-checkin').disabled=enabled&&!checked;$('#wallet-checkin').classList.toggle('is-signed',checked);$('#wallet-checkin use').setAttribute('href',checked?'#i-check-circle':'#i-gift');$('#wallet-checkin-hint').textContent='本周 '+n+'/5 天 · 已获 '+checks().reduce((v,c)=>v+c.reward,0)+' 云贝';$('#wallet-checkin-bonus').hidden=!enabled||checked;$('#wallet-checkin-bonus').textContent='+'+(currentRule.rewards[n]||0);$('#wallet-checkin').setAttribute('aria-label',!enabled?'签到暂未开放':checked?'查看本周签到进度':'本周第 '+(n+1)+' 次签到领取 '+(currentRule.rewards[n]||0)+' 云贝');$('.wallet-week-link').title='本周任选 5 天签到，按第 1–5 次奖励发放';}
- const nativeAll=renderAll;renderAll=function(){nativeAll();update();};
-  document.addEventListener('click',async e=>{const b=e.target.closest('[data-supply]');if(!b||b.disabled)return;const a=b.dataset.supply;if(a==='check')sign();else if(a==='trial')useTrial();else if(a==='owned'){closeModal();setTab('recharge');}else if(a.startsWith('perk-'))useTrial(a.slice(5));else if(a==='export')exportTrial();else if(a==='friend-add')friendAdd();else if(a.startsWith('friend-'))friendAdvance(a.slice(7));else if(a==='close-modal')closeModal();else if(a.startsWith('claim-open-'))claimOpen(Number(a.slice(11)));else if(a.startsWith('claim-confirm-')){closeModal();claim(Number(a.slice(14)));}else if(a.startsWith('claim-'))claim(Number(a.slice(6)));else if(a==='rules')actions.rules();else if(a==='next-day'||a==='next-week'){s.offset+=a==='next-day'?1:7;put();if(!$('#overlay').hidden)closeModal();renderAll();toast('演示已切换至 '+day());}else if(a==='copy'){const input=$('#supply-link');try{await navigator.clipboard.writeText(input.value);toast('邀请体验链接已复制。');}catch{input.focus();input.select();document.execCommand('copy');toast('邀请体验链接已复制。');}}});
- document.addEventListener('submit',e=>{
-  if(e.target.id!=='supply-invite-form')return;e.preventDefault();if(!cfg().invite.enabled)return;
-  const data=new FormData(e.target),name=data.get('friend').trim(),account=data.get('account').trim().toLowerCase();if(!name||!account)return;
-  const fail=message=>{const el=$('#supply-friend-error');el.hidden=false;el.textContent=message;};
-  if(s.friends.some(f=>f.account===account))return fail('该账号已参与过邀请，每位新用户仅参与一次。');
-  const cap=cfg().invite.monthlyCap;if(cap>0&&s.friends.filter(f=>f.created.startsWith(day().slice(0,7))).length>=cap)return fail('已达到本月有效邀请名额。');
-  const r=clone(cfg().invite),id=uid('FR');s.friends.push({id,name,account,created:day(),stage:1,reward:r.inviter[0],friendReward:r.friend[0],rules:r});
-  addCredit(r.inviter[0],'invite','邀请同门注册 · '+name,id);log('当前用户','邀请奖励','云贝',r.inviter[0],id);log('受邀好友：'+name,'好友奖励','云贝',r.friend[0],id);put();closeModal();renderAll();toast('注册奖励已分别记入邀请人和好友账户。');
- });
- window.YunbeiSupply={data:s,config:cfg,defaults,definitions,clone,escape:esc,day,refresh:()=>renderAll(),rule,showRules:()=>actions.rules()};
- window.addEventListener('storage',e=>{if(e.key!==STORE||!e.newValue)return;try{const next=JSON.parse(e.newValue);if(!next||next.walletVersion!==2)return;const currentRole=state.role;const supply=s;Object.assign(state,next);state.role=currentRole;if(next.supply&&supply)Object.assign(supply,next.supply);renderAll();}catch{}});
- put();renderAll();setTab(location.hash.slice(1)||'recharge',false);
- if(new URLSearchParams(location.search).get('gift')==='volcano')openModal('同门送你一份绘图体验','<div class="supply-award">火山图同款模板 + 示例数据 + 新人体验 1 次</div><p class="supply-modal-note">这张图，你也可以做。用示例数据完成第一次绘图与导出，体验基因云的科研工具。</p><div class="modal-actions">'+button('trial','打开同款绘图体验')+'</div>');
-
+ const quote=pendingRecharge||rechargeQuote();if(!quote){toast('请先选择充值档位。');return;}
+ openModal('支付确认明细',`<div class="exchange-preview">${icon('coin')}<div><h3>请核对支付信息</h3><p>确认后完成本次充值（演示环境不真实扣款）</p></div></div><div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>折扣优惠</span><strong>−${money(quote.faceCents-quote.paidCents)}（${quote.discountZhe} 折）</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div><div class="detail-line total"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="modal-note">${icon('file')}<span>充值订单可按实付金额申请发票。</span></div><div class="modal-actions"><button class="btn" data-action="close">取消</button><button class="btn primary" data-action="confirm-pay">确认支付</button></div>`);
+};
+function confirmPayNow(){const quote=pendingRecharge||rechargeQuote();if(!quote)return;$('#simulate-pay').disabled=true;const order=completeRecharge(quote);if(!order){showError('充值优惠状态已变化，请刷新后重新确认订单。');return;}rechargePage=1;pendingRecharge=null;if(typeof clearPaymentTimer==='function')clearPaymentTimer();closeModal();renderAll();toast(`充值成功，${fmt(order.total)} 云贝已到账，实付 ${money(order.paidCents)}`);setTab('recharge-orders');}
 function ybTaskCfg(){
  const d={activityName:'科研云贝任务活动',enabled:true,tasks:{
   invite:{name:'邀请好友得云贝',desc:'只有未注册基因云的新账号有效，双方注册成功即得云贝。',link:'https://www.genescloud.cn/home',daily:3,inviter:10,friend:10},
@@ -228,17 +149,22 @@ pageInfo.invite[0]='云贝任务';pageInfo.invite[1]='完成每日任务和成�
 
 let rechargeOrderFilter='all',rechargeOrderPage=1,rechargeOrderKeyword='';
 function rechargeOrderRecords(){if(!Array.isArray(state.rechargeFailures))state.rechargeFailures=[{id:'CZFAIL20261001',kind:'recharge',name:'充值 100 元',faceCents:10000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-5),paymentMethod:'wechat',status:'failed',failReason:'支付超时',demo:true},{id:'CZFAIL20261002',kind:'recharge',name:'充值 50 元',faceCents:5000,paidCents:0,principal:0,bonus:0,created:addDays(nowIso(),-2),paymentMethod:'alipay',status:'failed',failReason:'用户取消支付',demo:true}];return [...(state.recharges||[]),...(state.rechargeExamples||[]),...(state.rechargeFailures||[])].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
+const selectedRechargeOrders=new Set();
+function rechargeOrderEligible(o){return o && o.kind==='recharge' && o.status==='paid' && (o.invoice?o.invoice.status==='available':true);}
+function updateRechargeOrderMergeSummary(){const list=rechargeOrderRecords().filter(o=>selectedRechargeOrders.has(o.id)&&rechargeOrderEligible(o));const sum=list.reduce((a,o)=>a+(o.invoiceCents||o.paidCents||0),0);const el=$('#recharge-order-merge-summary');if(el)el.textContent=`已选 ${list.length} 笔 · 合计 ${money(sum)}`;}
 function renderRechargeOrders(){
  const body=$('#recharge-order-rows');if(!body)return;
  const all=rechargeOrderRecords();const rows=all.filter(o=>{const ok=rechargeOrderFilter==='all'||o.status===rechargeOrderFilter;const kw=rechargeOrderKeyword.trim();return ok&&(!kw||o.id.toLowerCase().includes(kw.toLowerCase())||money(o.paidCents).includes(kw));});
  const pages=Math.max(1,Math.ceil(rows.length/10));rechargeOrderPage=Math.max(1,Math.min(rechargeOrderPage,pages));
- body.innerHTML=rows.slice((rechargeOrderPage-1)*10,rechargeOrderPage*10).map(o=>{const status=o.status||'paid';return `<tr class="${status==='failed'?'order-failed':''}"><td class="record-title" data-label="充值订单"><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}${o.demo?'<span class="table-demo">历史示例</span>':''}</div></td><td data-label="充值金额">${money(o.faceCents)}</td><td data-label="实付金额">${money(o.paidCents)}</td><td data-label="到账云贝">${status==='failed'?'0 云贝':fmt((o.principal||0)+(o.bonus||0))+' 云贝'}</td><td data-label="支付方式">${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</td><td data-label="状态"><span class="tag ${status==='failed'?'failed':'success'}">${status==='failed'?(o.failReason||'充值失败'):'充值成功'}</span></td><td data-label="操作"><button class="table-action" data-recharge-order="${esc(o.id)}">查看详情</button></td></tr>`;}).join('')||'<tr><td colspan="7" style="text-align:center;padding:40px">暂无符合条件的充值订单。</td></tr>';
- $('#recharge-order-total').textContent=pageCaption(rows.length,rechargeOrderPage);$('#recharge-order-pagination').innerHTML=pager(pages,rechargeOrderPage,'recharge-order-page');
+ selectedRechargeOrders.forEach(id=>{const o=rechargeOrderRecords().find(x=>x.id===id);if(!o||!rechargeOrderEligible(o))selectedRechargeOrders.delete(id);});
+ body.innerHTML=rows.slice((rechargeOrderPage-1)*10,rechargeOrderPage*10).map(o=>{const status=o.status||'paid';const eligible=rechargeOrderEligible(o);return `<tr class="${status==='failed'?'order-failed':''}"><td data-label="选择">${eligible?`<input type="checkbox" class="order-check" data-order-check="${esc(o.id)}" ${selectedRechargeOrders.has(o.id)?'checked':''} aria-label="选择订单 ${esc(o.id)}">`:''}</td><td class="record-title" data-label="充值订单"><div class="order-name">${esc(o.name)}</div><div class="order-id">${esc(o.id)}${o.demo?'<span class="table-demo">历史示例</span>':''}</div></td><td data-label="充值金额">${money(o.faceCents)}</td><td data-label="实付金额">${money(o.paidCents)}</td><td data-label="到账云贝">${status==='failed'?'0 云贝':fmt((o.principal||0)+(o.bonus||0))+' 云贝'}</td><td data-label="支付方式">${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</td><td data-label="状态"><span class="tag ${status==='failed'?'failed':'success'}">${status==='failed'?(o.failReason||'充值失败'):'充值成功'}</span></td><td data-label="操作"><button class="table-action" data-recharge-order="${esc(o.id)}">查看详情</button></td></tr>`;}).join('')||'<tr><td colspan="8" style="text-align:center;padding:40px">暂无符合条件的充值订单。</td></tr>';
+ updateRechargeOrderMergeSummary();$('#recharge-order-total').textContent=pageCaption(rows.length,rechargeOrderPage);$('#recharge-order-pagination').innerHTML=pager(pages,rechargeOrderPage,'recharge-order-page');
 }
 function rechargeOrderDetail(id){const o=rechargeOrderRecords().find(x=>x.id===id);if(!o)return;const failed=o.status==='failed';openModal('充值订单详情',`<div class="exchange-preview">${icon(failed?'file':'coin')}<div><h3>${esc(o.name)} · ${failed?'充值失败':'已支付'}</h3><p>${failed?esc(o.failReason||'支付未完成'):'云贝已到账'}</p></div></div><div class="detail-line"><span>充值订单号</span><strong style="font-size:11px">${esc(o.id)}</strong></div><div class="detail-line"><span>充值时间</span><strong>${displayDate(o.created,true)}</strong></div><div class="detail-line"><span>充值原价</span><strong>${money(o.faceCents)}</strong></div>${failed?'<div class="detail-line"><span>实付金额</span><strong>¥0.00</strong></div><div class="detail-line"><span>到账云贝</span><strong>0 云贝</strong></div>':`<div class="detail-line"><span>实付金额</span><strong>${money(o.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt((o.principal||0)+(o.bonus||0))} 云贝</strong></div>`}<div class="detail-line"><span>支付方式</span><strong>${o.paymentMethod==='alipay'?'支付宝':'微信支付'}</strong></div>${failed?'<div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-tab="recharge">重新充值</button></div>':`<div class="detail-line"><span>可开票金额</span><strong>${money(o.invoiceCents||o.paidCents)}</strong></div><div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-invoice-order="${esc(o.id)}">申请开票</button></div>`}`);
 }
-document.addEventListener('click',e=>{const f=e.target.closest('[data-recharge-order-status]');if(f){rechargeOrderFilter=f.dataset.rechargeOrderStatus;rechargeOrderPage=1;$$('#recharge-order-filters .category').forEach(x=>x.classList.toggle('active',x===f));renderRechargeOrders();return;}const d=e.target.closest('[data-recharge-order]');if(d){rechargeOrderDetail(d.dataset.rechargeOrder);}});
-document.addEventListener('input',e=>{if(e.target.id==='recharge-order-search'){rechargeOrderKeyword=e.target.value;rechargeOrderPage=1;renderRechargeOrders();}});
+document.addEventListener('change',e=>{const c=e.target.closest('[data-order-check]');if(c){if(c.checked)selectedRechargeOrders.add(c.dataset.orderCheck);else selectedRechargeOrders.delete(c.dataset.orderCheck);updateRechargeOrderMergeSummary();return;}if(e.target.id==='select-all-recharge-orders'){rechargeOrderRecords().slice((rechargeOrderPage-1)*10,rechargeOrderPage*10).forEach(o=>{if(rechargeOrderEligible(o)){if(e.target.checked)selectedRechargeOrders.add(o.id);else selectedRechargeOrders.delete(o.id);}});renderRechargeOrders();}});
+document.addEventListener('click',e=>{const cp=e.target.closest('[data-action="confirm-pay"]');if(cp){confirmPayNow();return;}if(e.target.id==='recharge-order-merge-btn'){const ids=[...selectedRechargeOrders];if(!ids.length){toast('请先勾选可开票的充值订单。');return;}invoiceForm(ids);return;}const f=e.target.closest('[data-recharge-order-status]');if(f){rechargeOrderFilter=f.dataset.rechargeOrderStatus;rechargeOrderPage=1;selectedRechargeOrders.clear();$$('#recharge-order-filters .category').forEach(x=>x.classList.toggle('active',x===f));renderRechargeOrders();return;}const d=e.target.closest('[data-recharge-order]');if(d){rechargeOrderDetail(d.dataset.rechargeOrder);}});
+document.addEventListener('input',e=>{if(e.target.id==='recharge-order-search'){rechargeOrderKeyword=e.target.value;rechargeOrderPage=1;selectedRechargeOrders.clear();renderRechargeOrders();}});
 document.addEventListener('click',e=>{const page=e.target.closest('[data-recharge-order-page]');if(page){rechargeOrderPage=Number(page.dataset.rechargeOrderPage);renderRechargeOrders();}});
 const nativeAllOrders=renderAll;renderAll=function(){nativeAllOrders();renderRechargeOrders();};
 
