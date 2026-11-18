@@ -51,13 +51,14 @@ function qrSvg(text,size=240){if(!window.QRCode)return '<div class="qr-fallback"
 let paymentTimer=null,paymentDeadline=0;
 function clearPaymentTimer(){clearInterval(paymentTimer);paymentTimer=null;}
 function startPaymentCountdown(){clearPaymentTimer();paymentDeadline=Date.now()+5*60*1000;renderPaymentCountdown();paymentTimer=setInterval(renderPaymentCountdown,1000);}
-function renderPaymentCountdown(){const el=$('#payment-countdown'),btn=$('#simulate-pay'),qr=$('#payment-qr');if(!el)return;const ms=Math.max(0,paymentDeadline-Date.now()),m=String(Math.floor(ms/60000)).padStart(2,'0'),sec=String(Math.floor(ms%60000/1000)).padStart(2,'0');if(ms<=0){clearPaymentTimer();el.textContent='二维码已过期';qr?.classList.add('expired');qr.innerHTML='<div class="qr-expired">二维码已过期<br><small>请重新选择充值档位</small></div>';if(btn){btn.disabled=true;btn.textContent='支付已超时';}return;}el.textContent=`支付倒计时 ${m}:${sec}`;}
+function recordRechargeFailure(reason){const q=pendingRecharge;if(!q||q.status)return;const failure={id:uid('CZFAIL'),kind:'recharge',name:'充值 '+money(q.faceCents),faceCents:q.faceCents,paidCents:0,principal:0,bonus:0,created:nowIso(),paymentMethod:paymentMethod==='alipay'?'alipay':'wechat',status:'failed',failReason:reason};if(!Array.isArray(state.rechargeFailures))state.rechargeFailures=[];if(!state.rechargeFailures.some(o=>o.faceCents===q.faceCents&&o.failReason===reason&&Math.abs(Date.parse(o.created)-Date.now())<1500))state.rechargeFailures.unshift(failure);persist();renderAll();toast('充值未完成，已生成失败订单。');}
+function renderPaymentCountdown(){const el=$('#payment-countdown'),btn=$('#simulate-pay'),qr=$('#payment-qr');if(!el)return;const ms=Math.max(0,paymentDeadline-Date.now()),m=String(Math.floor(ms/60000)).padStart(2,'0'),sec=String(Math.floor(ms%60000/1000)).padStart(2,'0');if(ms<=0){clearPaymentTimer();recordRechargeFailure('支付超时');el.textContent='二维码已过期';qr?.classList.add('expired');qr.innerHTML='<div class="qr-expired">二维码已过期<br><small>请重新选择充值档位</small></div>';if(btn){btn.disabled=true;btn.textContent='支付已超时';}return;}el.textContent=`支付倒计时 ${m}:${sec}`;}
 function paymentQrData(q){return `https://pay.genescloud.cn/demo?amount=${(q.paidCents/100).toFixed(2)}&plan=${q.planId}&first=${q.first?1:0}`;}
 function updatePaymentQr(q){const qr=$('#payment-qr'),label=$('#payment-method-label');if(!qr)return;qr.innerHTML=qrSvg(paymentQrData(q),180);qr.classList.remove('expired');label.textContent=`微信 / 支付宝均可扫码支付 ${money(q.paidCents)}`;}
 function checkout(){}
 function payRecharge(){const quote=pendingRecharge||rechargeQuote();if(!quote)return;pendingRecharge=quote;$('#simulate-pay').disabled=true;const order=completeRecharge(quote);if(!order){showError('充值优惠状态已变化，请刷新后重新确认订单。');return;}rechargePage=1;renderAll();openModal('充值成功',`<div class="success-icon">${icon('check')}</div><h3 class="success-title">${fmt(order.total)} 云贝已到账</h3><p class="success-desc">充值 ${fmt(order.principal)} 云贝${order.bonus?' + 赠送 '+fmt(order.bonus)+' 云贝':''}<br>本次实付 ${money(order.paidCents)}，当前可用 ${fmt(state.balance)} 云贝。</p><div class="detail-line"><span>充值订单号</span><strong style="font-size:11px">${order.id}</strong></div><div class="modal-note">${icon('file')}<span>此充值订单可申请 ${money(order.paidCents)} 发票，赠送云贝不额外开票。</span></div><div class="modal-links"><button class="btn primary" data-tab="shop">去兑换权益</button><button class="btn" data-tab="ledger">云贝明细</button><button class="btn primary" data-invoice-order="${order.id}">申请充值发票</button></div><div class="modal-actions"><button class="btn" data-action="close">完成</button></div>`);}
 function rechargeDetails(id){const o=rechargeOrders().find(r=>r.id===id);if(!o)return;openModal('充值订单详情',`<div class="exchange-preview">${icon('coin')}<div><h3>${esc(o.name)} · 已支付</h3><p>${o.demo?'充值成功':'充值成功，云贝已到账'}</p></div></div><div class="detail-line"><span>充值订单号</span><strong style="font-size:11px">${o.id}</strong></div><div class="detail-line"><span>充值时间</span><strong>${displayDate(o.created,true)}</strong></div><div class="detail-line"><span>充值原价</span><strong>${money(o.faceCents)}</strong></div><div class="detail-line"><span>优惠减免</span><strong>${money(o.faceCents-o.paidCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(o.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(o.principal)} 充值 + ${fmt(o.bonus)} 赠送</strong></div><div class="detail-line total"><span>可开票金额</span><strong>${money(o.invoiceCents)}</strong></div><div class="modal-actions"><button class="btn" data-action="close">关闭</button><button class="btn primary" data-invoice-order="${id}">${getInvoiceState(o)==='available'?'申请开票':'查看发票'}</button></div>`);}
-function inviteShareUrl(){const code=state.inviteCode||'';return `https://www.genescloud.cn/home?inviteCode=${encodeURIComponent(code)}`;}
+function inviteShareUrl(){const code=state.inviteCode||'';const base=state.config?.yunbeiTasks?.tasks?.invite?.link||'https://www.genescloud.cn/home';try{const url=new URL(base);url.searchParams.set('inviteCode',code);return url.href;}catch{return `${base}?inviteCode=${encodeURIComponent(code)}`;}}
 let invitePage=1;
 function renderInvites(){
  const invites=inviteRecords(),invitedCount=invites.length,earned=invites.reduce((sum,i)=>sum+(i.reward||10),0);
@@ -93,13 +94,13 @@ const pageInfo={
  dashboard:['云贝看板','按时间查看消耗、充值与奖励，了解绘图与分析投入。'],
  shop:['消费云贝','用云贝兑换科研绘图、SKILL 包与平台高级功能。'],
  orders:['我的兑换','查询商品、权益与活动的兑换记录。'],
- invite:['邀请好友','分享邀请链接，好友注册成功后双方获得云贝。'],
+ 'recharge-orders':['充值订单','查询充值成功和失败订单，失败原因可追溯。'],invite:['邀请好友','分享邀请链接，好友注册成功后双方获得云贝。'],
  invoices:['发票管理','管理充值订单发票，按实付金额申请与下载。'],
  admin:['云贝配置','管理充值档位、商城商品、签到、首充与邀请奖励。'],
  operations:['运营统计','查看平台用户的充值与兑换情况，掌握人数、订单与金额。']
 };
 const HIDDEN_PAGES=['dashboard','orders'];
-const NAV_GROUPS={earn:['recharge','ledger','invite','dashboard'],spend:['shop','invoices','orders']};
+const NAV_GROUPS={earn:['recharge','recharge-orders','ledger','invite','dashboard'],spend:['shop','invoices','orders']};
 function syncSidebarNavigation(tab){
  const group=Object.keys(NAV_GROUPS).find(key=>NAV_GROUPS[key].includes(tab));
  $$('.module-nav-parent').forEach(el=>{const active=el.dataset.userModule===group;el.classList.toggle('active',active);el.setAttribute('aria-expanded',String(active));});
@@ -113,7 +114,7 @@ function setTab(tab,updateHash=true){
  $('#page-title').textContent=pageInfo[tab][0];$('#page-description').textContent=pageInfo[tab][1];
  $('#breadcrumb-current').textContent=pageInfo[tab][0];
  $('#breadcrumb-current').hidden=tab==='home';$('#breadcrumb-divider').hidden=tab==='home';
- $('#page-balance').hidden=['invoices','recharge','admin','operations'].includes(tab);document.title=pageInfo[tab][0]+' · 派森诺基因云';
+ $('#page-balance').hidden=['invoices','recharge','recharge-orders','admin','operations'].includes(tab);document.title=pageInfo[tab][0]+' · 派森诺基因云';
  if(updateHash&&location.hash!=='#'+tab)history.pushState(null,'','#'+tab);
  if(changed){window.scrollTo(0,0);if(updateHash)$('#page-title').focus({preventScroll:true});}
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
@@ -139,6 +140,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.plan){selectedPlan=b.dataset.plan;renderRecharge();return;}
  if(b.dataset.payment){paymentMethod=b.dataset.payment;$$('[data-payment]').forEach(e=>e.classList.toggle('selected',e===b));if($('#payment-qr'))updatePaymentQr(rechargeQuote());return;}
  if(b.id==='simulate-pay'){payRecharge();return;}
+ if(b.id==='cancel-payment'){recordRechargeFailure('用户取消支付');pendingRecharge=null;clearPaymentTimer();renderRecharge();return;}
  if(b.dataset.period){dashboardPeriod=b.dataset.period;$('#dashboard-range-error').textContent='';renderDashboard();return;}
  if(b.dataset.usageCategory){openUsageDetails('',b.dataset.usageCategory);return;}
  if(b.dataset.usagePage){openUsageDetails(usageDetailDay,usageDetailCategory,Number(b.dataset.usagePage));return;}

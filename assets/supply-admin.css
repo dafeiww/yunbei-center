@@ -30,3 +30,14 @@
 .growth-week-fields .growth-week-link{grid-column:1/-1}.growth-week-fields .growth-week-link input{font-size:12px}.growth-week-fields .growth-week-link small{color:#677684}
 
 .btn.save-success{background:#eef7f1!important;border-color:#c9d9cd!important;color:#4d7c5f!important;box-shadow:none!important}.btn.save-error{background:#fff3f2!important;border-color:#e3b6b2!important;color:#a84942!important;box-shadow:none!important}.growth-form-footer span.is-dirty{color:#a85b23}.growth-form-footer span.is-saved{color:#4d7c5f}
+.task-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:22px}
+.task-admin-card{border:1px solid #e4e9ee;border-radius:10px;background:#fcfcfd;padding:20px;display:flex;flex-direction:column;gap:18px}
+.task-admin-head{display:flex;align-items:center;gap:10px}
+.task-admin-icon{display:grid;place-items:center;flex:0 0 auto;width:36px;height:36px;border-radius:10px;background:linear-gradient(140deg,#fff2de,#ffe0b6);border:1px solid #f3d4a8;color:#b55f1d}
+.task-admin-icon.wechat{background:#eaf8ee;border-color:#b7e7c5;color:#07c160}
+.task-admin-icon .icon{width:19px;height:19px}
+.task-admin-kind{font-size:10px;background:#f0f4f8;color:#6d7c88;border-radius:5px;padding:5px 8px;white-space:nowrap}.task-admin-head h4{font-size:14px;color:#3d4b58;margin:0}
+.task-admin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.task-admin-fields label{display:flex;flex-direction:column;gap:8px;min-width:0}.task-admin-fields span{font-size:11px;color:#677684}.task-admin-fields input{width:100%;min-height:42px;padding:9px 12px;border:1px solid #dce3e9;border-radius:6px;font-size:12px;background:#fff;color:#576775}
+.task-admin-fields small{font-size:10px;color:#a1a9b1}.task-admin-link-field{grid-column:1/-1}.task-admin-link-field input{font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px}.task-admin-desc{margin:0;font-size:10px;color:#94a0aa}
+@media(max-width:1000px){.task-admin-grid{grid-template-columns:1fr}.task-admin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.task-admin-grid{margin-top:18px}.task-admin-card{padding:17px}.task-admin-fields{grid-template-columns:1fr}.task-admin-head{align-items:flex-start;flex-direction:column;gap:8px}}
