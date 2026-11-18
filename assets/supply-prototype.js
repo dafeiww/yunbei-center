@@ -167,7 +167,7 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  put();renderAll();setTab(location.hash.slice(1)||'recharge',false);
  if(new URLSearchParams(location.search).get('gift')==='volcano')openModal('同门送你一份绘图体验','<div class="supply-award">火山图同款模板 + 示例数据 + 新人体验 1 次</div><p class="supply-modal-note">这张图，你也可以做。用示例数据完成第一次绘图与导出，体验基因云的科研工具。</p><div class="modal-actions">'+button('trial','打开同款绘图体验')+'</div>');
 
-function ybTaskCfg(){const d={enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const c=cfg().yunbeiTasks||{};return {...d,...c,invite:{...d.invite,...(c.invite||{})},profile:{...d.profile,...(c.profile||{})},checkin:{...d.checkin,...(c.checkin||{})},wechat:{...d.wechat,...(c.wechat||{})},avatar:{...d.avatar,...(c.avatar||{})}};}
+function ybTaskCfg(){const d={enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const c=state.config.yunbeiTasks||{};return {...d,...c,invite:{...d.invite,...(c.invite||{})},profile:{...d.profile,...(c.profile||{})},checkin:{...d.checkin,...(c.checkin||{})},wechat:{...d.wechat,...(c.wechat||{})},avatar:{...d.avatar,...(c.avatar||{})}};}
 function ensureTaskData(){if(!state.taskData)state.taskData={completed:[],checkinDate:'',invite:{date:'',count:0}};if(!Array.isArray(state.taskData.completed))state.taskData.completed=[];if(state.taskData.invite?.date!==day())state.taskData.invite={date:day(),count:0};}
 function taskCompleted(id){ensureTaskData();return state.taskData.completed.includes(id);}
 function inviteDailyCount(){ensureTaskData();return state.taskData.invite.count;}
@@ -177,12 +177,12 @@ function taskCard(id,title,desc,reward,status){const done=taskCompleted(id);retu
 function renderTaskCenter(){
  const box=$('#supply-task-center');if(!box)return;ensureTaskData();const c=ybTaskCfg(),limit=inviteDailyLimit(),count=inviteDailyCount(),records=inviteAllRecords(),link=inviteShareUrl();
  const canInvite=limit===0||count<limit;
- const cards=[taskCard('invite','邀请好友得云贝','只有未注册基因云的新账号有效，双方注册成功即得云贝。',`${c.invite.inviter}/${c.invite.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`),taskCard('profile','完善个人中心','补充昵称、研究方向和所在单位。',c.profile.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'),taskCard('checkin','签到得云贝','每天签到一次，完成即到账。',c.checkin.reward,state.taskData.checkinDate===day()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到'),taskCard('wechat','绑定微信','绑定后可同步消息和快捷登录。',c.wechat.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'),taskCard('avatar','上传个人图像','上传头像，让协作更亲切。',c.avatar.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励')];
+ const cards=[taskCard('invite','邀请好友得云贝','只有未注册基因云的新账号有效，双方注册成功即得云贝。',`${c.invite.inviter}/${c.invite.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`),taskCard('profile','完善个人中心','补充昵称、研究方向和所在单位。',c.profile.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'),taskCard('checkin','签到得云贝','每天签到一次，完成即计入本周签到进度。',rule().rewards[Math.min(checks().length,4)]||0,state.taskData.checkinDate===day()||done()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到'),taskCard('wechat','绑定微信','绑定后可同步消息和快捷登录。',c.wechat.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'),taskCard('avatar','上传个人图像','上传头像，让协作更亲切。',c.avatar.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励')];
  const rows=records.slice(0,10).map(r=>`<tr><td class="record-title"><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">历史示例</span>':''}</div></div></td><td data-label="邀请码"><b>${esc(state.inviteCode)}</b></td><td data-label="我的奖励">+${r.reward||c.invite.inviter} 云贝</td><td data-label="好友奖励">+${r.friendReward||c.invite.friend} 云贝</td><td data-label="状态"><span class="tag success">${r.status==='rewarded'?'邀请成功':'已完成'}</span></td></tr>`).join('');
  box.innerHTML=`<div class="task-hero"><div><span class="eyebrow">云贝任务</span><h2>完成任务，持续拿云贝</h2><p>签到、资料、微信、头像和邀请都集中在这里；邀请需使用你的专属邀请码。</p></div><div class="task-invite-code"><span>我的邀请码</span><strong>${esc(state.inviteCode)}</strong><input readonly value="${esc(link)}"><button class="btn primary" type="button" data-action="copy-invite-link">复制邀请链接</button></div></div><div class="task-grid">${cards.join('')}</div><article class="surface invite-records-card"><div class="surface-heading"><div><h3>邀请记录</h3><p>今日已成功 ${count} 位${limit===0?' · 不限人数':' / 上限 '+limit+' 位'}；仅未注册过基因云的新账号有效。</p></div></div><div class="table-wrap"><table><thead><tr><th>受邀好友</th><th>邀请码</th><th>我的奖励</th><th>好友奖励</th><th>状态</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;padding:40px">暂无邀请记录。</td></tr>'}</tbody></table></div></article>`;
 }
 function completeTask(id,reward,label){ensureTaskData();if(state.taskData.completed.includes(id))return;state.taskData.completed.push(id);addCredit(reward,'task',label);log('当前用户','任务奖励','云贝',reward);persist();renderAll();toast(label+'，'+reward+' 云贝已到账。');}
-function taskCheckin(){ensureTaskData();const c=ybTaskCfg();if(state.taskData.checkinDate===day())return toast('今天已完成签到任务。');state.taskData.checkinDate=day();addCredit(c.checkin.reward,'task','每日签到任务');log('当前用户','任务奖励','云贝',c.checkin.reward);persist();renderAll();toast('签到成功，'+c.checkin.reward+' 云贝已到账。');}
+function taskCheckin(){ensureTaskData();if(state.taskData.checkinDate===day()||done())return toast('今天已完成签到任务。');state.taskData.checkinDate=day();sign();put();}
 function openTaskModal(id){
  const c=ybTaskCfg();
  if(id==='invite'){openModal('邀请好友注册',`<p class="modal-intro">邀请码 <b>${esc(state.inviteCode)}</b> 已绑定本次邀请；账号必须未注册过基因云。</p><form id="task-invite-form"><div class="field"><label for="task-friend-name">好友昵称</label><input id="task-friend-name" required maxlength="30" placeholder="例如：研究伙伴小林"></div><div class="field"><label for="task-friend-key">好友账号</label><input id="task-friend-key" required pattern="[A-Za-z0-9@._-]{3,60}" maxlength="60" placeholder="例如 researcher01"></div><div class="modal-error" id="modal-error" hidden></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">模拟注册成功</button></div></form>`);return;}
@@ -225,14 +225,19 @@ const nativeAllOrders=renderAll;renderAll=function(){nativeAllOrders();renderRec
 
 function aiTokenBalance(){if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;return state.orders.reduce((sum,o)=>sum+(Number(o.tokenAmount)||0),0)-state.tokenUsed;}
 const aiModels=[
- {id:'deepseek-v4-flash',name:'DeepSeek V4 Flash',factor:.4,note:'高速通用'},
- {id:'5.6-terra',name:'5.6 Terra',factor:.8,note:'均衡稳定'},
- {id:'5.6-luna',name:'5.6 Luna',factor:.9,note:'轻量高效'},
- {id:'5.6-sol',name:'5.6 Sol',factor:1.0,note:'主力推理'},
- {id:'6-luna',name:'6 Luna',factor:1.1,note:'新一代通用'},
- {id:'6-sol',name:'6 Sol',factor:1.3,note:'更强推理'},
- {id:'6-astra',name:'6 Astra',factor:1.6,note:'旗舰能力'},
- {id:'image-2',name:'Image-2',factor:1.4,note:'多模态辅助'}
+ {id:'gpt-5.1',name:'GPT-5.1',factor:1.0,note:'通用主力'},
+ {id:'gpt-5.1-mini',name:'GPT-5.1 Mini',factor:.6,note:'高性价比'},
+ {id:'o4-mini',name:'o4 mini',factor:.8,note:'推理增强'},
+ {id:'claude-sonnet-4.5',name:'Claude Sonnet 4.5',factor:1.2,note:'长文分析'},
+ {id:'claude-haiku-4.5',name:'Claude Haiku 4.5',factor:.5,note:'快速回答'},
+ {id:'gemini-3-pro',name:'Gemini 3 Pro',factor:1.3,note:'多模态'},
+ {id:'gemini-2.5-flash',name:'Gemini 2.5 Flash',factor:.5,note:'高速响应'},
+ {id:'deepseek-v4-flash',name:'DeepSeek V4 Flash',factor:.4,note:'科研总结'},
+ {id:'kimi-k2',name:'Kimi K2',factor:.7,note:'长上下文'},
+ {id:'qwen3-max',name:'Qwen3 Max',factor:.8,note:'中文增强'},
+ {id:'doubao-1.6-pro',name:'豆包 1.6 Pro',factor:.7,note:'中文对话'},
+ {id:'grok-4.1',name:'Grok 4.1',factor:1.2,note:'实时检索'},
+ {id:'image-2',name:'Image-2',factor:1.4,note:'图表与图像'}
 ];
 function aiModel(id){return aiModels.find(m=>m.id===id)||aiModels[0];}
 function aiEstimateTokens(text,id){const m=aiModel(id);return Math.max(80,Math.round((String(text||'').length+45)*1.1*m.factor));}
