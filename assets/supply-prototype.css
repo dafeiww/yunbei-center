@@ -331,3 +331,106 @@
 #recharge-order-merge-btn{padding:7px 14px;font-size:12px;white-space:nowrap}
 .order-check{width:16px;height:16px;accent-color:#e58b48;cursor:pointer}
 @media(max-width:900px){.invoice-merge-tools{margin-left:0;width:100%;justify-content:flex-end}}
+
+/* Recharge custom card */
+.recharge-plan.custom-plan{align-items:stretch;text-align:left}
+.recharge-plan.custom-plan .plan-rate{position:absolute;top:14px;right:14px;z-index:2}
+.recharge-plan.custom-plan .custom-plan-title{display:block;width:100%;font-size:13px;color:#8d99a5;font-weight:600}
+.recharge-plan.custom-plan .plan-points{width:100%;font-size:36px;line-height:1.1;color:#202b36}
+.recharge-plan.custom-plan .plan-points small{font-size:13px;color:#6d7f8e;font-weight:600;margin-left:5px}
+.recharge-plan.custom-plan .plan-custom-box{position:relative;width:100%;margin-top:12px}
+.recharge-plan.custom-plan .plan-custom-box input{width:100%;height:50px;padding:0 46px 0 16px;border:1px solid #e6eef3;border-radius:10px;background:#fff;font-size:16px;color:#202b36}
+.recharge-plan.custom-plan .plan-custom-box input:focus{border-color:#b96e26;box-shadow:0 0 0 3px #f7c78442;outline:none}
+.recharge-plan.custom-plan .plan-custom-yunbei{width:100%;margin-top:10px;font-size:16px;font-weight:700;color:#202b36}
+.recharge-plan.custom-plan .plan-custom-yunbei b{font-size:20px;color:#c24c0d;margin:0 2px}
+.recharge-plan.custom-plan .plan-custom-box small{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:13px;color:#8d99a5;pointer-events:none}
+.recharge-plan.custom-plan .plan-note{width:100%;margin-top:13px;padding-top:13px;border-top:1px solid #e6eef3;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#6d7f8e}
+.recharge-plan.custom-plan .plan-note b{font-size:20px;color:#c24c0d}
+.recharge-plan.custom-plan.selected{background:linear-gradient(140deg,#fffaf0,#fff1dd);border-color:#f2b570;box-shadow:0 12px 26px #d47b2a1f}
+
+/* Admin discount badge */
+.activity-discount-badge{display:inline-flex!important;align-items:center;gap:6px;padding:5px 8px!important;border-radius:8px!important;background:#fff1df!important;border:1px solid #f0c18b!important;font-size:11px!important;color:#a25717!important}
+.activity-discount-badge strong{font-size:16px;color:#c2410c!important;font-weight:800!important;letter-spacing:.2px}
+
+/* Yunbei task colors */
+.yunbei-task-card{background:#fff}
+.yunbei-task-card .yunbei-task-icon{border-color:color-mix(in srgb,var(--task-color) 22%,white);background:color-mix(in srgb,var(--task-color) 8%,white);color:var(--task-color)}
+.yunbei-task-card .yunbei-task-kind{color:var(--task-color);background:color-mix(in srgb,var(--task-color) 10%,white)}
+.yunbei-task-card b{color:var(--task-color)}
+.yunbei-task-card.task-invite{--task-color:#a25717}
+.yunbei-task-card.task-profile{--task-color:#1663d0}
+.yunbei-task-card.task-checkin{--task-color:#c8422f}
+.yunbei-task-card.task-wechat{--task-color:#07c160}
+.yunbei-task-card.task-avatar{--task-color:#7c5cbf}
+
+/* WeChat bind QR */
+.wechat-bind-modal{max-width:280px;margin:0 auto;text-align:center}
+.wechat-bind-qr{display:grid;place-items:center;padding:14px;border:1px solid #b7e7c5;border-radius:14px;background:#f7fffa}
+.wechat-bind-tip{margin-top:12px;font-size:13px;color:#5f7180}
+
+/* Single recharge confirmation button */
+.recharge-submit-group:has(.recharge-submit:only-child){grid-template-columns:1fr!important}
+.modal-actions:has([data-action="confirm-pay"]:only-child){justify-content:flex-end}
+.modal-actions [data-action="confirm-pay"]:only-child{min-width:128px}
+
+/* Sidebar: flat two-level navigation */
+.sidebar .module-nav-parent,.sidebar .module-nav-item,.sidebar .nav-item,.sidebar .admin-nav{border-radius:0!important}
+.sidebar .module-nav-parent{min-height:46px!important;gap:9px!important;padding:0 14px!important;font-size:13px!important;color:#d8e0e8!important;background:transparent!important;box-shadow:none!important}
+.sidebar .module-nav-parent.active{color:#fff!important}
+.sidebar .module-nav-parent:hover{background:#ffffff0d!important;color:#fff!important}
+.sidebar .module-nav-item{min-height:38px!important;gap:9px!important;padding:0 12px!important;font-size:13px!important;color:#aebbc7!important;background:transparent!important;box-shadow:none!important;border-radius:0!important}
+.sidebar .module-nav-item:hover{background:#ffffff0a!important;color:#fff!important}
+.sidebar .module-nav-item.active{background:transparent!important;color:#fff!important;font-weight:650!important;box-shadow:inset 3px 0 0 #f0a55e!important}
+.sidebar .module-subnav{margin:2px 0 0 15px!important;padding-left:11px!important}
+.sidebar .nav-item{min-height:44px!important}
+.sidebar .admin-nav.active{background:transparent!important;color:#fff!important;box-shadow:inset 3px 0 0 #f0a55e!important}
+.sidebar [data-admin-parent] .nav-chevron{margin-left:auto;width:13px;height:13px}
+
+/* Invite modal alignment */
+.invite-modal-top{align-items:end}
+.invite-modal-top .btn{align-self:end;margin-bottom:6px}
+
+/* Task custom icons */
+.yunbei-task-icon,.task-admin-icon{overflow:hidden}
+.task-icon-img{width:100%;height:100%;object-fit:contain;display:block}
+.task-icon-actions{position:absolute;right:12px;top:12px;display:flex;gap:6px}
+.task-admin-card{position:relative}
+.task-admin-icon{position:relative}
+.task-icon-file{display:none!important}
+
+/* Invoice application type */
+.tag.single{background:#eef4f8;border-color:#d7e6ef;color:#4a6d86}
+.tag.merge{background:#fff2e0;border-color:#f0cd9f;color:#9c5416}
+
+/* Admin editing activity is form-only */
+.supply-activity-card.is-editing{border-color:#f0d3b0;background:#fffdf8}
+.supply-activity-card.is-editing .activity-editor{margin-top:0;padding:0;border-top:0}
+
+/* 统一主操作按钮配色（充值页除外） */
+body:not(.recharge-tab-active) .btn:not(:disabled):not(.save-success):not(.save-error),
+body:not(.recharge-tab-active) .table-action:not(:disabled):not([data-task-icon-upload]),
+body:not(.recharge-tab-active) .exchange-btn:not(:disabled),
+body:not(.recharge-tab-active) .footer-entry-nav button {
+  background: linear-gradient(92deg,#5db2ff 2%, #1890ff 98%) !important;
+  border-color: #1890ff !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+body:not(.recharge-tab-active) .btn:not(:disabled):not(.save-success):not(.save-error):hover,
+body:not(.recharge-tab-active) .table-action:not(:disabled):not([data-task-icon-upload]):hover,
+body:not(.recharge-tab-active) .exchange-btn:not(:disabled):hover,
+body:not(.recharge-tab-active) .footer-entry-nav button:hover {
+  background: linear-gradient(92deg,#6cbcff 2%, #2f9dff 98%) !important;
+  border-color: #40a5ff !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+body:not(.recharge-tab-active) .table-action:not(:disabled):not([data-task-icon-upload]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 7px 12px;
+  min-height: 36px;
+}

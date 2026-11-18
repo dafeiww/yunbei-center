@@ -57,9 +57,9 @@
 .activity-tier-row .table-action.danger{color:#c0563f}
 .activity-tier-add{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;background:#f7fafb;border:1px dashed #d3dde4;border-radius:10px;margin-top:10px}
 .activity-tier-add .add-label{font-size:12px;font-weight:650;color:#445e73}
-.activity-tier-add .add-input-wrap{display:flex;align-items:center;background:#fff;border:1px solid #dce4e9;border-radius:8px;padding:0 10px;gap:6px}
+.activity-tier-add .add-input-wrap{display:flex;align-items:center;background:#fff;border:1px solid #dce4e9;border-radius:8px;padding:0 10px;gap:6px;min-width:230px}
 .activity-tier-add .add-input-wrap .add-yuan{color:#8a99a3;font-size:12px}
-.activity-tier-add input{border:0;outline:none;background:transparent;padding:8px 0;width:110px;font-size:13px;color:#445e73}
+.activity-tier-add input{border:0;outline:none;background:transparent;padding:8px 0;width:190px;font-size:13px;color:#445e73}
 .activity-tier-add .btn{padding:8px 16px;font-size:12px}
 .activity-tier-add .add-hint{color:#8a99a3;font-size:11px}
 
@@ -67,3 +67,116 @@
 .activity-editor .activity-grid{grid-template-columns:repeat(2,minmax(0,280px));}
 .activity-editor .activity-grid label input{width:100%}
 @media(max-width:900px){.activity-editor .activity-grid{grid-template-columns:1fr}}
+
+/* 任务图标上传：醒目线框按钮 */
+.task-icon-actions{position:static!important;display:flex!important;align-items:center;gap:8px!important;margin-left:auto!important}
+.task-icon-actions [data-task-icon-upload]{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:36px!important;padding:8px 14px!important;border:1.5px dashed #1890ff!important;border-radius:8px!important;background:transparent!important;color:#1890ff!important;font-size:12px!important;font-weight:650!important;white-space:nowrap!important;text-decoration:none!important}
+.task-icon-actions [data-task-icon-upload]:hover{background:#eaf4ff!important;border-style:solid!important;transform:translateY(-1px)}
+.task-icon-actions .danger{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:36px!important;padding:8px 12px!important;border:1.5px dashed #e88c7a!important;border-radius:8px!important;background:transparent!important;color:#d9534a!important;font-size:12px!important;font-weight:650!important;white-space:nowrap!important;text-decoration:none!important}
+.task-icon-actions .danger:hover{background:#fff1ef!important;border-style:solid!important;transform:translateY(-1px)}
+
+/* 固定侧边栏已确认的扁平橙色选中样式 */
+body .sidebar .module-nav-parent,
+body .sidebar .module-nav-item,
+body .sidebar .nav-item,
+body .sidebar .admin-nav { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; }
+body .sidebar .module-nav-parent.active,
+body .sidebar .module-nav-item.active,
+body .sidebar .nav-item.active,
+body .sidebar .admin-nav.active { background: transparent !important; color: #fff !important; box-shadow: inset 3px 0 0 #f0a55e !important; }
+
+/* 统一侧边栏层级 */
+body .sidebar .module-nav-parent,
+body .sidebar .module-nav-item,
+body .sidebar .nav-item,
+body .sidebar .admin-nav { width:100% !important; min-height:46px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; color:#d8e0e8 !important; transition:background .15s,color .15s !important; }
+body .sidebar .module-nav-parent { padding:0 16px !important; font-size:14px !important; font-weight:600 !important; }
+body .sidebar .module-subnav { margin:0 !important; padding:0 !important; }
+body .sidebar .module-nav-item, body .sidebar .admin-nav { padding:0 16px 0 44px !important; font-size:13px !important; font-weight:500 !important; }
+body .sidebar .module-nav-parent:hover, body .sidebar .module-nav-item:hover, body .sidebar .admin-nav:hover { background:#4b5867 !important; color:#fff !important; }
+body .sidebar .module-nav-parent.active { background:transparent !important; color:#fff !important; }
+body .sidebar .module-nav-item.active, body .sidebar .admin-nav.active { background:#1890ff !important; color:#fff !important; font-weight:650 !important; box-shadow:none !important; }
+body .sidebar .module-nav-item.active>.icon, body .sidebar .admin-nav.active>.icon { color:#fff !important; }
+body.is-admin .footer { display:none !important; }
+
+/* 管理端非充值区域主色改为蓝色 */
+body.is-admin:not(.admin-recharge-active) .admin-tabs button.active { color:#1890ff !important; box-shadow:0 1px 5px #1890ff14 !important; }
+body.is-admin:not(.admin-recharge-active) .growth-activity-switch input:checked+.growth-toggle { background:#1890ff !important; }
+body.is-admin:not(.admin-recharge-active) .growth-activity-switch input:focus-visible+.growth-toggle { outline-color:#9ed0ff !important; }
+body.is-admin:not(.admin-recharge-active) .growth-activity-switch small { color:#4096ff !important; }
+body.is-admin:not(.admin-recharge-active) .growth-budget strong { color:#1890ff !important; }
+body.is-admin:not(.admin-recharge-active) .growth-budget strong small { color:#677684 !important; }
+body.is-admin:not(.admin-recharge-active) .growth-field input { color:#455d6c !important; }
+body.is-admin:not(.admin-recharge-active) .admin-tabs { background:#eef4f8 !important; }
+body.is-admin:not(.admin-recharge-active) .admin-tabs button.active { background:#fff !important; }
+
+/* 云贝任务配置 */
+.task-admin-toolbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:18px 0 16px; }
+.task-admin-toolbar>div { display:flex; align-items:center; gap:10px; }
+.task-admin-toolbar strong { font-size:14px; color:#3d4b58; }
+.task-admin-toolbar span { font-size:11px; color:#8a99a3; }
+.task-admin-head { align-items:center; gap:10px !important; }
+.task-admin-head h4 { flex:1 !important; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.task-admin-kind { flex-shrink:0; }
+.task-admin-kind.custom { background:#eef4f8; color:#1890ff; }
+.task-card-actions { display:flex; align-items:center; margin-left:6px; }
+.task-admin-icon.no-icon { background:#eef1f4 !important; border-color:#dde3e9 !important; color:#8a97a2 !important; }
+.task-admin-icon.has-icon { background:#fff !important; }
+.task-admin-card.is-creating { border-color:#b9d7ff !important; background:#fbfdff !important; }
+.task-admin-card [data-task-delete] { border:1px solid #ffd9d2 !important; background:#fff5f3 !important; color:#d9534a !important; border-radius:8px !important; padding:7px 10px !important; min-height:34px !important; font-weight:650 !important; }
+.task-admin-card [data-task-delete]:hover { background:#ffeae6 !important; border-color:#e88c7a !important; }
+
+/* 管理端侧边栏当前项使用蓝色 */
+body.is-admin:not(.admin-recharge-active) .sidebar .module-nav-item.active, body.is-admin:not(.admin-recharge-active) .sidebar .admin-nav.active { background:#1890ff !important; }
+body.is-admin:not(.admin-recharge-active) .growth-day-inputs input { color:#1890ff !important; }
+
+/* Admin config top cleanup */
+body.is-admin .page-context-bar .page-breadcrumb,
+body.is-admin .page-head .page-head-actions,
+body.is-admin .admin-hero .growth-header-actions { display:none !important; }
+
+/* Unified dark sidebar */
+body .sidebar { background:#404a57 !important; border-right-color:#404a57 !important; color:#fff !important; }
+body .sidebar .module-subnav,
+body .sidebar .admin-subnav { background:#404a57 !important; border-left-color:#ffffff14 !important; margin:2px 0 0 15px !important; padding-left:8px !important; }
+body .sidebar .module-nav-parent { gap:9px !important; padding:0 14px !important; }
+body .sidebar .module-nav-item { padding:0 12px 0 36px !important; }
+body .sidebar .module-nav-parent:hover,
+body .sidebar .module-nav-item:hover,
+body .sidebar .admin-nav:hover { background:#4b5867 !important; }
+body .sidebar .module-nav-item.active,
+body .sidebar .admin-nav.active { background:#1890ff !important; box-shadow:none !important; }
+body .sidebar .module-nav-parent[aria-expanded="false"] + .module-subnav { display:none !important; }
+body .sidebar .module-nav-parent[aria-expanded="true"] + .module-subnav { display:flex !important; flex-direction:column; }
+body .sidebar .module-nav-parent .nav-chevron { margin-left:auto !important; transition:transform .18s ease; }
+body .sidebar .module-nav-parent[aria-expanded="true"] .nav-chevron { transform:rotate(90deg) !important; }
+body .sidebar .module-nav-parent[aria-expanded="false"] .nav-chevron { transform:rotate(-90deg) !important; }
+
+/* Task icon and delete states */
+.task-icon-actions .danger[data-task-icon-remove] { display:none !important; }
+.task-admin-card [data-task-delete] { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:6px !important; min-height:34px !important; padding:7px 12px !important; border:1px solid #ffccc7 !important; background:#fff !important; color:#ff4d4f !important; border-radius:8px !important; font-weight:650 !important; white-space:nowrap !important; }
+.task-admin-card [data-task-delete]:hover { background:#fff1f0 !important; border-color:#ff7875 !important; }
+.task-admin-card [data-task-delete] .icon { width:13px !important; height:13px !important; }
+
+/* Recharge activity action hierarchy */
+.activity-buttons .table-action { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:7px !important; min-width:82px !important; min-height:38px !important; padding:8px 14px !important; border-radius:9px !important; font-size:12px !important; font-weight:650 !important; white-space:nowrap !important; text-decoration:none !important; }
+.activity-buttons .table-action .icon { width:14px !important; height:14px !important; stroke-width:2 !important; }
+.activity-buttons .activity-edit { background:#fff !important; border:1px solid #91caff !important; color:#1677ff !important; }
+.activity-buttons .activity-edit:hover { background:#e6f4ff !important; border-color:#1677ff !important; color:#1677ff !important; }
+.activity-buttons .table-action.danger { background:#fff !important; border:1px solid #ffccc7 !important; color:#ff4d4f !important; }
+.activity-buttons .table-action.danger:hover { background:#fff1f0 !important; border-color:#ff7875 !important; color:#ff4d4f !important; }
+.surface-heading .btn.primary { display:inline-flex !important; align-items:center !important; gap:8px !important; }
+.surface-heading .btn.primary .icon { width:15px !important; height:15px !important; stroke-width:2.2 !important; }
+
+/* Shop config button hierarchy */
+#admin-shop-panel .btn:not(.primary) { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:7px !important; min-height:38px !important; padding:8px 13px !important; background:#fff !important; border:1px solid #d9e2ec !important; color:#587082 !important; border-radius:8px !important; font-weight:650 !important; white-space:nowrap !important; }
+#admin-shop-panel .btn:not(.primary):hover { background:#f5f8fb !important; border-color:#a9c4d5 !important; color:#406078 !important; }
+#admin-shop-panel .btn.primary { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; min-height:40px !important; padding:9px 18px !important; border-radius:8px !important; font-weight:700 !important; }
+#admin-shop-panel .btn .icon { width:14px !important; height:14px !important; stroke-width:2 !important; }
+#admin-shop-panel .admin-row-actions .table-action { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:6px !important; min-width:76px !important; min-height:36px !important; padding:8px 12px !important; border-radius:8px !important; font-size:12px !important; font-weight:650 !important; white-space:nowrap !important; }
+#admin-shop-panel .admin-row-actions .table-action .icon { width:13px !important; height:13px !important; stroke-width:2 !important; }
+#admin-shop-panel .admin-row-actions .table-action.shop-edit { background:#fff !important; border:1px solid #91caff !important; color:#1677ff !important; }
+#admin-shop-panel .admin-row-actions .table-action.shop-edit:hover { background:#e6f4ff !important; border-color:#1677ff !important; color:#1677ff !important; }
+#admin-shop-panel .admin-row-actions .table-action.danger { background:#fff !important; border:1px solid #ffccc7 !important; color:#ff4d4f !important; }
+#admin-shop-panel .admin-row-actions .table-action.danger:hover { background:#fff1f0 !important; border-color:#ff7875 !important; color:#ff4d4f !important; }
+body.is-admin.admin-invoice-active .admin-tabs { display:none !important; }

@@ -9,12 +9,12 @@
  const defaults={version:1,updatedAt:'',checkin:{enabled:true,rewards:[1,1,1,1,1],unlockAt:3,perk:'volcano'},recharge:{enabled:true,weeks:[{name:'高级科研图表体验',desc:'火山图、热图等高级图表模板 + 示例数据',uses:1,kind:'volcano',link:''},{name:'AI 分析报告体验',desc:'上传结果表，AI 生成 1 份图文解读报告',uses:1,kind:'ai'},{name:'结题报告导出包',desc:'把本项目图表、AI解读和结论整理成 1 份可交付报告',uses:1,kind:'report'}]},invite:{enabled:true,inviter:[10,20,20],friend:[10,20,20],returnDays:7,monthlyCap:0}};
  if(!state.config.supplyRules)state.config.supplyRules=clone(defaults);
  const cfg=()=>state.config.supplyRules;if(cfg().invite.monthlyCap===undefined||cfg().invite.monthlyCap>0)cfg().invite.monthlyCap=0;
- const rechargeDiscounts=()=>{const d=state.config.rechargeDiscounts||{},num=v=>Number.isFinite(Number(v))?Math.min(9,Math.max(1,Math.round(Number(v)*10)/10)):undefined;return {first:num(d.first)??8,second:num(d.second)??8.8,later:num(d.later)??9};};
+ const rechargeDiscounts=()=>{const d=state.config.rechargeDiscounts||{},num=v=>Number.isFinite(Number(v))?Math.min(10,Math.max(1,Math.round(Number(v)*10)/10)):undefined;return {first:num(d.first)??8,second:num(d.second)??8.8,later:num(d.later)??9};};
  const normalizeWeek=v=>{const kind=typeof v==='string'?v:(v.kind||'volcano'),def=definitions[kind]||definitions.volcano,uses=Math.max(1,Math.round(Number(typeof v==='string'?1:v.uses)||1));return {name:String(typeof v==='string'?def.name:v.name||def.name),desc:String(typeof v==='string'?def.name:v.desc||def.name),uses,kind,link:String(typeof v==='string'?'':v.link||'').trim()};};
  const RECHARGE_STAGE_RESET='2026-11-17-first-discount';if(state.rechargeStageReset!==RECHARGE_STAGE_RESET){state.paidRechargeCount=0;state.rechargeStageReset=RECHARGE_STAGE_RESET;}state.paidRechargeCount=Math.max(0,Math.min(99,Math.round(Number(state.paidRechargeCount)||0)));
  const rechargeStage=()=>((Math.max(0,Math.round(Number(state.paidRechargeCount)||0)))%4);
  const inviteExamples=[['林同学',1,1],['陈同学',2,4],['周同学',3,9]].map(([name,stage,age],i)=>({id:'DEMO-SUPPLY-'+i,name,created:shiftedDay(day(),-age),stage,reward:defaults.invite.inviter.slice(0,stage).reduce((a,b)=>a+b,0),friendReward:defaults.invite.friend.slice(0,stage).reduce((a,b)=>a+b,0),rules:clone(defaults.invite),demo:true}));
- s.weekRules=s.weekRules||{};s.events=s.events||[];s.configHistory=s.configHistory||[];if(!state.config.yunbeiTasks)state.config.yunbeiTasks={activityName:'科研云贝任务活动',enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const taskRule=state.config.yunbeiTasks;if(!Array.isArray(state.config.supplyRules.checkin.rewards)||state.config.supplyRules.checkin.rewards.length!==5)state.config.supplyRules.checkin.rewards=Array(5).fill(Math.max(0,Math.round(Number(taskRule.checkin?.reward)||1)));Object.values(s.weekRules).forEach(w=>{w.rewards=Array(5).fill(Math.max(0,Math.round(Number(taskRule.checkin?.reward)||1)));});
+ s.weekRules=s.weekRules||{};s.events=s.events||[];s.configHistory=s.configHistory||[];if(!state.config.yunbeiTasks)state.config.yunbeiTasks={activityName:'科研云贝任务活动',enabled:true,invite:{daily:3,inviter:10,friend:10},profile:{reward:3},checkin:{reward:1},wechat:{reward:3},avatar:{reward:1}};const taskRule=state.config.yunbeiTasks;state.config.supplyRules.checkin.rewards=[1,1,1,1,1];Object.values(s.weekRules).forEach(w=>{w.rewards=[1,1,1,1,1];});
  const rule=()=>s.weekRules[start()]||cfg().checkin;
  const log=(who,source,kind,amount,reference='')=>s.events.unshift({id:uid('AW'),day:day(),who,source,kind,amount,reference});
  const grant=(id,perk,source)=>{if(s.perks.some(p=>p.id===id))return id;const total=Math.max(1,Math.round(Number(perk.uses)||1));s.perks.push({id,kind:perk.kind||'volcano',name:perk.name,desc:perk.desc||'',totalUses:total,usedUses:0});log('当前用户',source,perk.name+' × '+total,1,id);return id;};
@@ -52,15 +52,15 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
  function track(){
   const r=rule(),n=checks().length,total=Number(r.rewards[0]||0)*5,earned=checks().reduce((a,c)=>a+c.reward,0);
   if(!cfg().checkin.enabled)return '<div class="supply-paused">签到暂未开放，已获得的云贝保留。</div>';
-  return `<div class="supply-track-head"><strong>本周签到进度 ${n}/5</strong><span>${earned}/${total} 云贝</span></div><div class="supply-days">${r.rewards.map((v,i)=>`<div class="supply-day ${i<n?'done':''}"><b>${i<n?'✓':'+'+Number(v||0)}</b><span>第${i+1}次</span></div>`).join('')}</div><div class="supply-track-bottom"><span>第 ${Math.min(n+1,5)} 次可领 +${Number(r.rewards[Math.min(n,4)]||0)} 云贝 · 已累计 ${earned} 云贝</span>${button('check',n>=5?'本周已领满':done()?'今日已签到':'签到领云贝',n>=5||done())}</div>`;
+  return `<div class="supply-track-head"><strong>本周签到进度 ${n}/5</strong><span>${earned}/5 云贝</span></div><div class="supply-days">${[0,1,2,3,4].map((v,i)=>`<div class="supply-day ${i<n?'done':''}"><b>${i<n?'✓':'+1'}</b><span>第${i+1}次</span></div>`).join('')}</div><div class="supply-track-bottom"><span>${n>=5?'本周已领满 5 云贝':'第 ${Math.min(n+1,5)} 次可领 +1 云贝 · 已累计 ${earned} 云贝'}</span>${button('check',n>=5?'本周已领满':done()?'今日已签到':'签到领云贝',n>=5||done())}</div>`;
  }
  function sign(){
   if(!cfg().checkin.enabled){toast('签到暂未开放。');return;}
   const n=checks().length;if(done()||n>=5)return showCheck();
   if(!s.weekRules[start()])s.weekRules[start()]=clone(cfg().checkin);
-  const r=rule(),reward=r.rewards[n];s.checks.push({day:day(),reward});addCredit(reward,'checkin','签到得云贝 · 本周第 '+(n+1)+' 次签到');log('当前用户','签到奖励','云贝',reward,start());put();renderAll();showCheck(reward);
+  const reward=1;s.checks.push({day:day(),reward});addCredit(reward,'checkin','签到得云贝 · 本周第 '+(n+1)+' 次签到');log('当前用户','签到奖励','云贝',reward,start());put();renderAll();showCheck(reward);
  }
- function showCheck(reward=0){const r=rule(),total=r.rewards.reduce((a,b)=>a+b,0);openModal('签到得云贝',`${reward?`<div class="supply-award">签到成功，${reward} 云贝已到账。</div>`:''}${track()}<p class="supply-modal-note" style="margin-top:18px">周一至周日任选 5 天签到，不要求连续；第 1–5 次奖励分别为 ${r.rewards.join('、')} 云贝，本周累计最多 ${total} 云贝。已获得的云贝保留。</p>`);}
+ function showCheck(reward=0){openModal('签到得云贝',`${reward?`<div class="supply-award">签到成功，${reward} 云贝已到账。</div>`:''}${track()}<p class="supply-modal-note" style="margin-top:18px">一周任选 5 天签到，不要求连续；每天可得 1 云贝，本周累计最多 5 云贝。已获得的云贝保留。</p>`);}
  const rechargePanel=$('#panel-recharge');
   const nativeQuote=rechargeQuote;
  rechargeQuote=function(id=selectedPlan){const q=nativeQuote(id);if(!q)return q;const d=rechargeDiscounts(),stage=rechargeStage(),zhe=stage===0?d.first:stage===1?d.second:stage===2?d.later:10;const label=stage===0?'首充 '+formatZhe(d.first):stage===1?'第2次 '+formatZhe(d.second):stage===2?'第3次 '+formatZhe(d.later):'第4次 原价';return {...q,first:stage===0,rechargeStage:stage,discountExhausted:false,discountZhe:zhe,discountLabel:label,paidCents:Math.round(q.faceCents*zhe/10)};};
@@ -81,11 +81,11 @@ cfg().recharge.weeks=(Array.isArray(cfg().recharge.weeks)&&cfg().recharge.weeks.
   }).join('');
  }
  const nativeRecharge=renderRecharge;
- renderRecharge=function(){nativeRecharge();const q=rechargeQuote();if(!q)return;const nameTag=$('#plans-offer-title');const nameWrap=nameTag?.closest('.plans-offer-tag');const actName=String(state.config.rechargeActivityName||'').trim();if(nameTag){nameTag.textContent=actName;if(nameWrap)nameWrap.hidden=!actName;}$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
+ renderRecharge=function(){nativeRecharge();const q=rechargeQuote();if(!q)return;const payBtn=$('#simulate-pay');if(payBtn)payBtn.textContent='确认明细';const nameTag=$('#plans-offer-title');const nameWrap=nameTag?.closest('.plans-offer-tag');const actName=String(state.config.rechargeActivityName||'').trim();if(nameTag){nameTag.textContent=actName;if(nameWrap)nameWrap.hidden=!actName;}$('#checkout-first-tag').textContent=q.discountLabel;$('.quote-discount span').textContent=q.discountLabel+'优惠';$('.quote-discount').hidden=q.discountZhe>=10;$('#checkout-first-tag').hidden=false;$$('.plan-rate').forEach(e=>e.hidden=false);renderRechargePass();};
  const nativePay=payRecharge;
  payRecharge=function(){
  const quote=pendingRecharge||rechargeQuote();if(!quote){toast('请先选择充值档位。');return;}
- openModal('支付确认明细',`<div class="exchange-preview">${icon('coin')}<div><h3>请核对支付信息</h3><p>确认后完成本次充值（演示环境不真实扣款）</p></div></div><div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>折扣优惠</span><strong>−${money(quote.faceCents-quote.paidCents)}（${quote.discountZhe} 折）</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div><div class="detail-line total"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="modal-note">${icon('file')}<span>充值订单可按实付金额申请发票。</span></div><div class="modal-actions"><button class="btn" data-action="close">取消</button><button class="btn primary" data-action="confirm-pay">确认支付</button></div>`);
+ openModal('支付确认明细',`<div class="exchange-preview">${icon('coin')}<div><h3>请核对支付信息</h3><p>确认后完成本次充值（演示环境不真实扣款）</p></div></div><div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>折扣优惠</span><strong>−${money(quote.faceCents-quote.paidCents)}（${quote.discountZhe} 折）</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div><div class="detail-line total"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="modal-note">${icon('file')}<span>充值订单可按实付金额申请发票。</span></div><div class="modal-actions"><button class="btn primary" data-action="confirm-pay">确认支付</button></div>`);
 };
 function confirmPayNow(){const quote=pendingRecharge||rechargeQuote();if(!quote)return;$('#simulate-pay').disabled=true;const order=completeRecharge(quote);if(!order){showError('充值优惠状态已变化，请刷新后重新确认订单。');return;}rechargePage=1;pendingRecharge=null;if(typeof clearPaymentTimer==='function')clearPaymentTimer();closeModal();renderAll();toast(`充值成功，${fmt(order.total)} 云贝已到账，实付 ${money(order.paidCents)}`);setTab('recharge-orders');}
 function ybTaskCfg(){
@@ -98,9 +98,12 @@ function ybTaskCfg(){
  }};
  if(!state.config.yunbeiTasks)state.config.yunbeiTasks=clone(d);
  const c=state.config.yunbeiTasks;
- if(!c.tasks)c.tasks=clone(d.tasks);const legacy={invite:c.invite,profile:c.profile,checkin:c.checkin,wechat:c.wechat,avatar:c.avatar};Object.keys(d.tasks).forEach(id=>{if(!c.tasks[id])c.tasks[id]={...d.tasks[id],...(legacy[id]||{})};});
+ if(!c.tasks)c.tasks=clone(d.tasks);
+ const deleted=new Set(Array.isArray(c.deletedTasks)?c.deletedTasks:[]);
+ const legacy={invite:c.invite,profile:c.profile,checkin:c.checkin,wechat:c.wechat,avatar:c.avatar};Object.keys(d.tasks).forEach(id=>{if(deleted.has(id))return;if(!c.tasks[id])c.tasks[id]={...d.tasks[id],...(legacy[id]||{})};});
  const tasks={};
- Object.keys(d.tasks).forEach(id=>{tasks[id]={...d.tasks[id],...(c.tasks[id]||{})};if(id==='profile'&&tasks[id].desc==='补充昵称、研究方向和所在单位。')tasks[id].desc='补充职称、单位和研究方向。'; if(!c.tasks[id])c.tasks[id]=tasks[id];});
+ Object.keys(d.tasks).forEach(id=>{if(deleted.has(id))return;tasks[id]={...d.tasks[id],...(c.tasks[id]||{})};if(id==='profile'&&tasks[id].desc==='补充昵称、研究方向和所在单位。')tasks[id].desc='补充职称、单位和研究方向。'; if(!c.tasks[id])c.tasks[id]=tasks[id];});
+ Object.keys(c.tasks||{}).forEach(id=>{if(!tasks[id])tasks[id]={...(c.tasks[id]||{}),custom:true};});
  return {...d,...c,tasks};
 }
 function ensureTaskData(){if(!state.taskData)state.taskData={completed:[],checkinDate:'',invite:{date:'',count:0}};if(!Array.isArray(state.taskData.completed))state.taskData.completed=[];if(state.taskData.invite?.date!==day())state.taskData.invite={date:day(),count:0};}
@@ -111,15 +114,27 @@ function inviteAllRecords(){return [...(state.invites||[]),...(state.inviteExamp
 function taskIcon(id){return {invite:'users',profile:'user',checkin:'gift',wechat:'wechat',avatar:'image'}[id]||'gift';}
 function taskCard(id,title,desc,reward,status,doneOverride){
  const done=id==='invite'?false:(doneOverride??taskCompleted(id));
- const label=id==='invite'?'去邀请':done?'已完成':'去完成';
+ const unbind=id==='wechat'&&done;
+ const label=id==='invite'?'去邀请':unbind?'去解绑':done?'已完成':'去完成';
  const rewardText=id==='invite'?esc(String(reward)):'+'+reward;
- return `<article class="yunbei-task-card task-${id} ${done?'done':''}"><div class="yunbei-task-main"><span class="yunbei-task-icon ${id==='wechat'?'wechat':''}" aria-hidden="true"><svg class="icon"><use href="#i-${taskIcon(id)}"></use></svg></span><div class="yunbei-task-content"><span class="yunbei-task-kind">${id==='invite'||id==='checkin'?'每日任务':'成长任务'}</span><h4>${esc(title)}</h4><p>${esc(desc)}</p><small>${esc(status)}</small></div></div><div class="yunbei-task-side"><b>${rewardText}</b><span>云贝</span><button class="btn ${done?'':'primary'}" type="button" data-supply-task="${id}" ${done?'disabled':''}>${label}</button></div></article>`;
+ const savedIcon=ybTaskCfg().tasks[id]?.icon||'';
+ const iconMarkup=savedIcon?`<img class="task-icon-img" src="${esc(savedIcon)}" alt="">`:`<svg class="icon"><use href="#i-${taskIcon(id)}"></use></svg>`;
+ return `<article class="yunbei-task-card task-${id} ${done?'done':''}"><div class="yunbei-task-main"><span class="yunbei-task-icon ${id==='wechat'?'wechat':''}" aria-hidden="true">${iconMarkup}</span><div class="yunbei-task-content"><span class="yunbei-task-kind">${(ybTaskCfg().tasks[id]||{}).custom?'自定义任务':(id==='invite'||id==='checkin'?'每日任务':'成长任务')}</span><h4>${esc(title)}</h4><p>${esc(desc)}</p><small>${esc(status)}</small></div></div><div class="yunbei-task-side"><b>${rewardText}</b><span>云贝</span><button class="btn ${unbind?'':'primary'}" type="button" data-supply-task="${unbind?'wechat-unbind':id}" ${done&&!unbind?'disabled':''}>${label}</button></div></article>`;
 }
 function renderTaskCenter(){
  const box=$('#panel-invite');if(!box)return;ensureTaskData();const c=ybTaskCfg(),limit=inviteDailyLimit(),count=inviteDailyCount(),records=inviteAllRecords(),link=inviteShareUrl();
  const canInvite=limit===0||count<limit;
- const cards=[taskCard('invite',c.tasks.invite.name,c.tasks.invite.desc,`${c.tasks.invite.inviter}/${c.tasks.invite.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`),taskCard('profile',c.tasks.profile.name,c.tasks.profile.desc,c.tasks.profile.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'),taskCard('checkin',c.tasks.checkin.name,c.tasks.checkin.desc,rule().rewards[Math.min(checks().length,4)]||0,state.taskData.checkinDate===day()||done()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到',state.taskData.checkinDate===day()||done()),taskCard('wechat',c.tasks.wechat.name,c.tasks.wechat.desc,c.tasks.wechat.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'),taskCard('avatar',c.tasks.avatar.name,c.tasks.avatar.desc,c.tasks.avatar.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励')];
- const rows=records.slice(0,10).map(r=>`<tr><td class="record-title"><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">历史示例</span>':''}</div></div></td><td data-label="邀请码"><b>${esc(state.inviteCode)}</b></td><td data-label="我的奖励">+${r.reward||c.tasks.invite.inviter} 云贝</td><td data-label="好友奖励">+${r.friendReward||c.tasks.invite.friend} 云贝</td><td data-label="状态"><span class="tag success">${r.status==='rewarded'?'邀请成功':'已完成'}</span></td></tr>`).join('');
+ const cards=[];
+ ['invite','profile','checkin','wechat','avatar',...Object.keys(c.tasks||{})].filter((id,i,arr)=>c.tasks[id]&&arr.indexOf(id)===i).forEach(id=>{
+  const t=c.tasks[id];
+  if(id==='invite')cards.push(taskCard('invite',t.name,t.desc,`${t.inviter}/${t.friend}`,`今日 ${limit===0?'不限':count+'/'+limit} 位 · 已成功 ${records.length} 位`));
+  else if(id==='checkin')cards.push(taskCard('checkin',t.name,t.desc,rule().rewards[Math.min(checks().length,4)]||0,state.taskData.checkinDate===day()||done()?`今日已签到 · ${displayDate(nowIso(),true)}`:'今日未签到',state.taskData.checkinDate===day()||done()));
+  else if(id==='profile')cards.push(taskCard('profile',t.name,t.desc,t.reward,taskCompleted('profile')?'资料已完善':'一次性奖励'));
+  else if(id==='wechat')cards.push(taskCard('wechat',t.name,t.desc,t.reward,taskCompleted('wechat')?'微信已绑定':'一次性奖励'));
+  else if(id==='avatar')cards.push(taskCard('avatar',t.name,t.desc,t.reward,taskCompleted('avatar')?'头像已上传':'一次性奖励'));
+  else cards.push(taskCard(id,t.name,t.desc,t.reward||0,taskCompleted(id)?'已完成':'一次性奖励'));
+ });
+ const rows=records.slice(0,10).map(r=>`<tr><td class="record-title"><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">历史示例</span>':''}</div></div></td><td data-label="邀请码"><b>${esc(state.inviteCode)}</b></td><td data-label="我的奖励">+${r.reward||c.tasks.invite?.inviter||10} 云贝</td><td data-label="好友奖励">+${r.friendReward||c.tasks.invite?.friend||10} 云贝</td><td data-label="状态"><span class="tag success">${r.status==='rewarded'?'邀请成功':'已完成'}</span></td></tr>`).join('');
  box.innerHTML=`<div class="yunbei-task-grid">${cards.join('')}</div>`;
 }
 function completeTask(id,reward,label){ensureTaskData();if(state.taskData.completed.includes(id))return;state.taskData.completed.push(id);addCredit(reward,'task',label);log('当前用户','任务奖励','云贝',reward);persist();renderAll();toast(label+'，'+reward+' 云贝已到账。');}
@@ -128,7 +143,7 @@ function openTaskModal(id){
  const c=ybTaskCfg();
  if(id==='invite'){const records=inviteAllRecords(),rows=records.slice(0,10).map(r=>`<tr><td><div class="invite-person"><span class="invite-person-avatar" aria-hidden="true">${esc(String(r.name).slice(0,1))}</span><div><strong>${esc(r.name)}</strong>${r.demo?'<span class="table-demo">示例</span>':''}</div></div></td><td>${displayDate(r.created)}</td><td class="num">+${r.reward||c.tasks.invite.inviter}</td><td class="num">+${r.friendReward||c.tasks.invite.friend}</td><td><span class="tag success">邀请成功</span></td></tr>`).join('');openModal('邀请好友得云贝',`<div class="invite-modal-top"><div class="invite-modal-field"><span>邀请链接（已包含邀请码）</span><input readonly value="${esc(inviteShareUrl())}" onclick="this.select()"></div><button class="btn primary" type="button" data-action="copy-invite-link">复制邀请链接</button></div><div class="invite-modal-summary"><span>今日已邀请 ${inviteDailyCount()}/${inviteDailyLimit()||'不限'} 位</span><span>累计邀请 ${records.length} 位</span><span>链接内邀请码自动识别 · 仅未注册新账号有效</span></div><div class="invite-modal-list"><table><thead><tr><th>好友昵称</th><th>邀请时间</th><th>我的奖励</th><th>好友奖励</th><th>状态</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="empty-state">还没有邀请记录，复制链接邀请好友吧。</td></tr>'}</tbody></table></div>`);return;}
  if(id==='profile'){openModal('完善个人中心',`<form id="task-profile-form"><div class="field"><label for="task-name">职称</label><input id="task-name" required maxlength="40" placeholder="暂未设置职位"></div><div class="field"><label for="task-org">单位</label><input id="task-org" required maxlength="60" placeholder="暂未设置单位"></div><div class="field"><label for="task-field">研究方向</label><input id="task-field" required maxlength="60" placeholder="暂未设置研究方向"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">保存并领奖</button></div></form>`);return;}
- if(id==='wechat'){openModal('绑定微信',`<form id="task-wechat-form"><div class="field"><label for="task-wechat">微信号</label><input id="task-wechat" required maxlength="40" placeholder="请填写微信号"></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">确认绑定</button></div></form>`);return;}
+ if(id==='wechat'){openModal('绑定微信',`<div class="wechat-bind-modal"><div class="wechat-bind-qr">${qrSvg('https://genescloud.cn/wechat-bind?code='+esc(state.inviteCode||'DEMO'),190)}</div><div class="wechat-bind-tip">请使用微信扫描二维码完成绑定</div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="button" data-action="wechat-bind-confirm">我已扫码绑定</button></div></div>`);return;}
  if(id==='avatar'){openModal('上传个人图像',`<form id="task-avatar-form"><div class="field"><label for="task-avatar">选择头像</label><input id="task-avatar" type="file" accept="image/*" required></div><div class="modal-actions"><button class="btn" type="button" data-action="close">取消</button><button class="btn primary" type="submit">上传并领奖</button></div></form>`);return;}
 }
 function taskInviteSubmit(){
@@ -136,7 +151,7 @@ function taskInviteSubmit(){
  if(!name||!account)return fail('请填写好友昵称和账号。');const limit=inviteDailyLimit();if(limit>0&&inviteDailyCount()>=limit)return fail('今日邀请人数已达上限。');const c=ybTaskCfg();const exists=inviteAllRecords().some(r=>String(r.friendKey||'').toLowerCase()===account);if(exists)return fail('该账号已在基因云注册过，只有新注册账号才能获得邀请奖励。');
  const id=uid('INV');state.invites.unshift({id,friendKey:account,name,reward:c.tasks.invite.inviter,friendReward:c.tasks.invite.friend,created:nowIso(),status:'rewarded'});state.taskData.invite.count++;addCredit(c.tasks.invite.inviter,'invite','邀请好友注册 · '+name,id);log('受邀好友：'+name,'好友奖励','云贝',c.tasks.invite.friend,id);persist();closeModal();renderAll();toast('邀请成功，双方云贝已到账。');
 }
-document.addEventListener('click',e=>{const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='checkin')return taskCheckin();openTaskModal(id);});
+document.addEventListener('click',e=>{const wb=e.target.closest('[data-action="wechat-bind-confirm"]');if(wb){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');return;}const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='wechat-unbind'){closeModal();actions.profile();toast('请在个人中心解绑微信。');return;}if(id==='checkin')return taskCheckin();openTaskModal(id);});
 document.addEventListener('submit',e=>{
  if(e.target.id==='task-invite-form'){e.preventDefault();taskInviteSubmit();return;}
  if(e.target.id==='task-profile-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('profile',ybTaskCfg().profile.reward,'个人中心已完善');}return;}
@@ -209,5 +224,7 @@ document.addEventListener('keydown',e=>{if(e.target.id==='ai-chat-input'&&e.key=
 if(!state.config.catalog.some(p=>p.id==='token-100k')){state.config.catalog.unshift({id:'token-100k',name:'AI Token · 10万',category:'AI Token',price:100,desc:'可切换主流模型对话',unit:'10万 Token',kind:'aiToken',tokenAmount:100000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
 if(!state.config.catalog.some(p=>p.id==='token-500k')){state.config.catalog.splice(1,0,{id:'token-500k',name:'AI Token · 50万',category:'AI Token',price:450,desc:'批量对话更划算',unit:'50万 Token',kind:'aiToken',tokenAmount:500000,icon:'layers',color:'blue',badge:'AI Token',enabled:true,cover:''});applyConfig();}
 if(!Number.isFinite(state.tokenUsed))state.tokenUsed=0;
+
+window.YunbeiSupply={data:s,config:cfg,defaults,definitions,clone,escape:(value)=>esc(value),day,refresh:()=>renderAll(),rule,showRules:()=>actions.rules()};
 
 })();

@@ -386,3 +386,12 @@ body{background:#f6f8fb!important}
 .admin-modal-sm .modal-content{padding:22px 24px 24px}
 .admin-modal .admin-submit-row .btn{width:auto}
 .admin-category-modal-overlay{z-index:95}
+.required-mark{color:#e2664a;font-style:normal;margin-left:2px;font-weight:700}
+.admin-invalid{border-color:#e2664a !important;box-shadow:0 0 0 3px rgba(226,102,74,.12)}
+.admin-product-price span{display:block}
+.admin-product-price small{display:block;margin-left:0;margin-top:2px}
+
+.admin-new-row td{background:#fff7ed !important;transition:background-color .8s ease}
+.admin-new-row td:first-child{box-shadow:inset 3px 0 0 #f08a3d}
+
+.admin-item-row.admin-new-row{background:#fff7ed !important;border-color:#f7c59b !important;box-shadow:inset 3px 0 0 #f08a3d}

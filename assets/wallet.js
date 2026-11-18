@@ -33,19 +33,27 @@ function renderLedger(){
  $('#ledger-pagination').innerHTML=pager(pages,ledgerPage,'ledger-page');
 }
 function ledgerDetails(id){const r=state.ledger.find(row=>row.id===id);if(!r)return;openModal('云贝变动详情',`<div class="exchange-preview">${icon(r.delta<0?'chart':'coin')}<div><h3>${esc(r.label)}</h3><p>${sourceLabel(r.source)}</p></div></div><div class="detail-line"><span>云贝变动</span><strong class="num ${r.delta>0?'positive':'negative'}">${r.delta>0?'+':''}${fmt(r.delta)} 云贝</strong></div><div class="detail-line"><span>发生时间</span><strong>${displayDate(r.created,true)}</strong></div><div class="detail-line"><span>变动后余额</span><strong>${fmt(r.balance)} 云贝</strong></div><div class="detail-line"><span>关联单号</span><strong style="font-size:11px">${esc(r.orderId)}</strong></div>${r.category?`<div class="detail-line"><span>使用去向</span><strong>${esc(r.category)}</strong></div>`:''}<div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`);}
+function applyCustomAmount(){const input=$('#custom-amount-input');if(!input)return;const v=Math.max(0,Math.round(Number(input.value)||0));customRechargeAmount=v>0?v:'';applyCustomRecharge();renderRecharge();if(v>0)toast(`已设置自定义充值 ¥${v}（${v*10} 云贝）`);}
+function applyCustomRecharge(){
+ const plan=RECHARGE_PLANS.find(p=>p.id==='custom');if(!plan)return;
+ const v=Math.max(0,Math.round(Number(customRechargeAmount)||0));
+ plan.yuan=v;plan.principal=v*10;plan.paidCents=Math.round(v*100*(plan.discountZhe||8)/10);plan.faceCents=v*100;
+}
 function renderRecharge(){
  const visiblePlans=RECHARGE_PLANS.filter(p=>p.enabled!==false);if(!visiblePlans.some(p=>p.id===selectedPlan))selectedPlan=visiblePlans[0]?.id||'';const q=rechargeQuote(selectedPlan);if(!q){
   $('#recharge-plans').innerHTML='<div class="recharge-empty"><strong>暂无可用充值档位</strong><span>管理员启用档位后即可选择充值。</span></div>';
   const offer=$('#plans-offer-title');if(offer)offer.textContent='暂未开放';
-  ['quote-face','quote-discount','quote-principal','quote-bonus','quote-total','quote-paid'].forEach(id=>$('#'+id).textContent='—');
+  ['quote-face','quote-discount','quote-principal','quote-total','quote-paid'].forEach(id=>$('#'+id).textContent='—');
   $('#checkout-first-tag').hidden=true;$('#simulate-pay').disabled=true;
   $('#payment-qr').innerHTML='<span class="qr-expired">暂无可用档位</span>';$('#payment-method-label').textContent='请选择可用档位后扫码支付';
   clearPaymentTimer();$('#payment-countdown').textContent='等待选择充值档位';pendingRecharge=null;return;
  }
 
  const offer=$('#plans-offer-title');if(offer)offer.textContent=(q.first?'首充 ':'充值 ')+formatZhe(Math.min(...visiblePlans.map(p=>rechargeQuote(p.id).discountZhe)));
- $('#recharge-plans').innerHTML=visiblePlans.map(p=>{const quote=rechargeQuote(p.id);return `<button class="recharge-plan ${p.id===selectedPlan?'selected':''}" data-plan="${p.id}" aria-pressed="${p.id===selectedPlan}" aria-label="${fmt(quote.principal)}云贝，赠送${fmt(quote.bonus)}云贝，${formatZhe(quote.discountZhe)}，实付${money(quote.paidCents)}"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${fmt(quote.principal)}<small>云贝</small></strong><span class="plan-amount">原价 <del>${money(quote.faceCents)}</del></span><span class="plan-bonus ${quote.bonus?'':'empty'}">${quote.bonus?'额外赠送 '+fmt(quote.bonus)+' 云贝':'无额外赠送'}</span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></button>`;}).join('');
- $('#quote-face').textContent=money(q.faceCents);updatePaymentQr(q);pendingRecharge=q;if($('#simulate-pay')){$('#simulate-pay').disabled=false;$('#simulate-pay').textContent='确认支付';}startPaymentCountdown();$('#quote-discount').textContent='−'+money(q.faceCents-q.paidCents);$('.quote-discount span').textContent=q.discountZhe+'折优惠';$('#checkout-first-tag').textContent='充值 '+q.discountZhe+' 折';$('.quote-discount').hidden=false;$('#checkout-first-tag').hidden=false;$('#quote-principal').textContent=fmt(q.principal);$('#quote-bonus').textContent='+'+fmt(q.bonus);$('#quote-total').innerHTML=fmt(q.total)+'<small>云贝</small>';$('#quote-paid').textContent=money(q.paidCents);
+ const customPlan=visiblePlans.find(p=>p.id==='custom');
+ const customInput=customPlan?`<div class="custom-amount-row"><input id="custom-amount-input" type="number" min="1" max="100000" step="1" placeholder="输入自定义金额（元）" value="${customRechargeAmount||''}"><button class="btn" type="button" data-action="apply-custom">确认</button></div>`:'';
+ $('#recharge-plans').innerHTML=visiblePlans.map(p=>{const quote=rechargeQuote(p.id);return `<button class="recharge-plan ${p.id===selectedPlan?'selected':''}" data-plan="${p.id}" aria-pressed="${p.id===selectedPlan}" aria-label="${fmt(quote.principal)}云贝，${formatZhe(quote.discountZhe)}，实付${money(quote.paidCents)}"><span class="plan-rate">${formatZhe(quote.discountZhe)}</span><strong class="plan-points num">${p.id==='custom'?(customRechargeAmount?fmt(quote.principal):'0') : fmt(quote.principal)}<small>云贝</small></strong><span class="plan-amount">原价 <del>${money(quote.faceCents)}</del></span><span class="plan-note">实付 <b class="num">${money(quote.paidCents)}</b></span></button>`;}).join('');
+ $('#quote-face').textContent=money(q.faceCents);updatePaymentQr(q);pendingRecharge=q;if($('#simulate-pay')){$('#simulate-pay').disabled=false;$('#simulate-pay').textContent='确认支付';}startPaymentCountdown();$('#quote-discount').textContent='−'+money(q.faceCents-q.paidCents);$('.quote-discount span').textContent=q.discountZhe+'折优惠';$('#checkout-first-tag').textContent='充值 '+q.discountZhe+' 折';$('.quote-discount').hidden=false;$('#checkout-first-tag').hidden=false;$('#quote-principal').textContent=fmt(q.principal);$('#quote-total').innerHTML=fmt(q.total)+'<small>云贝</small>';$('#quote-paid').textContent=money(q.paidCents);
 }
 function qrSvg(text,size=240){if(!window.QRCode)return '<div class="qr-fallback">二维码生成失败</div>';const qr=new QRCode(-1,1);qr.addData(text);qr.make();const n=qr.getModuleCount(),unit=size/n;let path='';for(let row=0;row<n;row++){for(let col=0;col<n;col++){if(qr.isDark(row,col))path+=`M${(col*unit).toFixed(2)} ${(row*unit).toFixed(2)}h${unit.toFixed(2)}v${unit.toFixed(2)}h-${unit.toFixed(2)}z`;}}return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="支付二维码"><rect width="${size}" height="${size}" fill="#fff"></rect><path d="${path}" fill="#111827"></path></svg>`;}
 let paymentTimer=null,paymentDeadline=0;
@@ -120,7 +128,7 @@ function setTab(tab,updateHash=true){
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
 }
 const actions={
- close:closeModal,rules:showRules,help:showRules,earn:()=>earn(),checkin,rights:showRights,'add-plan':addPlan,'add-product':addProduct,
+ close:closeModal,rules:showRules,help:showRules,earn:()=>earn(),checkin,rights:showRights,'apply-custom':applyCustomAmount,'add-plan':addPlan,'add-product':addProduct,
  recharge:()=>{closeModal();setTab('recharge');},checkout,'copy-invite':copyInvite,'copy-invite-link':copyInviteLink,'share-invite':shareInviteLink,'invite-demo':inviteDemo,'usage-details':()=>openUsageDetails(),'invoice-rules':invoiceRules,
  'apply-period':()=>{dashboardCustomStart=$('#dashboard-start').value;dashboardCustomEnd=$('#dashboard-end').value;const valid=dashboardRange().valid;$('#dashboard-range-error').textContent=valid?'':'请选择不晚于今天、开始早于结束且最多 366 天的日期范围。';if(valid)renderDashboard();},
  'view-orders':()=>{closeModal();setTab('orders');},'continue-shopping':()=>{closeModal();setTab('shop');},
@@ -138,6 +146,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.userModule){setTab(b.dataset.userModule==='spend'?'shop':'recharge');return;}
  if(b.dataset.tab){if(!$('#overlay').hidden)closeModal();setTab(b.dataset.tab);return;}
  if(b.dataset.plan){selectedPlan=b.dataset.plan;renderRecharge();return;}
+ if(b.dataset.customAmount){const v=Math.round(Number(b.value)||0);customRechargeAmount=v>0?v:'';applyCustomRecharge();renderRecharge();return;}
  if(b.dataset.payment){paymentMethod=b.dataset.payment;$$('[data-payment]').forEach(e=>e.classList.toggle('selected',e===b));if($('#payment-qr'))updatePaymentQr(rechargeQuote());return;}
  if(b.id==='simulate-pay'){payRecharge();return;}
  if(b.id==='cancel-payment'){recordRechargeFailure('用户取消支付');pendingRecharge=null;clearPaymentTimer();renderRecharge();return;}
