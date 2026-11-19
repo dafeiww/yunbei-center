@@ -434,3 +434,10 @@ body:not(.recharge-tab-active) .table-action:not(:disabled):not([data-task-icon-
   padding: 7px 12px;
   min-height: 36px;
 }
+
+/* Custom recharge card badge stays flush with the card corner */
+.recharge-plan.custom-plan .plan-rate{top:0;right:0;border-radius:0 12px 0 8px}
+
+/* Fixed check-in reward rule */
+.growth-fixed-reward{font-size:20px;font-weight:750;color:#1890ff;line-height:1.2}
+.task-admin-fixed-rule{padding:11px 12px;border:1px dashed #b9d7f5;border-radius:10px;background:#f4faff;color:#24629b;font-size:12px;font-weight:600}

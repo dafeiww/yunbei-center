@@ -66,7 +66,7 @@ function rechargeQuote(planId=selectedPlan){
  if(planId==='custom'){const yuan=Math.max(0,Math.min(100000,Math.floor(Number(customRechargeAmount)||0))),principal=yuan*10,bonus=bonusByRatio(principal);return {planId:'custom',first:true,discountZhe:8,faceCents:yuan*100,paidCents:Math.round(yuan*80),principal,bonus,total:principal+bonus};}
   const plan=RECHARGE_PLANS.find(p=>p.id===planId);if(!plan)return null;
  const first=true,discountZhe=Number.isFinite(Number(plan.discountZhe))?Math.min(10,Math.max(1,Number(plan.discountZhe))):8,faceCents=plan.yuan*100,paidCents=Number.isFinite(Number(plan.paidCents))?Math.max(0,Math.round(Number(plan.paidCents))):Math.round(faceCents*discountZhe/10);
- const principal=Math.max(1,Math.round((Number(plan.yuan)||0)*10)),bonus=bonusByRatio(principal);
+ const principal=Math.max(0,Math.round((Number(plan.yuan)||0)*10)),bonus=bonusByRatio(principal);
  return {planId,first,discountZhe,faceCents,paidCents,principal,bonus,total:principal+bonus};
 }
 function prepareState(){

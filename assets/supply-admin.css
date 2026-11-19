@@ -180,3 +180,68 @@ body .sidebar .module-nav-parent[aria-expanded="false"] .nav-chevron { transform
 #admin-shop-panel .admin-row-actions .table-action.danger { background:#fff !important; border:1px solid #ffccc7 !important; color:#ff4d4f !important; }
 #admin-shop-panel .admin-row-actions .table-action.danger:hover { background:#fff1f0 !important; border-color:#ff7875 !important; color:#ff4d4f !important; }
 body.is-admin.admin-invoice-active .admin-tabs { display:none !important; }
+
+/* 管理端发票申请状态筛选 */
+.invoice-status-tabs{display:flex;gap:6px;margin:0 0 16px;padding:4px;background:#eef4f8;border-radius:9px;width:max-content;max-width:100%;overflow:auto}
+.invoice-status-tabs button{border:0;background:transparent;color:#657581;font:inherit;font-size:12px;font-weight:650;min-height:34px;padding:7px 13px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
+.invoice-status-tabs button:hover{color:#1677ff}
+.invoice-status-tabs button.active{background:#fff;color:#1677ff;box-shadow:0 1px 5px #1890ff1a}
+
+/* 充值活动卡片按钮主次层级 */
+body.is-admin .activity-buttons .activity-edit,
+body.is-admin .activity-buttons .activity-edit:hover,
+body.is-admin .activity-buttons .table-action.activity-edit,
+body.is-admin .activity-buttons .table-action.activity-edit:hover {
+  background: #fff !important;
+  border: 1px solid #91caff !important;
+  color: #1677ff !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+body.is-admin .activity-buttons .table-action.danger,
+body.is-admin .activity-buttons .table-action.danger:hover,
+body.is-admin .activity-buttons button.danger {
+  background: #fff !important;
+  border: 1px solid #ffccc7 !important;
+  color: #ff4d4f !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+body.is-admin .activity-buttons .table-action.danger:hover {
+  background: #fff1f0 !important;
+  border-color: #ff7875 !important;
+}
+body.is-admin .activity-buttons .activity-edit:hover {
+  background: #e6f4ff !important;
+  border-color: #1677ff !important;
+}
+
+/* 统一弹窗按钮主次层级 */
+body:not(.recharge-tab-active) .modal-actions:has(.btn.primary) .btn[data-action="close"] {
+  background: #fff !important;
+  border: 1px solid #d9e2ea !important;
+  color: #576b7c !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+body:not(.recharge-tab-active) .modal-actions:has(.btn.primary) .btn[data-action="close"]:hover {
+  background: #f4f8fb !important;
+  border-color: #b9c6d1 !important;
+  color: #404a57 !important;
+}
+
+/* 任务配置按钮主次层级 */
+body:not(.recharge-tab-active) .task-admin-card .table-action[data-task-delete],
+body:not(.recharge-tab-active) .task-admin-card button[data-task-delete] {
+  background: #fff !important;
+  border: 1px solid #ffccc7 !important;
+  color: #ff4d4f !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+body:not(.recharge-tab-active) .task-admin-card .table-action[data-task-delete]:hover,
+body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
+  background: #fff1f0 !important;
+  border-color: #ff7875 !important;
+  color: #ff4d4f !important;
+}

@@ -4,9 +4,13 @@ const OPERATIONS_DEMO_USERS=['小李','小明','林知远','陈可宁','赵书�
 const operationsCurrentUser={id:'current-user',name:'科研探索者（当前账号）',account:'researcher@example.com'};
 
 function operationsExamples(){
- if(state.operationsExamples?.version===2)return state.operationsExamples;
+ if(state.operationsExamples?.version===2){
+  state.operationsExamples.recharge=state.operationsExamples.recharge.filter(row=>row.status!=='pending');
+  state.operationsExamples={...state.operationsExamples,recharge:state.operationsExamples.recharge};
+  persist();return state.operationsExamples;
+ }
  const plans=defaultRechargePlans(),products=defaultCatalog();
- const rechargeStatus=index=>index%9===2?'pending':index%9===3?'failed':'paid';
+ const rechargeStatus=index=>index%9===3?'failed':'paid';
  const exchangeStatus=index=>index%8===2?'failed':index%8===5?'pending':'success';
  const recharge=Array.from({length:24},(_,index)=>{
   const plan=plans[index%plans.length],user=OPERATIONS_DEMO_USERS[index%OPERATIONS_DEMO_USERS.length];
@@ -20,7 +24,7 @@ function operationsExamples(){
 }
 function operationsRecords(){
  const examples=operationsExamples();
- const recharge=[...examples.recharge,...(state.recharges||[]).map(o=>({...o,status:o.status||'paid',user:operationsCurrentUser}))];
+ const recharge=[...examples.recharge,...(state.recharges||[]).map(o=>({...o,status:o.status||'paid',user:operationsCurrentUser}))].filter(row=>row.status!=='pending');
  const exchange=[...examples.exchange,...state.orders.map(o=>({...o,status:o.status||'success',user:operationsCurrentUser,category:o.category||productsById[o.productId]?.category||'商品兑换',unit:o.unit||productsById[o.productId]?.unit||'份'}))];
  const period=$('#operations-period')?.value||'30',cutoff=period==='all'?'':shiftedDay(today(),1-Number(period));
  const included=row=>!cutoff||dateKey(new Date(row.created))>=cutoff;
@@ -28,7 +32,7 @@ function operationsRecords(){
 }
 function operationsStatusDefinitions(){
  return operationsView==='recharge'?[
-  {key:'all',label:'全部记录',fallback:'paid'},{key:'paid',label:'充值成功',fallback:'paid'},{key:'pending',label:'充值中',fallback:'pending'},{key:'failed',label:'充值失败',fallback:'failed'}
+  {key:'all',label:'全部记录',fallback:'paid'},{key:'paid',label:'充值成功',fallback:'paid'},{key:'failed',label:'充值失败',fallback:'failed'}
  ]:[
   {key:'all',label:'全部记录',fallback:'success'},{key:'success',label:'兑换成功',fallback:'success'},{key:'pending',label:'兑换中',fallback:'pending'},{key:'failed',label:'兑换失败',fallback:'failed'}
  ];
