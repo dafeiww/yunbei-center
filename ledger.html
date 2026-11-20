@@ -2429,7 +2429,7 @@ body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
 <div class="list-tools"><div class="categories" id="invoice-filters"><button class="category active" data-invoice-filter="all">全部订单<span class="invoice-filter-count" id="all-invoice-count">30</span></button><button class="category" data-invoice-filter="available">待开票<span class="invoice-filter-count" id="available-invoice-count">2</span></button><button class="category" data-invoice-filter="pending">开票中<span class="invoice-filter-count" id="pending-invoice-count">10</span></button><button class="category" data-invoice-filter="issued">已开票<span class="invoice-filter-count" id="issued-invoice-count">10</span></button></div>
   <div class="invoice-merge-tools">
     <span class="merge-summary" role="status">已选 <span id="invoice-selected">0</span> 笔 · 合计 <strong class="num" id="invoice-total">¥0.00</strong></span>
-    <button class="btn primary" id="batch-invoice" type="button" disabled>合并开票</button>
+    <button class="btn primary" id="batch-invoice" type="button">合并开票</button>
   </div>
 </div><div class="list-card"><label class="select-all-mobile"><input type="checkbox" id="select-all-invoices-mobile">选择本页可开票订单</label><div class="table-wrap"><table><thead><tr><th class="check-cell"><input type="checkbox" id="select-all-invoices" aria-label="选择本页可开票订单"></th><th>充值订单</th><th>实付金额</th><th>可开票金额</th><th>开票状态</th><th>操作</th></tr></thead><tbody id="invoice-rows"></tbody></table></div><div class="invoice-pagination"><span id="invoice-record-total" role="status"></span><nav id="invoice-pagination" aria-label="发票列表分页"></nav></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>可开票金额等于充值实付金额，不包含八折减免和赠送云贝。历史示例仅供体验；本页不生成真实税务发票。</p></section>
       
@@ -3968,7 +3968,7 @@ function renderInvoices() {
 
 function updateInvoiceSelection(){
       const available=invoicePageItems().filter(o=>getInvoiceState(o)==='available');
-      $('#invoice-selected').textContent=selectedInvoices.size; $('#invoice-total').textContent=money([...selectedInvoices].reduce((s,id)=>s+(orderById(id)?.invoiceCents||0),0)); $('#batch-invoice').disabled=selectedInvoices.size<2;
+      $('#invoice-selected').textContent=selectedInvoices.size; $('#invoice-total').textContent=money([...selectedInvoices].reduce((s,id)=>s+(orderById(id)?.invoiceCents||0),0));
       $('#select-all-invoices').checked=available.length>0&&available.every(o=>selectedInvoices.has(o.id)); $('#select-all-invoices').indeterminate=available.some(o=>selectedInvoices.has(o.id))&&!$('#select-all-invoices').checked; $('#select-all-invoices').disabled=available.length===0;
       const mobile=$('#select-all-invoices-mobile');mobile.checked=$('#select-all-invoices').checked;mobile.indeterminate=$('#select-all-invoices').indeterminate;mobile.disabled=available.length===0;
     }
@@ -4942,7 +4942,10 @@ document.addEventListener('click',event=>{
  if(b.dataset.downloadInvoice){downloadInvoice(b.dataset.downloadInvoice);return;}
  if(b.dataset.invoiceOrder){invoiceDetails(b.dataset.invoiceOrder);return;}
  if(b.dataset.invoiceType){saveInvoiceDraft();invoiceType=b.dataset.invoiceType;invoiceDraft.type=invoiceType;applyInvoiceType();$('#invoice-title').value=invoiceDraft[invoiceType+'Title'];fieldError('invoice-title','');fieldError('invoice-tax','');return;}
- if(b.id==='confirm-exchange'){confirmExchange();return;}if(b.id==='checkin'){checkin();return;}if(b.id==='batch-invoice'){if(selectedInvoices.size>=2)invoiceForm([...selectedInvoices]);return;}
+ if(b.id==='confirm-exchange'){confirmExchange();return;}if(b.id==='checkin'){checkin();return;}if(b.id==='batch-invoice'){
+  if(selectedInvoices.size<2){toast('请至少勾选两笔待开票订单。');return;}
+  invoiceForm([...selectedInvoices]);return;
+ }
  if(b.dataset.action&&actions[b.dataset.action])actions[b.dataset.action]();
 });
 document.addEventListener('submit',event=>{
