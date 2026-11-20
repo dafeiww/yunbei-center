@@ -2005,6 +2005,63 @@ body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
   #panel-ledger .ledger-entry { display: contents; }
 }
 </style>
+<style id="yunbei-admin-invoice-desktop">
+@media (min-width: 801px) {
+  #admin-invoices .admin-invoice-card { border-radius: 14px; --invoice-inset: clamp(14px, 1.5vw, 22px); }
+  #admin-invoices .admin-invoice-toolbar,
+  #admin-invoices .admin-invoice-controls { display: flex; align-items: center; gap: 14px; }
+  #admin-invoices .admin-invoice-toolbar {
+    justify-content: space-between; flex-wrap: wrap;
+    min-height: 64px; padding: 12px var(--invoice-inset); border-bottom: 1px solid var(--line);
+  }
+  #admin-invoices .admin-invoice-controls h2 {
+    margin: 0; padding-inline-end: 14px; border-inline-end: 1px solid var(--line);
+    font-size: 16px; font-weight: 700; line-height: 1.4; white-space: nowrap;
+  }
+  #admin-invoices .invoice-status-tabs { gap: 2px; margin: 0; padding: 0; background: transparent; overflow: visible; }
+  #admin-invoices .invoice-status-tabs button {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+    min-height: 34px; border: 1px solid transparent; border-radius: 8px; box-shadow: none;
+  }
+  #admin-invoices .invoice-status-tabs button.active { border-color: #d9e5f3; background: #eef4fc; }
+  #admin-invoices .invoice-filter-count {
+    padding: 1px 4px; font-size: 11px; line-height: 1.4;
+    border-radius: 4px; background: #eef4f8; font-variant-numeric: tabular-nums;
+  }
+  #admin-invoices .invoice-status-tabs button.active .invoice-filter-count { background: #fff; }
+  #admin-invoice-count { color: #637887; font-size: 12px; white-space: nowrap; }
+  #admin-invoices .table-wrap { overflow-x: auto; }
+  #admin-invoices table { width: 100%; min-width: 700px; table-layout: fixed; }
+  #admin-invoices :is(th, td) { padding: 10px 8px; font-size: 13px; line-height: 1.5; }
+  #admin-invoices th { padding-block: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  #admin-invoices :is(th, td):first-child { padding-inline-start: var(--invoice-inset); }
+  #admin-invoices :is(th, td):last-child { padding-inline-end: var(--invoice-inset); }
+  #admin-invoices th:nth-child(1) { width: 17%; }
+  #admin-invoices th:nth-child(2) { width: 11%; }
+  #admin-invoices th:nth-child(3) { width: 9%; }
+  #admin-invoices th:nth-child(4) { width: 24%; }
+  #admin-invoices th:nth-child(5) { width: 9%; }
+  #admin-invoices th:nth-child(6) { width: 10%; }
+  #admin-invoices th:nth-child(7) { width: 10%; }
+  #admin-invoices th:nth-child(8) { width: 10%; }
+  #admin-invoices :is(th, td):is(:nth-child(5), :nth-child(6)) { text-align: right; }
+  #admin-invoices :is(th, td):nth-child(7) { padding-inline-start: 16px; }
+  #admin-invoices td:nth-child(6) { white-space: nowrap; font-weight: 650; }
+  #admin-invoices .num { font-variant-numeric: tabular-nums; }
+  #admin-invoices .order-name { font-weight: 650; overflow-wrap: anywhere; }
+  #admin-invoices .order-id { margin-top: 4px; }
+  #admin-invoices :is(td:nth-child(2),td:nth-child(4)) { overflow-wrap: anywhere; }
+  body #admin-invoices .admin-invoice-details:not(:disabled) {
+    display: inline-flex; gap: 4px; align-items: center; justify-content: flex-start;
+    border: 0 !important; background: transparent !important; color: var(--income) !important;
+    padding: 3px 0; min-height: 28px; box-shadow: none !important; transform: none !important;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  #admin-invoices .admin-invoice-details .icon { width: 11px; height: 11px; }
+  #admin-invoices .admin-invoice-details:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  #admin-invoices .admin-invoice-empty td { text-align: center; padding-block: 44px; }
+}
+</style>
 </head>
 <body>
   <svg class="symbols" aria-hidden="true"><defs>
@@ -4498,16 +4555,24 @@ function syncSidebarNavigation(tab){
  $$('.module-nav-parent').forEach(el=>{const active=el.dataset.userModule===group;el.classList.toggle('active',active);el.setAttribute('aria-expanded',String(active));});
  $$('.sidebar [data-tab], .mobile-module-nav [data-tab]').forEach(el=>{const navView=tab==='admin'?(adminView==='invoices'?'invoices':'recharge'):null;const match=el.dataset.tab===tab&&!(tab==='admin'&&el.dataset.adminView&&el.dataset.adminView!==navView);el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
 }
+function renderPageHeading(tab){
+ const [title,description]=tab==='admin'&&adminView==='invoices'
+  ? ['发票管理','查看用户提交的单笔与合并开票申请，跟踪开票进度。']
+  : pageInfo[tab];
+ $('#page-title').textContent=title;
+ $('#page-description').textContent=description;
+ $('#breadcrumb-current').textContent=title;
+ document.title=title+' · 派森诺基因云';
+}
 function setTab(tab,updateHash=true){
  if(HIDDEN_PAGES.includes(tab)||!Object.hasOwn(pageInfo,tab)||['admin','operations'].includes(tab)&&!isAdmin())tab='recharge';if(isAdmin()&&!['admin','operations'].includes(tab))tab='admin';
  const changed=activeTab!==tab;activeTab=tab;
  $$('.page-panel').forEach(el=>el.hidden=el.id!=='panel-'+tab);
  syncSidebarNavigation(tab);
  document.body.classList.toggle('recharge-tab-active',tab==='recharge');
- $('#page-title').textContent=pageInfo[tab][0];$('#page-description').textContent=pageInfo[tab][1];
- $('#breadcrumb-current').textContent=pageInfo[tab][0];
+ renderPageHeading(tab);
  $('#breadcrumb-current').hidden=tab==='home';$('#breadcrumb-divider').hidden=tab==='home';
- $('#page-balance').hidden=['invoices','recharge','recharge-orders','admin','operations'].includes(tab);document.title=pageInfo[tab][0]+' · 派森诺基因云';
+ $('#page-balance').hidden=['invoices','recharge','recharge-orders','admin','operations'].includes(tab);
  if(updateHash&&location.hash!=='#'+tab)history.pushState(null,'','#'+tab);
  if(changed){window.scrollTo(0,0);if(updateHash)$('#page-title').focus({preventScroll:true});}
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
@@ -4896,7 +4961,7 @@ function renderRechargeActivities(){
  const list=rechargeActivities();
  box.innerHTML=list.map(a=>{if(activityEditingId===a.id)return `<article class="supply-activity-card is-editing">${activityForm(a)}</article>`;return `<article class="supply-activity-card ${a.enabled?'active':''}"><div class="activity-card-head"><div><span class="activity-status">${a.enabled?'已生效':'未生效'}</span><h4>${esc(a.name)}</h4><p class="activity-discount-badge">充值折扣 <strong>${formatZhe(activityDiscount(a))}</strong></p></div><div class="activity-buttons"><button class="table-action activity-edit" type="button" data-activity-action="edit" data-id="${esc(a.id)}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M14.1 4.1l5.8 5.8M4 20l1-5.8L16.5 2.7a2.2 2.2 0 0 1 3.1 3.1L8.1 17.3z"></path></svg>编辑</button><label class="admin-switch"><input type="checkbox" data-activity-enable="${esc(a.id)}" ${a.enabled?'checked':''}><span class="switch-track"><i></i></span><em>${a.enabled?'生效中':'已停用'}</em></label><button class="table-action danger" type="button" data-activity-action="delete" data-id="${esc(a.id)}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>删除</button></div></div><div class="activity-tiers">${a.tiers.map(tierChip).join('')}</div></article>`;}).join('')||'<div class="admin-empty">暂无充值活动，点击上方创建活动。</div>';
 }
- const nativeSync=syncAdminView;syncAdminView=function(){nativeSync();if(adminView==='supply-recharge')adminView='recharge';document.body.classList.toggle('admin-recharge-active',activeTab==='admin'&&isAdmin()&&adminView==='recharge');document.body.classList.toggle('admin-invoice-active',activeTab==='admin'&&isAdmin()&&adminView==='invoices');const configVisible=activeTab==='admin'&&isAdmin(),moduleFor={'admin-supply-checkin':'supply-checkin','admin-supply-recharge':'supply-recharge','admin-recharge-activity':'recharge','admin-supply-tasks':'tasks','admin-invoices':'invoices',};$('#admin-recharge-panel').hidden=true;$('#admin-shop-panel').hidden=!configVisible||adminView!=='shop';$$('.growth-section').forEach(el=>el.hidden=!configVisible||moduleFor[el.id]!==adminView);};
+ const nativeSync=syncAdminView;syncAdminView=function(){nativeSync();if(adminView==='supply-recharge')adminView='recharge';document.body.classList.toggle('admin-recharge-active',activeTab==='admin'&&isAdmin()&&adminView==='recharge');document.body.classList.toggle('admin-invoice-active',activeTab==='admin'&&isAdmin()&&adminView==='invoices');const configVisible=activeTab==='admin'&&isAdmin(),moduleFor={'admin-supply-checkin':'supply-checkin','admin-supply-recharge':'supply-recharge','admin-recharge-activity':'recharge','admin-supply-tasks':'tasks','admin-invoices':'invoices',};$('#admin-recharge-panel').hidden=true;$('#admin-shop-panel').hidden=!configVisible||adminView!=='shop';$$('.growth-section').forEach(el=>el.hidden=!configVisible||moduleFor[el.id]!==adminView);if(configVisible)renderPageHeading('admin');};
  const nativeLists=renderAdminLists;
  renderAdminLists=function(){renderRechargeActivities();renderTaskAdmin();const quote=rechargeQuote;try{rechargeQuote=function(id=selectedPlan){const q=quote(id),p=state.config.rechargePlans.find(x=>x.id===id);if(!q||!p)return q;const z=Number(p.discountZhe)||8;return {...q,first:true,discountZhe:z,paidCents:Number.isFinite(Number(p.paidCents))?Number(p.paidCents):Math.round(p.yuan*100*z/10)};};nativeLists();const h=$('#admin-plan-list .admin-list-header');if(h){h.children[3].textContent='折扣';h.children[4].textContent='实付';}}finally{rechargeQuote=quote;}};
  const headerActions=$('.growth-header-actions');headerActions.id='growth-main-actions';headerActions.hidden=true;$('.page-head-actions').append(headerActions);
@@ -5006,11 +5071,32 @@ document.addEventListener('submit',e=>{
 });
 window.addEventListener('storage',()=>{applyConfig();applyRechargeActivity(activeRechargeActivity());renderAll();});
 
-$('#panel-admin').insertAdjacentHTML('beforeend',`<section id="admin-invoices" class="growth-section" hidden><article class="surface admin-config-card"><div class="surface-heading"><div><h3>发票申请管理</h3><p>查看用户提交的单笔和合并开票申请</p></div><span class="growth-scope-label">管理员视图</span></div><div class="admin-list-heading"><h4 id="admin-invoice-heading">全部发票申请</h4><span id="admin-invoice-count">0 条</span></div><div class="invoice-status-tabs" role="tablist" aria-label="发票申请状态筛选"><button type="button" class="active" data-admin-invoice-filter="all">全部</button><button type="button" data-admin-invoice-filter="pending">开票中</button><button type="button" data-admin-invoice-filter="issued">已开票</button></div><div class="table-wrap"><table><thead><tr><th>申请编号</th><th>申请人</th><th>抬头类型</th><th>发票抬头</th><th>订单数量</th><th>开票金额</th><th>状态</th><th>操作</th></tr></thead><tbody id="admin-invoice-rows"></tbody></table></div></article></section>`);
+$('#panel-admin').insertAdjacentHTML('beforeend',`
+ <section id="admin-invoices" class="growth-section" aria-labelledby="admin-invoice-heading" hidden>
+  <article class="list-card admin-invoice-card">
+   <div class="admin-invoice-toolbar">
+    <div class="admin-invoice-controls">
+     <h2 id="admin-invoice-heading">开票申请</h2>
+     <div class="invoice-status-tabs" role="group" aria-label="发票申请状态筛选">
+      <button type="button" class="active" data-admin-invoice-filter="all" aria-pressed="true">全部 <span class="invoice-filter-count"></span></button>
+      <button type="button" data-admin-invoice-filter="pending" aria-pressed="false">开票中 <span class="invoice-filter-count"></span></button>
+      <button type="button" data-admin-invoice-filter="issued" aria-pressed="false">已开票 <span class="invoice-filter-count"></span></button>
+     </div>
+    </div>
+    <span id="admin-invoice-count" role="status"></span>
+   </div>
+   <div class="table-wrap">
+    <table aria-labelledby="admin-invoice-heading">
+     <thead><tr><th scope="col">申请编号</th><th scope="col">申请人</th><th scope="col">抬头类型</th><th scope="col">发票抬头</th><th scope="col">订单数量</th><th scope="col">开票金额</th><th scope="col">状态</th><th scope="col">操作</th></tr></thead>
+     <tbody id="admin-invoice-rows"></tbody>
+    </table>
+   </div>
+  </article>
+ </section>`);
 function adminInvoiceRecords(){const groups=new Map();rechargeOrders().filter(o=>o.invoice).forEach(o=>{const i=o.invoice;if(!groups.has(i.id))groups.set(i.id,{...i,orderIds:[...new Set(i.orderIds||[o.id])]});else{const g=groups.get(i.id);g.orderIds=[...new Set([...g.orderIds,...(i.orderIds||[o.id])])];g.totalCents=g.orderIds.reduce((sum,id)=>sum+(rechargeOrders().find(x=>x.id===id)?.invoiceCents||0),0);}});return [...groups.values()].sort((a,b)=>Date.parse(b.created)-Date.parse(a.created));}
 let adminInvoiceFilter='all';
 document.addEventListener('click',e=>{const b=e.target.closest('[data-admin-invoice-filter]');if(!b)return;adminInvoiceFilter=b.dataset.adminInvoiceFilter;renderAdminInvoices();});
-function renderAdminInvoices(){const all=adminInvoiceRecords(),rows=adminInvoiceFilter==='all'?all:all.filter(i=>i.status===adminInvoiceFilter),body=$('#admin-invoice-rows');if(!body)return;const counts={all:all.length,pending:all.filter(i=>i.status==='pending').length,issued:all.filter(i=>i.status==='issued').length};$$('[data-admin-invoice-filter]').forEach(b=>{b.classList.toggle('active',b.dataset.adminInvoiceFilter===adminInvoiceFilter);b.textContent=(b.dataset.adminInvoiceFilter==='all'?'全部':b.dataset.adminInvoiceFilter==='pending'?'开票中':'已开票')+' '+counts[b.dataset.adminInvoiceFilter];});const heading=$('#admin-invoice-heading');if(heading)heading.textContent=adminInvoiceFilter==='all'?'全部发票申请':adminInvoiceFilter==='pending'?'开票中申请':'已开票申请';const count=$('#admin-invoice-count');if(count)count.textContent=rows.length+' 条';body.innerHTML=rows.map(i=>`<tr><td class="record-title"><div class="order-name">${esc(i.id)}</div><div class="order-id"><span class="tag ${(i.orderIds?.length||1)>1?'merge':'single'}">${(i.orderIds?.length||1)>1?'合并申请':'单笔申请'}</span>${fmt(i.orderIds?.length||1)} 张充值订单</div></td><td>${esc(i.applicant||'当前用户')}</td><td>${i.type==='company'?'企业':'个人'}</td><td>${esc(i.title)}</td><td class="num">${fmt(i.orderIds?.length||1)}</td><td class="num">${money(i.totalCents)}</td><td><span class="tag ${i.status==='issued'?'success':i.status==='pending'?'pending':''}">${{available:'待开票',pending:'开票中',issued:'已开票'}[i.status]||'待开票'}</span></td><td><button class="table-action" data-admin-invoice-detail="${esc(i.orderIds?.[0]||'')}">查看详情</button></td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:36px">暂无发票申请。</td></tr>';}
+function renderAdminInvoices(){const all=adminInvoiceRecords(),rows=adminInvoiceFilter==='all'?all:all.filter(i=>i.status===adminInvoiceFilter),body=$('#admin-invoice-rows');if(!body)return;const counts={all:all.length,pending:all.filter(i=>i.status==='pending').length,issued:all.filter(i=>i.status==='issued').length};$$('[data-admin-invoice-filter]').forEach(b=>{const active=b.dataset.adminInvoiceFilter===adminInvoiceFilter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));b.querySelector('.invoice-filter-count').textContent=counts[b.dataset.adminInvoiceFilter];});$('#admin-invoice-count').textContent='共 '+rows.length+' 条';body.innerHTML=rows.map(i=>`<tr><td class="record-title"><div class="order-name">${esc(i.id)}</div><div class="order-id"><span class="tag ${(i.orderIds?.length||1)>1?'merge':'single'}">${(i.orderIds?.length||1)>1?'合并申请':'单笔申请'}</span></div></td><td>${esc(i.applicant||'当前用户')}</td><td>${i.type==='company'?'企业':'个人'}</td><td>${esc(i.title)}</td><td class="num">${fmt(i.orderIds?.length||1)}</td><td class="num">${money(i.totalCents)}</td><td><span class="tag ${i.status==='issued'?'success':i.status==='pending'?'pending':''}">${{available:'待开票',pending:'开票中',issued:'已开票'}[i.status]||'待开票'}</span></td><td><button type="button" class="table-action admin-invoice-details" data-admin-invoice-detail="${esc(i.orderIds?.[0]||'')}" aria-label="查看申请 ${esc(i.id)} 的详情"><span>查看详情</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg></button></td></tr>`).join('')||'<tr class="admin-invoice-empty"><td colspan="8">暂无符合条件的发票申请</td></tr>';}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-admin-invoice-detail]');if(b)invoiceDetails(b.dataset.adminInvoiceDetail);});
 const beforeAdminInvoices=renderAdminLists;renderAdminLists=function(){beforeAdminInvoices();renderAdminInvoices();};
 
