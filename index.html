@@ -2259,7 +2259,9 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
   border-radius: 7px;
   color: var(--yb-muted);
 }
-#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .category.active {
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .category.active,
+#panel-shop #categories .category.active,
+#panel-ledger #ledger-filters .category.active {
   color: var(--yb-blue);
   border-color: #d5e3f8;
   background: #eaf2ff;
@@ -2302,6 +2304,467 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
   #yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-tools .search input { width: 100%; }
 }
 </style>
+<style id="yunbei-ai-ui">
+/* Shared AI quota surfaces for the wallet and administration views. */
+.aiq-shell, #aiq-recharge-return {
+  --aiq-ink: #1a2a41;
+  --aiq-muted: #56677c;
+  --aiq-line: #dfe7f1;
+  --aiq-soft: #f5f8fc;
+  --aiq-blue: var(--yb-nav-active);
+  --aiq-blue-ink: color-mix(in srgb, var(--aiq-blue) 69%, #0b1b30);
+  --aiq-blue-surface: color-mix(in srgb, var(--aiq-blue) 4%, #fff);
+  --aiq-blue-border: color-mix(in srgb, var(--aiq-blue) 23%, #fff);
+  --aiq-warm: var(--primary-button-text);
+  --aiq-warm-edge: color-mix(in srgb, var(--primary-button-border) 65%, var(--primary-button-text));
+}
+.aiq-shell {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  color: var(--aiq-ink);
+}
+
+.aiq-shell :is(h2,h3,p,dl,dd) { margin: 0; }
+.aiq-shell [hidden], .aiq-shell .aiq-muted:empty { display: none !important; }
+.aiq-shell .aiq-alert:empty { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); padding: 0; border: 0; }
+.aiq-sr-only { position: absolute !important; width: 1px; height: 1px; margin: -1px !important; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+.aiq-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 12px;
+  margin: 0;
+}
+.aiq-user .aiq-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.aiq-metric {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  padding: 16px 18px;
+  min-height: 108px;
+  border: 1px solid var(--aiq-line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.aiq-metric.is-quota { background: var(--aiq-blue-surface); border-color: var(--aiq-blue-border); }
+.aiq-metric.is-wallet {
+  border-color: color-mix(in srgb, var(--primary-button-border) 53%, #fff);
+  background: color-mix(in srgb, var(--accent-soft) 47%, #fff);
+}
+.aiq-metric :is(dt,.aiq-metric-label), .aiq-metric > span { color: var(--aiq-muted); font-size: 13px; font-weight: 650; }
+.aiq-metric dd:not(.aiq-metric-note), .aiq-metric .aiq-metric-value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 6px; }
+.aiq-metric :is(dd:not(.aiq-metric-note),.aiq-metric-value) > span { color: var(--aiq-muted); font-size: 12px; }
+.aiq-metric strong, .aiq-metric .aiq-metric-value {
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+}
+.aiq-metric.is-quota strong { color: var(--aiq-blue); }
+.aiq-metric.is-wallet strong { color: #ab5f31; }
+.aiq-metric strong > small { letter-spacing: 0; }
+.aiq-metric :is(.aiq-metric-note,p,small) { color: var(--aiq-muted); font-size: 12px; line-height: 1.55; }
+
+.aiq-card {
+  min-width: 0;
+  padding: clamp(15px, 2.2vw, 22px);
+  border: 1px solid var(--aiq-line);
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 1px 2px #1a2a4107;
+}
+.aiq-card-head { display: flex; align-items: start; justify-content: space-between; gap: 12px 20px; margin-bottom: 15px; }
+.aiq-card :is(h2,h3) { color: var(--aiq-ink); line-height: 1.4; }
+.aiq-card h3 { font-size: 14px; font-weight: 650; }
+.aiq-card-head h2, .aiq-card > :is(h2,h3), .aiq-table-heading h3 { font-size: 17px; font-weight: 700; }
+.aiq-card-head p, .aiq-card > h2 + p, .aiq-setting p { margin-top: 4px; color: var(--aiq-muted); font-size: 13px; line-height: 1.55; }
+.aiq-card > h3 + p, .aiq-table-heading p { margin: 4px 0 12px; color: var(--aiq-muted); font-size: 13px; line-height: 1.55; }
+
+.aiq-field { display: grid; gap: 5px; min-width: 0; color: var(--aiq-ink); font-size: 13px; font-weight: 600; }
+.aiq-field :is(input,select) {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 7px 10px;
+  border: 1px solid #cbd7e5;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--aiq-ink);
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.aiq-input-with-unit { position: relative; display: block; }
+.aiq-input-with-unit input { padding-right: 58px; }
+.aiq-input-with-unit > span { position: absolute; inset: 0 13px 0 auto; display: grid; place-items: center; pointer-events: none; color: var(--aiq-muted); font-size: 12px; }
+.aiq-input-with-unit input::-webkit-inner-spin-button { appearance: none; }
+.aiq-input-with-unit input[type='number'] { appearance: textfield; }
+.aiq-field input::placeholder { color: #69798c; }
+.aiq-allocate #aiq-amount[aria-invalid='true'] { border-color: var(--aiq-warm-edge); background: #fffaf5; }
+.aiq-allocate #aiq-amount[aria-invalid='true']:focus-visible { outline: 2px solid var(--aiq-warm-edge); outline-offset: -1px; }
+
+.aiq-allocate { padding: 18px; }
+.aiq-allocate .aiq-card-head { margin-bottom: 12px; }
+.aiq-allocate .aiq-card-head h2 { font-size: 16px; }
+.aiq-allocate .aiq-card-head p { margin-top: 3px; font-size: 12px; }
+.aiq-allocate .aiq-user-rate strong { color: var(--aiq-blue-ink); font-weight: 750; }
+.aiq-amount-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.aiq-amount-line > .aiq-field { width: 120px; }
+.aiq-amount-line input { min-height: 36px; padding-block: 6px; }
+.aiq-amount-line .aiq-inline-note { margin: 0 !important; }
+.aiq-amount-line .aiq-inline-note { color: var(--aiq-blue-ink); font-weight: 650; }
+.aiq-amount-unit { font-size: 13px; font-weight: 550; }
+.aiq-range { display: grid; margin-top: 6px; }
+.aiq-range input[type='range'] {
+  --aiq-range-accent: var(--aiq-blue);
+  --aiq-range-rail: #e7edf4;
+  --aiq-range-gradient: linear-gradient(to right, var(--aiq-range-accent) var(--aiq-range-progress, 0%), var(--aiq-range-rail) var(--aiq-range-progress, 0%));
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: 27px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+}
+.aiq-range input[type='range']::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: var(--aiq-range-gradient); }
+.aiq-range input[type='range']::-moz-range-track { height: 6px; border-radius: 999px; background: var(--aiq-range-gradient); }
+.aiq-range input[type='range']::-moz-range-progress { background: transparent; }
+.aiq-range input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--aiq-range-accent);
+}
+.aiq-range input[type='range']::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--aiq-range-accent); }
+.aiq-range input[type='range']:disabled { --aiq-range-accent: #a8b7c8; cursor: not-allowed; }
+.aiq-quick, .aiq-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.aiq-quick { margin-top: 8px; }
+.aiq-actions { margin-top: 12px; }
+.aiq-allocate .aiq-quick { gap: 8px; margin-top: 6px; }
+.aiq-allocate .aiq-quick .aiq-button.is-quiet:not(:disabled):not(:hover) { background: #fff; }
+.aiq-allocate-actions { gap: 9px 14px; }
+.aiq-allocate-actions .aiq-button { min-height: 36px; }
+.aiq-auto-inline { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; font-size: 13px; font-weight: 500; color: #4a5761; cursor: pointer; }
+.aiq-auto-inline input[type='checkbox'] { width: 16px; height: 16px; margin: 0; accent-color: var(--aiq-blue); cursor: pointer; }
+.aiq-allocate-actions .aiq-button.is-recycle:not(:disabled) { color: #326d55; border-color: #4c9276; background: #fff; }
+.aiq-allocate-actions .aiq-button.is-recycle:not(:disabled):hover { color: #285540; border-color: #3d7b62; background: #f3faf7; }
+.aiq-allocate .aiq-refundable { margin-top: 7px; color: var(--aiq-muted); font-size: 12px; line-height: 1.5; }
+.aiq-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 6px 13px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: none;
+  color: var(--aiq-blue-ink);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+}
+.aiq-button.is-primary:not(:disabled), .aiq-record-filter input:checked + span {
+  background: var(--aiq-blue);
+  border-color: var(--aiq-blue);
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 1px #10325566;
+}
+.aiq-button.is-primary:not(:disabled):hover {
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--aiq-blue) 28%, transparent);
+}
+.aiq-button.is-secondary { border-color: var(--aiq-blue-border); background: #fff; }
+.aiq-button.is-secondary:not(:disabled):hover, .aiq-button.is-text:not(:disabled):hover { background: var(--aiq-blue-surface); }
+.aiq-button.is-recharge {
+  gap: 8px;
+  min-height: 40px;
+  border-color: var(--primary-button-border);
+  background: var(--primary-button-fill);
+  color: var(--primary-button-text);
+  box-shadow: 0 5px 14px rgba(238,157,82,.16), inset 0 1px 0 rgba(255,255,255,.72);
+}
+.aiq-button.is-recharge:not(:disabled):hover {
+  border-color: #f0bf8b;
+  background: var(--primary-button-hover);
+  box-shadow: 0 6px 16px rgba(238,157,82,.20), inset 0 1px 0 rgba(255,255,255,.76);
+}
+.aiq-shortage-actions .aiq-button.is-recharge:focus-visible { outline-color: var(--primary-button-text); }
+.aiq-button.is-quiet { min-height: 31px; padding: 4px 9px; border-color: var(--aiq-line); background: var(--aiq-soft); color: var(--aiq-muted); font-size: 12px; }
+.aiq-button.is-quiet:not(:disabled):hover { border-color: var(--aiq-blue-border); background: var(--aiq-blue-surface); color: var(--aiq-blue-ink); }
+.aiq-button:disabled { border-color: #dce4ee; background: #edf1f6; color: #67778b; cursor: not-allowed; }
+.aiq-shell :is(button,input,select,[tabindex]):focus-visible { outline: 2px solid var(--aiq-blue); outline-offset: 2px; }
+.aiq-shell input:not([type='checkbox']):focus, .aiq-shell select:focus { border-color: var(--aiq-blue); }
+
+.aiq-shortage {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--primary-button-border);
+  border-inline-start: 3px solid var(--aiq-warm-edge);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: #694221;
+}
+.aiq-shortage-copy { display: flex; align-items: start; gap: 9px; }
+.aiq-shortage-icon { flex: none; width: 20px; height: 20px; color: var(--aiq-warm); }
+.aiq-shortage-icon svg { display: block; width: 100%; height: 100%; }
+.aiq-shortage h3 { color: var(--aiq-warm); font-size: 14px; font-weight: 700; }
+.aiq-shortage p { margin-top: 3px; font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+.aiq-shortage-actions { margin-top: 10px; }
+.aiq-shortage-actions .aiq-button.is-secondary { color: #694221; border-color: var(--primary-button-border); background: #fff; }
+.aiq-shortage-actions .aiq-button.is-secondary:not(:disabled):hover { background: var(--accent-soft); }
+
+#aiq-recharge-return.aiq-return {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 9px 16px;
+  margin-bottom: 14px;
+  padding: 10px 13px;
+  border: 1px solid var(--aiq-blue-border);
+  border-radius: 8px;
+  background: var(--aiq-blue-surface);
+  color: var(--aiq-ink);
+}
+#aiq-recharge-return[hidden] { display: none !important; }
+.aiq-return-copy { min-width: 0; }
+.aiq-return-copy > :is(strong,h2,h3) { margin: 0; color: var(--aiq-blue-ink); font-size: 14px; font-weight: 700; }
+#aiq-recharge-return-note { margin: 2px 0 0; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.aiq-return .aiq-button { flex: none; }
+.aiq-return .aiq-button:focus-visible { outline: 2px solid var(--aiq-blue); outline-offset: 2px; }
+
+.aiq-inline-note { margin-top: 10px !important; color: var(--aiq-muted); font-size: 13px; line-height: 1.55; }
+.aiq-muted { color: var(--aiq-muted); font-size: 12px; }
+.aiq-alert {
+  padding: 10px 14px;
+  border: 1px solid var(--aiq-blue-border);
+  border-radius: 8px;
+  background: var(--aiq-blue-surface);
+  color: var(--aiq-blue-ink);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.aiq-alert:is(.is-error,[data-tone='error']) { border-color: #f1c8c8; background: #fef1f1; color: #8d2828; }
+.aiq-alert:is(.is-success,[data-tone='success']) { border-color: #bfddce; background: #eef8f2; color: #206843; }
+.aiq-alert:is(.is-warning,[data-tone='warning']) { border-color: #efdbc2; background: #fff7ec; color: var(--aiq-warm); }
+.aiq-setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.aiq-setting + .aiq-setting { border-top: 1px solid var(--aiq-line); }
+.aiq-setting :is(h3,strong) { font-size: 14px; font-weight: 650; }
+.aiq-setting > :is(.aiq-button,.aiq-switch) { flex: none; }
+.aiq-switch { position: relative; display: grid; place-items: center; width: 48px; height: 40px; cursor: pointer; }
+.aiq-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.aiq-switch > span { pointer-events: none; width: 38px; height: 22px; border-radius: 20px; background: #697a90; transition: background .16s; }
+.aiq-switch > span::after { content: ''; display: block; width: 16px; height: 16px; margin: 3px; border-radius: 50%; background: #fff; transition: transform .16s; }
+.aiq-switch input:checked + span { background: var(--aiq-blue); }
+.aiq-switch input:checked + span::after { transform: translateX(16px); }
+.aiq-switch input:focus-visible + span { outline: 2px solid var(--aiq-blue); outline-offset: 3px; }
+
+.aiq-record-filters { min-inline-size: 0; margin: 0 0 9px; padding: 0; border: 0; }
+.aiq-record-filter-options { display: flex; flex-wrap: wrap; gap: 5px 7px; }
+.aiq-record-filter { position: relative; display: inline-flex; cursor: pointer; }
+.aiq-record-filter span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--aiq-line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--aiq-muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.aiq-record-filter:hover input:not(:checked) + span { background: var(--aiq-blue-surface); border-color: var(--aiq-blue-border); color: var(--aiq-blue-ink); }
+.aiq-record-filter input:focus-visible + span { outline: 2px solid var(--aiq-blue); outline-offset: 2px; }
+.aiq-table-wrap { width: 100%; min-width: 0; overflow-x: auto; border: 1px solid var(--aiq-line); border-radius: 8px; }
+.aiq-table { width: 100%; min-width: 580px; border-collapse: collapse; table-layout: auto; font-size: 13px; }
+.aiq-table :is(th,td) { padding: 9px 12px; border-bottom: 1px solid var(--aiq-line); text-align: left; color: var(--aiq-muted); line-height: 1.55; }
+.aiq-table th { background: var(--aiq-soft); color: #475a72; font-size: 12px; font-weight: 650; white-space: nowrap; }
+.aiq-table tbody td:first-child:not(.aiq-empty) { color: var(--aiq-ink); font-weight: 600; }
+.aiq-table .aiq-record-time { width: 1%; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.aiq-table tbody tr:last-child td { border-bottom: 0; }
+.aiq-table tbody tr:hover td { background: #f7f9fd; }
+.aiq-table td.aiq-empty { padding: 24px 12px; background: #fff; text-align: center; color: var(--aiq-muted); }
+.aiq-shell .aiq-empty { font-size: 13px; }
+.aiq-badge { display: inline-flex; align-items: center; padding: 2px 7px; border: 1px solid var(--aiq-blue-border); border-radius: 5px; background: var(--aiq-blue-surface); color: var(--aiq-blue-ink); font-size: 12px; font-weight: 650; white-space: nowrap; }
+.aiq-badge.is-shortfall { border-color: #eedac1; background: #fff6e7; color: var(--aiq-warm); }
+.aiq-badge:is(.is-refund,.is-success) { border-color: #cce4d8; background: #ecf7f0; color: #206843; }
+.aiq-badge.is-failed { border-color: #f1c8c8; background: #fef1f1; color: #8d2828; }
+.aiq-badge.is-consume { border-color: #dfe6f0; background: var(--aiq-soft); color: #465b75; }
+.aiq-movement { color: var(--aiq-ink); font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.aiq-movement:is(.is-positive,.is-credit) { color: #206843; }
+.aiq-movement:is(.is-negative,.is-debit) { color: #9a351f; }
+.aiq-movement.is-neutral { color: var(--aiq-muted); font-weight: 500; }
+
+.aiq-admin :is(.aiq-pricing,.aiq-admin-records) > .aiq-actions {
+  justify-content: space-between;
+  margin: 0 0 14px;
+}
+.aiq-admin :is(.aiq-pricing,.aiq-admin-records) > .aiq-actions h3 { font-size: 17px; font-weight: 700; }
+.aiq-admin .aiq-pricing > .aiq-actions .aiq-badge { background: var(--aiq-soft); border-color: var(--aiq-line); color: var(--aiq-muted); }
+.aiq-rate-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1px;
+  border: 1px solid var(--aiq-line);
+  border-radius: 11px;
+  background: var(--aiq-line);
+  overflow: hidden;
+}
+.aiq-rate-layout > * { min-width: 0; padding: 14px clamp(12px, 2vw, 22px); }
+.aiq-rate-overview { display: grid; align-content: center; gap: 4px; background: var(--aiq-blue-surface); }
+.aiq-rate-overview .aiq-current-label { color: var(--aiq-muted); font-size: 12px; font-weight: 650; }
+.aiq-rate-formula {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  color: var(--aiq-muted);
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.aiq-rate-formula strong { min-width: 0; color: var(--aiq-blue-ink); font-size: clamp(26px, 3vw, 34px); line-height: 1.18; overflow-wrap: anywhere; }
+.aiq-rate-formula > span { min-width: 0; }
+.aiq-rate-example { color: var(--aiq-muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.aiq-rate-example strong { color: var(--aiq-ink); }
+.aiq-rate-editor { display: grid; align-content: center; gap: 7px; background: #fff; }
+.aiq-rate-editor h4 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; color: var(--aiq-ink); font-size: 13px; font-weight: 700; }
+.aiq-rate-pending { padding: 1px 6px; border-radius: 4px; background: var(--aiq-blue-surface); color: var(--aiq-blue-ink); font-size: 11px; font-weight: 650; }
+.aiq-rate-editor-content { display: grid; gap: 4px; }
+.aiq-rate-controls, .aiq-rate-unit-field { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-width: 0; }
+.aiq-rate-unit-field { color: var(--aiq-ink); font-size: 13px; font-weight: 600; }
+.aiq-rate-operand { display: inline-flex; align-items: center; gap: 5px; min-width: 0; white-space: nowrap; }
+.aiq-rate-equals { color: var(--aiq-muted); }
+.aiq-rate-unit-field input {
+  width: clamp(76px, 9vw, 105px);
+  max-width: 100%;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #cbd7e5;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--aiq-ink);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.aiq-rate-actions { margin-top: 0; }
+.aiq-rate-actions .aiq-button { min-height: 36px; padding-inline: 10px; }
+.aiq-rate-editor-content :is(p,small), .aiq-settlement-details p {
+  color: var(--aiq-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.aiq-rate-editor-content .aiq-rate-draft-note.is-dirty { color: var(--aiq-blue-ink); }
+.aiq-rate-editor-content #aiq-admin-message.is-success { color: #206843; }
+.aiq-rate-editor-content #aiq-admin-message.is-error { color: #8d2828; }
+.aiq-admin summary:focus-visible { outline: 2px solid var(--aiq-blue); outline-offset: 2px; }
+.aiq-settlement-details { margin-top: 9px; }
+.aiq-settlement-details summary { width: fit-content; padding-block: 4px; border-radius: 3px; color: var(--aiq-blue-ink); font-size: 13px; font-weight: 600; cursor: pointer; }
+.aiq-settlement-details summary:hover { text-decoration: underline; }
+.aiq-settlement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 8px 16px;
+  margin-top: 5px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--aiq-soft);
+  font-size: 13px;
+}
+.aiq-settlement-details:not([open]) > .aiq-settlement-grid { display: none; }
+.aiq-settlement-grid p { margin-top: 2px; }
+.aiq-admin-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 12px; }
+.aiq-admin-metrics .aiq-metric { min-height: 0; gap: 3px; padding: 8px 10px; border-radius: 8px; background: var(--aiq-soft); }
+.aiq-admin-metrics .aiq-metric > span { font-size: 12px; overflow-wrap: anywhere; }
+.aiq-admin-metrics .aiq-metric strong { font-size: clamp(17px, 2.3vw, 23px); }
+
+@media (max-width: 1080px) {
+  .aiq-setting { align-items: start; }
+}
+
+@media (max-width: 620px) {
+  .aiq-shell { gap: 12px; }
+  .aiq-metrics { gap: 7px; }
+  .aiq-user .aiq-metric { min-height: 0; padding: 10px 8px; gap: 4px; }
+  .aiq-user .aiq-metric strong { font-size: clamp(17px, 5.35vw, 24px); }
+  .aiq-user .aiq-metric dt { font-size: 12px; }
+  .aiq-user .aiq-metric-note { display: none; }
+  .aiq-card-head { margin-bottom: 12px; }
+  .aiq-table :is(th,td) { padding-inline: 9px; }
+}
+
+@media (max-width: 330px) {
+  .aiq-card-head { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+  .aiq-shortage-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .aiq-shortage-actions .aiq-button { min-height: 42px; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aiq-shell .aiq-switch > span, .aiq-shell .aiq-switch > span::after { transition: none; }
+}
+body:has(#panel-token:not([hidden]), #panel-admin:not([hidden]) #admin-token:not([hidden])) .page-head #page-balance { display: none; }
+.aiq-inline-note.is-warning { color: #995315; }
+</style>
+<style id="yunbei-operations-range">
+#panel-operations .operations-range-toolbar { align-items: flex-start; flex-wrap: wrap; gap: 10px 18px; }
+#panel-operations .operations-range-controls { display: grid; justify-items: end; gap: 6px; min-width: 0; }
+#panel-operations .operations-range-controls label { display: flex; align-items: center; gap: 6px; color: #526477; font-size: 12px; white-space: nowrap; }
+#panel-operations .operations-custom-range { display: flex; flex-wrap: wrap; align-items: end; justify-content: flex-end; gap: 7px; margin: 0; }
+#panel-operations .operations-custom-range[hidden] { display: none; }
+#panel-operations .operations-custom-range label { display: grid; gap: 3px; }
+#panel-operations .operations-custom-range input { width: 138px; max-width: 100%; min-width: 0; height: 34px; padding: 0 7px; border: 1px solid #dfe5ec; border-radius: 6px; background: #fff; color: #384c61; font-size: 12px; font-variant-numeric: tabular-nums; }
+#panel-operations .operations-custom-range input[aria-invalid='true'] { border-color: #b94e42; }
+#panel-operations .operations-range-apply { height: 34px; padding: 0 13px; border: 1px solid var(--primary-button-border, #e8c3a0); border-radius: 6px; background: var(--primary-button-fill, #fff1df); color: var(--primary-button-text, #7d4321); font-size: 12px; font-weight: 650; }
+#panel-operations .operations-range-apply:hover { background: var(--primary-button-hover, #ffe8cd); }
+#panel-operations .operations-range-controls :is(input,select,button):focus-visible { outline: 2px solid #3674bc; outline-offset: 2px; }
+#panel-operations .operations-range-controls p { margin: 0; color: #526477; text-align: right; font-size: 12px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+#panel-operations .operations-range-controls .operations-range-error { color: #9c362b; }
+#panel-operations .operations-range-controls p:empty { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 680px) {
+  #panel-operations .operations-range-controls { justify-items: start; width: 100%; }
+  #panel-operations .operations-custom-range { justify-content: flex-start; }
+  #panel-operations .operations-range-controls p { text-align: left; }
+}
+</style>
+<style id="yunbei-page-polish">
+#panel-invoices .invoice-merge-tools { flex-wrap: wrap; justify-content: flex-end; gap: 7px 10px; }
+#panel-invoices .invoice-merge-status { padding: 4px 8px; border: 1px solid #dfe7ef; border-radius: 6px; background: #f4f7fa; color: #56667a; font-size: 12px; line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; }
+#panel-invoices #merge-invoice { margin-left: 0; font: inherit; font-size: 12px; font-weight: 600; }
+#panel-invoices #merge-invoice:disabled { min-height: 36px; padding: 7px 12px; border: 1px solid #dbe3ec; border-radius: 8px; background: #edf1f5; color: #69798b; box-shadow: none; opacity: 1; cursor: not-allowed; }
+#panel-invoices #merge-invoice:focus-visible { outline: 2px solid var(--yb-nav-active); outline-offset: 2px; }
+#panel-invoices :is([data-invoice-check],#select-all-invoices,#select-all-invoices-mobile) { accent-color: var(--yb-nav-active); }
+#panel-admin .admin-tabs > button.active { background: var(--yb-nav-active) !important; color: #fff !important; box-shadow: none !important; }
+#panel-admin .admin-tabs > button.active:focus-visible { outline-color: var(--yb-nav-active); }
+:is(#panel-shop #categories, #panel-ledger #ledger-filters) .category { border-radius: 7px; }
+</style>
+<style id="yunbei-profile-ui">
+.yunbei-profile-card { max-width: 640px; }
+.yunbei-profile-card .surface-heading h2 { margin: 0; font-size: 16px; }
+.yunbei-profile-details { margin: 0; padding: 0 24px 12px; }
+.yunbei-profile-details dd { margin: 0; color: var(--yb-ink); font-weight: 600; }
+</style>
 </head>
 <body>
   <svg class="symbols" aria-hidden="true"><defs>
@@ -2334,6 +2797,10 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
     <symbol id="i-zap" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"></path></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"></circle><path d="M2 21v-2a7 7 0 0 1 14 0v2M17 3a4 4 0 0 1 0 8M18 14a5 5 0 0 1 4 5v2"></path></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 15v6h16v-6"></path></symbol>
+    <symbol id="i-yunbei-config" viewBox="0 0 24 24">
+  <path d="M9.8 3h4.4l.55 2.65 2.05 1.2 2.57-.84 2.2 3.8-2.02 1.8v2.38l2.02 1.8-2.2 3.8-2.57-.84-2.05 1.2-.55 2.65H9.8l-.55-2.65-2.05-1.2-2.57.84-2.2-3.8 2.02-1.8v-2.38l-2.02-1.8 2.2-3.8 2.57.84 2.05-1.2L9.8 3Z" transform="translate(1.1 .3) scale(.91)"/>
+  <circle cx="12" cy="12" r="2.7"/>
+</symbol>
     <symbol id="i-sort" viewBox="0 0 24 24"><path d="M7 4v16m-4-4 4 4 4-4M17 20V4m-4 4 4-4 4 4"></path></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-2-2-6-2-10-1v16c4-1 8-1 10 1 2-2 6-2 10-1V4c-4-1-8-1-10 1ZM12 5v16"></path></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></symbol>
@@ -2351,15 +2818,15 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
         <div class="module-subnav" id="cloud-subnav">
           <button type="button" class="module-nav-item" data-tab="recharge" id="tab-recharge" title="云贝充值"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝充值</span></button>
           <button type="button" class="module-nav-item" data-tab="invite" id="tab-invite" title="云贝任务"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg><span>云贝任务</span></button>
-          <button type="button" class="module-nav-item" data-tab="shop" id="tab-shop" title="兑换商城"><svg class="icon" aria-hidden="true"><use href="#i-gift"></use></svg><span>兑换商城</span></button><button type="button" class="module-nav-item" data-tab="token" id="tab-token" title="AI额度兑换"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>AI额度兑换</span></button>
+          <button type="button" class="module-nav-item" data-tab="shop" id="tab-shop" title="兑换商城"><svg class="icon" aria-hidden="true"><use href="#i-gift"></use></svg><span>兑换商城</span></button><button type="button" class="module-nav-item" data-tab="token" id="tab-token" title="云贝兑换 Token"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>云贝兑换 Token</span></button>
           <button type="button" class="module-nav-item" data-tab="ledger" id="tab-ledger" title="云贝明细"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg><span>云贝明细</span></button>
         </div>
       </div>
       <div class="module-nav-divider"></div>
       <div class="module-navigation admin-module-navigation" id="admin-navigation" hidden>
-        <button type="button" class="module-nav-parent" id="admin-nav-parent" data-admin-parent aria-expanded="true" aria-controls="admin-subnav" title="管理员"><svg class="icon" aria-hidden="true"><use href="#i-sort"></use></svg><span>管理员</span></button>
+        <button type="button" class="module-nav-parent" id="admin-nav-parent" data-admin-parent aria-expanded="true" aria-controls="admin-subnav" title="云贝配置中心"><svg class="icon" aria-hidden="true"><use href="#i-yunbei-config"></use></svg><span>云贝配置中心</span></button>
         <div class="module-subnav" id="admin-subnav">
-          <button type="button" class="module-nav-item" data-tab="admin" data-admin-view="recharge" id="tab-admin" title="云贝配置"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝配置</span></button>
+          <button type="button" class="module-nav-item" data-tab="admin" data-admin-view="supply-checkin" id="tab-admin" title="云贝配置"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝配置</span></button>
           <button type="button" class="module-nav-item" data-tab="admin" data-admin-view="invoices" id="tab-admin-invoices" title="发票管理"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg><span>发票管理</span></button>
           <button type="button" class="module-nav-item" data-tab="operations" id="tab-operations" title="运营统计"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>运营统计</span></button>
         </div>
@@ -2376,6 +2843,19 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
   <main class="main">
     <div class="content">
       <div class="page-head"><div><h1 id="page-title" tabindex="-1">云贝总览</h1><p id="page-description">管理你的云贝，开启更多绘图与分析可能。</p></div><div class="page-heading-controls"><div class="role-switcher" role="group" aria-label="项目角色"><span class="role-switcher-label">项目角色</span><div class="role-switcher-options"><button type="button" data-set-role="admin" aria-pressed="false">管理员</button><button type="button" class="active" data-set-role="user" aria-pressed="true">用户</button></div></div><div class="page-head-actions"><button class="page-balance" data-tab="ledger" id="page-balance"><svg class="icon"><use href="#i-coin"></use></svg><span>可用云贝</span><strong class="num" id="page-balance-value">3,000</strong></button><button class="subtle-btn" data-action="rules"><svg class="icon"><use href="#i-help"></use></svg>使用规则</button></div></div></div>
+<section id="aiq-recharge-return" class="aiq-return" aria-label="云贝兑换 Token" hidden>
+  <div class="aiq-return-copy"><strong>充值后继续兑换 Token</strong><p id="aiq-recharge-return-note"></p></div>
+  <button type="button" class="aiq-button is-secondary" data-aiq-action="return-ai">返回兑换 Token</button>
+</section>
+      <section class="page-panel" id="panel-profile" role="region" aria-labelledby="page-title" hidden>
+        <article class="surface yunbei-profile-card">
+          <div class="surface-heading"><h2>个人资料</h2></div>
+          <dl class="yunbei-profile-details">
+            <div class="detail-line"><dt>用户名</dt><dd>科研探索者</dd></div>
+            <div class="detail-line"><dt>账号绑定 · 微信</dt><dd id="profile-wechat-status"></dd></div>
+          </dl>
+        </article>
+      </section>
       <section class="page-panel" id="panel-dashboard" role="region" aria-labelledby="page-title" hidden>
  <div class="section-heading"><span class="period-filter-label">统计周期</span><div class="period-switch" aria-label="统计周期"><button data-period="7">最近一周</button><button data-period="30" class="active">最近一月</button><button data-period="90">最近三月</button><button data-period="custom">自定义</button></div></div>
  <div class="date-range" id="dashboard-custom-range" hidden><label>开始日期<input type="date" id="dashboard-start"></label><span>至</span><label>结束日期<input type="date" id="dashboard-end"></label><button class="btn" data-action="apply-period">查询</button><span id="dashboard-range-error" role="alert"></span></div>
@@ -2402,7 +2882,7 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
 </section>
 
       <section class="page-panel" id="panel-shop" role="region" aria-labelledby="page-title" hidden>
-        <div class="toolbar"><div class="categories" id="categories" aria-label="筛选兑换权益"><button class="category active" data-category="全部权益" aria-pressed="true">全部权益</button><button class="category" data-category="存储空间" aria-pressed="false">存储空间</button><button class="category" data-category="项目分享" aria-pressed="false">项目分享</button></div><label class="search"><svg class="icon"><use href="#i-search"></use></svg><input id="product-search" type="search" placeholder="搜索你需要的权益" aria-label="搜索兑换权益"></label></div>
+        <div class="toolbar"><div class="categories" id="categories" aria-label="筛选兑换权益"><button class="category active" data-category="全部权益" aria-pressed="true">全部权益</button><button class="category" data-category="项目分享" aria-pressed="false">项目分享</button></div><label class="search"><svg class="icon"><use href="#i-search"></use></svg><input id="product-search" type="search" placeholder="搜索你需要的权益" aria-label="搜索兑换权益"></label></div>
         <div class="shop-heading"><h2>精选商品与权益</h2><span id="product-count">为你的绘图与分析提效</span><select class="sort" id="sort-select" aria-label="权益排序"><option value="0">推荐排序</option><option value="1">云贝从低到高</option><option value="2">云贝从高到低</option></select></div>
         <div class="product-grid" id="products"></div>
       </section>
@@ -2427,44 +2907,101 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
  </tr></thead>
 <tbody id="ledger-rows"></tbody></table></div><div class="invoice-pagination"><span id="ledger-total" role="status"></span><nav id="ledger-pagination" aria-label="云贝明细分页"></nav></div></div></section>
       <section class="page-panel" id="panel-token" role="region" aria-labelledby="page-title" hidden>
-<style>
-.tp-wrap{display:flex;flex-direction:column;gap:16px}.tp-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.tp-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}.tp-stat span{display:block;color:#8b98a3;font-size:12px}.tp-stat strong{display:block;font-size:22px;margin-top:6px}.tp-stat small{display:block;color:#9ca6ad;font-size:11px;margin-top:4px}.tp-cols{display:grid;grid-template-columns:1fr;gap:16px}.tp-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}.tp-card h3{font-size:15px;font-weight:650}.tp-card>p{color:#7b8791;font-size:12px;margin-top:4px}.tp-line{display:flex;align-items:center;gap:8px;margin-top:12px}.tp-line input{width:120px;padding:8px 10px;border:1px solid var(--line);border-radius:8px}.tp-eq{color:#7b8791;font-size:13px}#tp-budget-range{width:100%;margin-top:10px}.tp-chips{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.tp-chip{border:1px solid #dfe5ea;background:#fff;border-radius:6px;padding:5px 12px;font-size:12px;color:#617582;cursor:pointer}.tp-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.tp-kpi{position:relative;overflow:hidden;border:1px solid #e6ecf1;background:linear-gradient(180deg,#fff,#fbfdfe);border-radius:14px;padding:16px 18px 14px 22px;box-shadow:0 10px 24px #34556d08}.tp-kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}.tp-kpi.kpi-blue::before{background:#3d8bfd}.tp-kpi.kpi-green::before{background:#4c9276}.tp-kpi.kpi-gray::before{background:#8e9eab}.tp-kpi.kpi-violet::before{background:#7b8ce0}.tp-kpi span{display:block;color:#84939e;font-size:12px;font-weight:600}.tp-kpi strong{display:block;margin-top:8px;font-size:24px;line-height:1.25;font-weight:700;color:#2b3d4b}.tp-kpi small{display:block;margin-top:6px;color:#95a4b0;font-size:11px}@media(max-width:1100px){.tp-dashboard{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.tp-dashboard{grid-template-columns:1fr}}.tp-insufficient{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:12px 14px;border:1px solid #f0c6c0;background:#fff6f5;border-radius:12px}.tp-insufficient strong{display:block;color:#c04b4b;font-size:14px}.tp-insufficient span{display:block;color:#a15f5f;font-size:12px;margin-top:4px}.tp-insufficient[hidden]{display:none!important}.tp-btn.orange{min-width:112px;background:var(--primary-button-fill);border:1px solid var(--primary-button-border);color:var(--primary-button-text);box-shadow:0 5px 14px rgba(238,157,82,.16),inset 0 1px 0 rgba(255,255,255,.72);font-weight:650}.tp-btn.orange:hover{background:var(--primary-button-hover);border-color:#f0bf8b;color:var(--primary-button-text);box-shadow:0 6px 16px rgba(238,157,82,.2),inset 0 1px 0 rgba(255,255,255,.76)}
-.tp-btn{display:inline-flex;align-items:center;border-radius:8px;padding:9px 16px;font-size:13px;line-height:1.4;cursor:pointer;border:1px solid transparent;font-weight:500}
-.tp-btn.primary{background:#3d8bfd;border-color:#3d8bfd;color:#fff;font-weight:600;box-shadow:0 3px 9px #3d8bfd33}
-.tp-btn.primary:hover{background:#2e79e8;border-color:#2e79e8}
-.tp-btn.secondary{background:#fff;border-color:#4c9276;color:#4c9276;font-weight:600}
-.tp-btn.secondary:hover{border-color:#3d7b62;color:#35674f;background:#f3faf7}
-.tp-btn.ghost{background:transparent;color:#7b8791}
-.tp-btn:disabled{opacity:.45;cursor:not-allowed}
-.tp-btn.ghost:hover{color:#3e5564}.tp-actions{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}.tp-switch{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5761;cursor:pointer}.tp-switch input[type="checkbox"]{width:16px;height:16px;accent-color:#3d8bfd}.tp-progress{height:6px;background:#eef2f4;border-radius:3px;margin-top:14px;overflow:hidden}.tp-progress i{display:block;height:100%;background:linear-gradient(90deg,#ed923e,#de6b28);border-radius:3px}.tp-used{color:#8b98a3;font-size:11px;margin-top:6px}.tp-tiers{display:flex;flex-direction:column;gap:10px;margin-top:12px}.tp-tier{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #eef2f4;border-radius:10px;padding:10px 14px}.tp-tier>div{display:flex;flex-direction:column;gap:2px}.tp-tier-usd{font-weight:700;font-size:16px}.tp-tier-coins{color:#7b8791;font-size:12px}.tp-note{color:#8b98a3;font-size:12px}table.tp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}table.tp-table th{text-align:left;color:#8d9aa6;font-size:11px;font-weight:500;padding:9px 10px;border-bottom:1px solid #e6ebef;white-space:nowrap}table.tp-table td{padding:10px;border-bottom:1px solid #f0f4f6}.tp-empty{color:#9ca6ad;text-align:center;padding:16px}@media(max-width:960px){.tp-summary{grid-template-columns:1fr 1fr}.tp-cols{grid-template-columns:1fr}}
+<div class="aiq-shell aiq-user">
+  <dl class="aiq-metrics" aria-label="云贝与 Token 余额">
+    <div class="aiq-metric is-wallet">
+      <dt>钱包可用</dt>
+      <dd><strong id="aiq-wallet">0</strong><span>云贝</span></dd>
+      <dd class="aiq-metric-note">兑换 Token 时从这里扣云贝</dd>
+    </div>
+    <div class="aiq-metric is-quota">
+      <dt>Token 余额</dt>
+      <dd><strong id="aiq-available">0</strong><span>Token</span></dd>
+      <dd class="aiq-metric-note">使用 AI 时优先扣这里的 Token</dd>
+    </div>
+  </dl>
 
-</style>
-<div class="tp-wrap">
- <div class="tp-summary">
-  <div class="tp-stat"><span>我的可用云贝</span><strong class="num" id="tp-balance">0</strong><small>分配与兑换从此余额扣减</small></div>
-  <div class="tp-stat"><span>已分配可用额度</span><strong class="num" id="tp-quota">$0</strong><small>来自云贝分配，调用优先抵扣</small></div>
- </div>
- <div class="tp-cols">
-  <div class="tp-card">
-   <h3>设置用于 newAPI 的云贝</h3>
-   <p>分配云贝转换为 newAPI 额度；云贝不足时，请先充值云贝。</p>
-   <div class="tp-line"><input id="tp-budget-input" type="number" min="0" step="1"><span>云贝</span><span class="tp-eq">= <b id="tp-budget-usd">$0</b> 额度</span></div>
-   <input id="tp-budget-range" type="range" min="0" max="3000" step="10" value="0">
-   <div class="tp-chips"><button class="tp-chip" data-tp="quick" data-n="100">100</button><button class="tp-chip" data-tp="quick" data-n="300">300</button><button class="tp-chip" data-tp="quick" data-n="500">500</button><button class="tp-chip" data-tp="quick" data-n="max">全部余额</button></div><div class="tp-insufficient" id="tp-insufficient" hidden><div><strong>云贝余额不足</strong><span id="tp-insufficient-text">请先充值云贝后再分配。</span></div><button class="tp-btn orange" type="button" data-tp="go-recharge">去充值云贝</button></div>
-   <div class="tp-actions"><button class="tp-btn primary" data-tp="save-budget">分配额度</button><button class="tp-btn secondary" data-tp="recycle">回收未使用额度</button><label class="tp-switch"><input type="checkbox" id="tp-auto" checked>额度不足自动消耗云贝</label></div>
-   <div class="tp-progress"><i id="tp-used-bar" style="width:0%"></i></div>
-   <div class="tp-used" id="tp-used-text">尚未分配</div>
+  <section class="aiq-card aiq-allocate" aria-labelledby="aiq-allocate-title">
+      <div class="aiq-card-head">
+        <div><h2 id="aiq-allocate-title">用云贝换 Token</h2><p class="aiq-user-rate"><strong id="aiq-user-rate-coins">—</strong> 云贝 = <strong id="aiq-user-rate">—</strong> Token</p></div>
+      </div>
+      <div class="aiq-amount-line">
+        <label class="aiq-field" for="aiq-amount">
+          <span class="aiq-sr-only">用于兑换的云贝数量</span>
+          <input type="number" id="aiq-amount" min="1" step="1" inputmode="numeric" placeholder="0" aria-describedby="aiq-allocation-preview aiq-user-message" aria-errormessage="aiq-shortage">
+        </label>
+        <span class="aiq-amount-unit" aria-hidden="true">云贝</span>
+        <p id="aiq-allocation-preview" class="aiq-inline-note" aria-live="polite">输入云贝后显示可兑换的 Token</p>
+      </div>
+      <div class="aiq-range">
+        <label class="aiq-sr-only" for="aiq-amount-slider">拖动选择兑换数量（云贝）</label>
+        <input id="aiq-amount-slider" type="range" min="0" max="0" step="1" value="0" aria-describedby="aiq-slider-max">
+        <span class="aiq-sr-only" id="aiq-slider-max">钱包可用上限</span>
+      </div>
+      <div class="aiq-quick" role="group" aria-label="常用兑换数量">
+        <button type="button" class="aiq-button is-quiet" id="aiq-quick-100" data-aiq-action="quick" data-amount="100" aria-label="使用 100 云贝兑换">100</button>
+        <button type="button" class="aiq-button is-quiet" id="aiq-quick-300" data-aiq-action="quick" data-amount="300" aria-label="使用 300 云贝兑换">300</button>
+        <button type="button" class="aiq-button is-quiet" id="aiq-quick-500" data-aiq-action="quick" data-amount="500" aria-label="使用 500 云贝兑换">500</button>
+        <button type="button" class="aiq-button is-quiet" id="aiq-quick-max" data-aiq-action="quick" data-amount="all">全部余额</button>
+      </div>
+      <div class="aiq-actions aiq-allocate-actions">
+        <button type="button" class="aiq-button is-primary" data-aiq-action="allocate" disabled>兑换 Token</button>
+        <button type="button" class="aiq-button is-recycle" data-aiq-action="refund" aria-describedby="aiq-refund-preview" disabled>回收未用 Token</button>
+        <label class="aiq-auto-inline" for="aiq-auto"><input id="aiq-auto" type="checkbox" aria-describedby="aiq-auto-note"><span>Token 不足时自动用云贝兑换</span></label>
+        <p id="aiq-auto-note" class="aiq-sr-only">优先使用 Token 余额，不足时按当前比例用云贝兑换。</p>
+      </div>
+      <p id="aiq-refund-preview" class="aiq-refundable" hidden></p>
+      <div class="aiq-shortage" id="aiq-allocation-error" hidden>
+        <div class="aiq-shortage-copy">
+          <span class="aiq-shortage-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7.25"/><path d="M10 6.6v4.3m0 2.55v.1" stroke-linecap="round"/></svg></span>
+          <div><h3>钱包云贝不足</h3><p id="aiq-shortage" role="status" aria-live="polite" aria-atomic="true"></p></div>
+        </div>
+        <div class="aiq-actions aiq-shortage-actions">
+          <button type="button" class="aiq-button is-recharge" data-aiq-action="recharge">去充值云贝 <span aria-hidden="true">→</span></button>
+          <button type="button" class="aiq-button is-secondary" data-aiq-action="quick" data-amount="all" data-aiq-use-available>按余额填写</button>
+        </div>
+      </div>
+  </section>
+  <p id="aiq-user-message" class="aiq-alert" role="status" aria-live="polite" aria-atomic="true"></p>
+
+  <section class="aiq-card aiq-history" aria-labelledby="aiq-history-title">
+    <div class="aiq-card-head">
+      <div><h2 id="aiq-history-title">Token 明细</h2><p>查看兑换、回收、使用和自动兑换记录。</p></div>
+    </div>
+    <fieldset class="aiq-record-filters" id="aiq-user-filter">
+  <legend class="aiq-sr-only">筛选记录类型</legend>
+  <div class="aiq-record-filter-options">
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-user-record-type" id="aiq-user-filter-all" value="all" checked><span>全部记录</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-user-record-type" id="aiq-user-filter-allocate" value="allocate"><span>兑换</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-user-record-type" id="aiq-user-filter-refund" value="refund"><span>回收</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-user-record-type" id="aiq-user-filter-consume" value="consume"><span>使用 Token</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-user-record-type" id="aiq-user-filter-shortfall" value="shortfall"><span>自动兑换</span></label>
   </div>
- </div>
- <div class="tp-card">
-  <h3>额度与兑换记录</h3>
-  <table class="tp-table"><thead><tr><th>类型</th><th>内容</th><th>说明</th><th>时间</th></tr></thead><tbody id="tp-records"></tbody></table>
- </div>
- <p class="tp-note">换算关系：10云贝 = 1元，即 1云贝 = ¥0.1 = $0.1，因此 10云贝 = $1。以管理员「newAPI额度配置」为准；本页为交互演示，不产生真实额度。</p>
+</fieldset>
+    <div class="aiq-table-wrap" role="region" aria-label="Token 明细表" tabindex="0">
+      <table class="aiq-table" aria-labelledby="aiq-history-title">
+        <thead><tr><th scope="col">类型</th><th scope="col">Token 变动</th><th scope="col">云贝钱包变动</th><th scope="col">说明</th><th scope="col" class="aiq-record-time" aria-sort="descending">时间</th></tr></thead>
+        <tbody id="aiq-user-rows"><tr><td class="aiq-empty" colspan="5">暂无兑换、回收或使用记录。</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
 </div>
-</section>
+      </section>
       <section class="page-panel" id="panel-operations" role="region" aria-labelledby="page-title" hidden>
-        <div class="operations-toolbar"><div><span class="admin-role-pill">管理员</span><span class="operations-demo-label">演示数据</span><p>人数按用户去重统计，订单笔数单独展示。</p></div><label>统计范围<select id="operations-period"><option value="7">最近 7 天</option><option value="30" selected>最近 30 天</option><option value="90">最近 90 天</option><option value="all">全部时间</option></select></label></div>
+        <div class="operations-toolbar operations-range-toolbar">
+          <div><span class="admin-role-pill">管理员</span><span class="operations-demo-label">演示数据</span><p>人数按用户去重统计，订单笔数单独展示。</p></div>
+          <section class="operations-range-controls" aria-label="统计范围">
+            <label for="operations-period">统计范围<select id="operations-period"><option value="7">最近 7 天</option><option value="30" selected>最近 30 天</option><option value="90">最近 90 天</option><option value="all">全部时间</option><option value="custom">自定义日期</option></select></label>
+            <form id="operations-custom-range" class="operations-custom-range" novalidate hidden>
+              <label for="operations-start">开始日期<input id="operations-start" type="date" aria-describedby="operations-range-error"></label>
+              <label for="operations-end">结束日期<input id="operations-end" type="date" aria-describedby="operations-range-error"></label>
+              <button type="submit" class="operations-range-apply">应用</button>
+            </form>
+            <p id="operations-range-error" class="operations-range-error" role="alert" aria-atomic="true"></p>
+            <p id="operations-range-current" class="operations-range-current" role="status" aria-atomic="true"></p>
+          </section>
+        </div>
         <div class="operations-stats">
           <article class="operation-stat"><span><svg class="icon"><use href="#i-users"></use></svg>充值人数</span><strong class="num" id="operations-recharge-users">0<small>人</small></strong><p id="operations-recharge-count">成功充值 0 笔</p></article>
           <article class="operation-stat"><span><svg class="icon"><use href="#i-gift"></use></svg>兑换人数</span><strong class="num" id="operations-exchange-users">0<small>人</small></strong><p id="operations-exchange-count">成功兑换 0 笔</p></article>
@@ -2476,6 +3013,106 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
       <section class="page-panel" id="panel-admin" role="region" aria-labelledby="page-title" hidden>
         <div class="admin-hero"><div><h2>管理配置</h2><p>仅管理员可见。新增商品默认不上架，新增充值档位默认不启用，手动开启后对用户展示。</p></div><span class="admin-role-pill">管理员</span></div>
         <nav class="admin-tabs" aria-label="管理配置页面"><button type="button" class="active" data-admin-view="recharge">充值配置</button><button type="button" data-admin-view="shop">商城配置</button></nav>
+<section id="admin-token" class="growth-section" aria-label="Token 兑换设置" hidden>
+<div class="aiq-shell aiq-admin">
+  <section class="aiq-card aiq-pricing" aria-labelledby="aiq-admin-rate-title">
+    <div class="aiq-actions">
+      <h3 id="aiq-admin-rate-title">云贝兑换 Token</h3>
+      <span class="aiq-badge">本地预览</span>
+    </div>
+    <div class="aiq-rate-layout">
+      <div class="aiq-rate-overview" role="group" aria-labelledby="aiq-current-label">
+        <p class="aiq-current-label" id="aiq-current-label">当前兑换比例</p>
+        <p class="aiq-rate-formula"><span><strong id="aiq-rate-current-coins">—</strong> 云贝</span><span> = </span><span><strong id="aiq-rate-current-input">—</strong> Token</span></p>
+        <p class="aiq-rate-example"><strong id="aiq-rate-example-coins">—</strong> 云贝可兑换 <strong id="aiq-rate-example-total">—</strong> Token</p>
+      </div>
+
+      <section class="aiq-rate-editor" aria-labelledby="aiq-rate-edit-title">
+        <h4 id="aiq-rate-edit-title">修改比例<span id="aiq-rate-edit-pending" class="aiq-rate-pending" hidden>未保存</span></h4>
+        <div class="aiq-rate-editor-content">
+          <div class="aiq-rate-controls">
+            <div class="aiq-rate-unit-field">
+              <label class="aiq-rate-operand" for="aiq-rate-coins">
+                <span class="aiq-sr-only">每组消耗的云贝数量</span>
+                <input id="aiq-rate-coins" type="number" min="1" max="1000000" step="1" inputmode="numeric" aria-describedby="aiq-admin-rate-help">
+                <span aria-hidden="true">云贝</span>
+              </label>
+              <span class="aiq-rate-equals" aria-hidden="true">=</span>
+              <label class="aiq-rate-operand" for="aiq-rate-input" id="aiq-rate-input-label">
+                <span class="aiq-sr-only">每组可兑换的 Token 数量</span>
+                <input id="aiq-rate-input" type="number" min="1" max="1000000" step="1" inputmode="numeric" aria-describedby="aiq-admin-rate-help">
+                <span id="aiq-rate-input-unit" aria-hidden="true">Token</span>
+              </label>
+            </div>
+            <div class="aiq-actions aiq-rate-actions">
+              <button type="button" class="aiq-button is-primary" data-aiq-action="save-rate" disabled>保存比例</button>
+              <button type="button" class="aiq-button is-secondary" data-aiq-action="reset-rate" hidden>撤销</button>
+            </div>
+          </div>
+          <small id="aiq-admin-rate-help">按设定比例整组兑换。两边填写 1–1,000,000 的整数。</small>
+          <p id="aiq-rate-draft-note" class="aiq-rate-draft-note">新比例只影响之后的兑换，回收按原比例。</p>
+          <p id="aiq-admin-message" aria-live="polite" aria-atomic="true" hidden></p>
+        </div>
+      </section>
+    </div>
+
+    <details class="aiq-settlement-details">
+      <summary>查看兑换规则</summary>
+      <div class="aiq-settlement-grid">
+        <div><strong>回收 Token</strong><p>按原来的兑换比例回收未用的整组 Token，不足一组的 Token 留在余额里。</p></div>
+        <div><strong>自动兑换</strong><p>用户开启自动兑换且云贝足够时，会兑换补齐所需的整组 Token，多换的 Token 留在余额里。</p></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="aiq-card aiq-admin-records" aria-labelledby="aiq-admin-records-title">
+    <div class="aiq-actions">
+      <h3 id="aiq-admin-records-title">额度与用量记录</h3>
+    </div>
+    <div class="aiq-metrics aiq-admin-metrics" aria-label="当前账户的 AI 额度与用量汇总">
+      <div class="aiq-metric">
+        <span>Token 余额</span>
+        <strong><span id="aiq-admin-available">0</span> <small>Token</small></strong>
+      </div>
+      <div class="aiq-metric">
+        <span>累计已使用 Token</span>
+        <strong><span id="aiq-admin-used">0</span> <small>Token</small></strong>
+      </div>
+      <div class="aiq-metric">
+        <span>自动兑换消耗云贝</span>
+        <strong><span id="aiq-admin-shortfall">0</span> <small>云贝</small></strong>
+      </div>
+    </div>
+    <fieldset class="aiq-record-filters" id="aiq-admin-filter">
+  <legend class="aiq-sr-only">筛选记录类型</legend>
+  <div class="aiq-record-filter-options">
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-admin-record-type" id="aiq-admin-filter-all" value="all" checked><span>全部记录</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-admin-record-type" id="aiq-admin-filter-allocate" value="allocate"><span>兑换</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-admin-record-type" id="aiq-admin-filter-refund" value="refund"><span>回收</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-admin-record-type" id="aiq-admin-filter-consume" value="consume"><span>使用 Token</span></label>
+    <label class="aiq-record-filter"><input class="aiq-sr-only" type="radio" name="aiq-admin-record-type" id="aiq-admin-filter-shortfall" value="shortfall"><span>自动兑换</span></label>
+  </div>
+</fieldset>
+    <div class="aiq-table-wrap" role="region" aria-label="管理员 AI 额度记录" tabindex="0">
+      <table class="aiq-table" aria-labelledby="aiq-admin-records-title">
+        <thead>
+          <tr>
+            <th scope="col">操作</th>
+            <th scope="col">Token 变动</th>
+            <th scope="col">云贝钱包变动</th>
+            <th scope="col">用量或说明</th>
+            <th scope="col">状态</th>
+            <th scope="col" class="aiq-record-time" aria-sort="descending">时间</th>
+          </tr>
+        </thead>
+        <tbody id="aiq-admin-rows">
+          <tr><td colspan="6" class="aiq-empty">暂无记录。用户兑换、回收或使用 Token 后，记录会显示在这里。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+</section>
           <article class="surface admin-config-card" id="admin-recharge-panel">
             <div class="surface-heading"><div><h3>新增充值档位</h3><p>云贝和折扣自动计算，保存后在下方生成列表</p></div></div>
             <form id="admin-plan-form" class="admin-add-form" novalidate>
@@ -2495,7 +3132,7 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
             <div class="surface-heading"><div><h3 id="admin-product-form-title">新建兑换商品</h3><p id="admin-product-form-desc">填写商品信息并上传封面，保存后在下方表格中管理，确认上架后对用户展示</p></div></div>
             <form id="admin-product-form" class="admin-add-form" novalidate>
               <label class="admin-line-field product-name-field"><span class="admin-line-label">商品名称</span><span class="admin-line-input wide"><input id="product-name" type="text" maxlength="60" placeholder="如：科研分析体验券、活动礼品包" required></span><small>作为商城卡片的商品标题</small></label>
-              <label class="admin-line-field"><span class="admin-line-label">权益分类</span><span class="admin-line-input admin-category-input"><select id="product-category"><option value="存储空间">存储空间</option><option value="项目分享">项目分享</option></select><button type="button" class="btn" id="admin-category-add"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>新增分类</button></span><small>选择已有分类，或点击“新增分类”创建分类</small></label>
+              <label class="admin-line-field"><span class="admin-line-label">权益分类</span><span class="admin-line-input admin-category-input"><select id="product-category"><option value="项目分享">项目分享</option></select><button type="button" class="btn" id="admin-category-add"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>新增分类</button></span><small>选择已有分类，或点击“新增分类”创建分类</small></label>
               <label class="admin-line-field"><span class="admin-line-label">所需云贝</span><span class="admin-line-input"><input id="product-price" type="number" min="1" step="1" placeholder="请输入云贝数量" required><i>云贝</i></span><small>每兑换一个所选单位需要支付的云贝</small></label>
               <div class="admin-line-field"><span class="admin-line-label">对应金额</span><span class="admin-line-input"><input id="product-money" type="text" value="0.00" readonly aria-live="polite"><i>元</i></span><small>按 10 云贝 = ¥1 自动换算</small></div>
               <div class="admin-line-field product-unit-field"><label class="admin-line-label" for="product-unit">兑换单位（选填）</label><div class="unit-select" id="product-unit-select"><div class="admin-line-input"><input id="product-unit" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="product-unit-options" aria-describedby="product-unit-help" maxlength="20" value="" placeholder="可不填，支持搜索或输入" autocomplete="off"><button type="button" class="unit-toggle" aria-label="展开兑换单位选项" tabindex="-1"><svg class="icon"><use href="#i-chevron"></use></svg></button></div><div class="unit-options" id="product-unit-options" role="listbox" aria-label="兑换单位" hidden></div></div><small id="product-unit-help">选填。支持搜索常用单位，也可直接输入自定义单位</small></div>
@@ -2520,7 +3157,7 @@ body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
             </div>
           </div>
       </section>
-      <section class="page-panel" id="panel-invoices" role="region" aria-labelledby="page-title" hidden><div class="tabs"><button class="tab" data-invoice-view="recharge-orders">充值订单</button><button class="tab active" data-invoice-view="invoices">开票记录</button></div><div class="list-tools"><div class="categories invoice-categories" id="invoice-filters"><button class="category active" data-invoice-filter="all">全部订单<span class="invoice-filter-count" id="all-invoice-count">30</span></button><button class="category" data-invoice-filter="available">待开票<span class="invoice-filter-count" id="available-invoice-count">2</span></button><button class="category" data-invoice-filter="pending">开票中<span class="invoice-filter-count" id="pending-invoice-count">10</span></button><button class="category" data-invoice-filter="issued">已开票<span class="invoice-filter-count" id="issued-invoice-count">10</span></button></div><div class="invoice-merge-tools"><button class="tp-btn primary" id="merge-invoice" data-tp="merge" disabled>合并开票</button></div></div><div class="list-card"><label class="select-all-mobile"><input type="checkbox" id="select-all-invoices-mobile">选择本页可开票订单</label><div class="table-wrap"><table><thead><tr><th class="check-cell"><input type="checkbox" id="select-all-invoices" aria-label="选择本页可开票订单"></th><th>充值订单</th><th>实付金额</th><th>可开票金额</th><th>开票状态</th><th>操作</th></tr></thead><tbody id="invoice-rows"></tbody></table></div><div class="invoice-pagination"><span id="invoice-record-total" role="status"></span><nav id="invoice-pagination" aria-label="发票列表分页"></nav></div><div class="invoice-summary"><span>已选 <span id="invoice-selected">0</span> 笔</span><span>合计 <b class="num" id="invoice-total">¥0.00</b></span><button class="btn primary" id="batch-invoice" disabled>申请开票</button></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>可开票金额等于充值实付金额，不包含八折减免和赠送云贝。历史示例仅供体验；本页不生成真实税务发票。</p></section>
+      <section class="page-panel" id="panel-invoices" role="region" aria-labelledby="page-title" hidden><div class="tabs"><button class="tab" data-invoice-view="recharge-orders">充值订单</button><button class="tab active" data-invoice-view="invoices">开票记录</button></div><div class="list-tools"><div class="categories invoice-categories" id="invoice-filters"><button class="category active" data-invoice-filter="all">全部订单<span class="invoice-filter-count" id="all-invoice-count">30</span></button><button class="category" data-invoice-filter="available">待开票<span class="invoice-filter-count" id="available-invoice-count">2</span></button><button class="category" data-invoice-filter="pending">开票中<span class="invoice-filter-count" id="pending-invoice-count">10</span></button><button class="category" data-invoice-filter="issued">已开票<span class="invoice-filter-count" id="issued-invoice-count">10</span></button></div><div class="invoice-merge-tools"><span class="invoice-merge-status" id="invoice-merge-status" role="status" aria-atomic="true">已选 0 笔</span><button type="button" class="table-action invoice-apply" id="merge-invoice" aria-describedby="invoice-merge-status" disabled>合并开票</button></div></div><div class="list-card"><label class="select-all-mobile"><input type="checkbox" id="select-all-invoices-mobile">选择本页可开票订单</label><div class="table-wrap"><table><thead><tr><th class="check-cell"><input type="checkbox" id="select-all-invoices" aria-label="选择本页可开票订单"></th><th>充值订单</th><th>实付金额</th><th>可开票金额</th><th>开票状态</th><th>操作</th></tr></thead><tbody id="invoice-rows"></tbody></table></div><div class="invoice-pagination"><span id="invoice-record-total" role="status"></span><nav id="invoice-pagination" aria-label="发票列表分页"></nav></div><div class="invoice-summary"><span>已选 <span id="invoice-selected">0</span> 笔</span><span>合计 <b class="num" id="invoice-total">¥0.00</b></span><button class="btn primary" id="batch-invoice" disabled>申请开票</button></div></div><p class="info-line"><svg class="icon"><use href="#i-info"></use></svg>可开票金额等于充值实付金额，不包含八折减免和赠送云贝。历史示例仅供体验；本页不生成真实税务发票。</p></section>
       
     </div>
   </main>
@@ -4009,15 +4646,22 @@ function visual(id) {
       return `<svg viewBox="0 0 320 128" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="320" height="128" fill="${bg}"/>${art}</svg>`;
     }
 
+// Keep paused products available as metadata for existing orders and balances.
+function isPausedStorageCategory(name){return String(name??'').trim()==='存储空间';}
+function isPausedStorageProduct(product){
+ return !!product&&(product.id==='storage'||product.kind==='storage'||isPausedStorageCategory(product.category));
+}
+function shopCatalog(){return catalog.filter(p=>!isPausedStorageProduct(p));}
+
 function refreshShopCategories(){
  const box=$('#categories');if(!box)return;
  const names=[];
- for(const p of catalog){if(p.enabled===false)continue;const name=(p.category||'').trim();if(name&&!names.includes(name))names.push(name);}
+ for(const p of shopCatalog()){if(p.enabled===false)continue;const name=(p.category||'').trim();if(name&&!names.includes(name))names.push(name);}
  if(!names.includes(category))category='全部权益';
  box.innerHTML=`<button class="category ${category==='全部权益'?'active':''}" data-category="全部权益" aria-pressed="${category==='全部权益'}">全部权益</button>`+names.map(name=>`<button class="category ${category===name?'active':''}" data-category="${esc(name)}" aria-pressed="${category===name}">${esc(name)}</button>`).join('');
 }
 function renderProducts() {
-      let items=catalog.filter(p=>p.enabled!==false&&(category==='全部权益'||p.category===category)&&(p.name+(p.desc||'')+p.category).toLowerCase().includes($('#product-search').value.trim().toLowerCase()));
+      let items=shopCatalog().filter(p=>p.enabled!==false&&(category==='全部权益'||p.category===category)&&(p.name+(p.desc||'')+p.category).toLowerCase().includes($('#product-search').value.trim().toLowerCase()));
       if(sortMode) items=[...items].sort((a,b)=>sortMode===1?a.price-b.price:b.price-a.price);
       $('#sort-select').value=String(sortMode);
       $('#product-count').textContent=category==='全部权益'&&!$('#product-search').value?'按需兑换商品、权益与活动':`共 ${items.length} 项可兑换商品`;
@@ -4051,7 +4695,7 @@ function renderInvoices() {
 
 function updateInvoiceSelection(){
       const available=invoicePageItems().filter(o=>getInvoiceState(o)==='available');
-      $('#invoice-selected').textContent=selectedInvoices.size; $('#invoice-total').textContent=money([...selectedInvoices].reduce((s,id)=>s+(orderById(id)?.invoiceCents||0),0)); $('#batch-invoice').disabled=selectedInvoices.size===0;$('#batch-invoice').textContent=selectedInvoices.size>1?'合并开票':'申请开票';const mi=$('#merge-invoice');if(mi){mi.disabled=selectedInvoices.size===0;mi.textContent=selectedInvoices.size>0?('合并开票（已选 '+selectedInvoices.size+' 笔）'):'合并开票';}
+      $('#invoice-selected').textContent=selectedInvoices.size; $('#invoice-total').textContent=money([...selectedInvoices].reduce((s,id)=>s+(orderById(id)?.invoiceCents||0),0)); $('#batch-invoice').disabled=selectedInvoices.size===0;$('#batch-invoice').textContent=selectedInvoices.size>1?'合并开票':'申请开票';const mi=$('#merge-invoice');if(mi){mi.disabled=selectedInvoices.size===0;const status=$('#invoice-merge-status'),text='已选 '+fmt(selectedInvoices.size)+' 笔';if(status&&status.textContent!==text)status.textContent=text;}
       $('#select-all-invoices').checked=available.length>0&&available.every(o=>selectedInvoices.has(o.id)); $('#select-all-invoices').indeterminate=available.some(o=>selectedInvoices.has(o.id))&&!$('#select-all-invoices').checked; $('#select-all-invoices').disabled=available.length===0;
       const mobile=$('#select-all-invoices-mobile');mobile.checked=$('#select-all-invoices').checked;mobile.indeterminate=$('#select-all-invoices').indeterminate;mobile.disabled=available.length===0;
     }
@@ -4076,7 +4720,9 @@ function closeModal(){
 function showError(message){let target=$('#modal-error');if(!target){target=document.createElement('div');target.id='modal-error';target.className='modal-error';$('#modal-content').append(target);}target.hidden=false;target.textContent=message;target.setAttribute('role','alert');}
 
 function exchange(productIds){
-      const items=productIds.map(id=>productsById[id]);if(items.some(p=>!p))return;
+      const items=productIds.map(id=>productsById[id]);
+      if(items.some(isPausedStorageProduct)){toast('该商品暂不可兑换。','error');return;}
+      if(!items.length||items.some(p=>!p))return;
       const total=items.reduce((sum,p)=>sum+p.price,0),insufficient=state.balance<total;
       const previews=items.map(p=>{
         const existing=state.orders.filter(o=>o.productId===p.id&&isActive(o)).reduce((max,o)=>Math.max(max,new Date(o.expires).getTime()),Date.now());
@@ -4221,7 +4867,8 @@ function earn(rewardJustClaimed=0){
   </script>
   <script>
 function isAdmin(){return state.role==='admin';}
-let adminView='recharge';
+const DEFAULT_ADMIN_VIEW='supply-checkin';
+let adminView=DEFAULT_ADMIN_VIEW;
 let adminShopCover='';
 let editingAdminProductId='';
 let pendingAdminPublish=null;
@@ -4229,7 +4876,7 @@ let pendingAdminPublish=null;
 function confirmAdminPublish(kind,id){
  if(!isAdmin())return;
  closeProductUnitMenu();
- const product=kind==='product',item=(product?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);if(!item)return;
+ const product=kind==='product',item=(product?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);if(!item||(product&&isPausedStorageProduct(item)))return;
  const quote=product?null:rechargeQuote(id);
  const content=product?`<div class="detail-line"><span>商品名称</span><strong>${esc(item.name)}</strong></div><div class="detail-line"><span>兑换单位</span><strong>${esc(item.unit||'—')}</strong></div><div class="detail-line"><span>所需云贝</span><strong>${fmt(item.price)} 云贝</strong></div><div class="detail-line"><span>对应金额</span><strong>${money(productAmountCents(item.price))}</strong></div>`:`<div class="detail-line"><span>充值原价</span><strong>${money(quote.faceCents)}</strong></div><div class="detail-line"><span>实付金额</span><strong>${money(quote.paidCents)}</strong></div><div class="detail-line"><span>到账云贝</span><strong>${fmt(quote.total)} 云贝</strong></div>`;
  openModal(product?'确认上架商品':'确认启用充值档位',`<p class="modal-intro">${product?'上架后，用户可以在兑换商城看到并兑换该商品。':'启用后，用户可以在充值页面选择并购买该档位。'}</p>${content}<div class="modal-actions"><button type="button" class="btn" data-action="close">取消</button><button type="button" class="btn primary" id="confirm-admin-publish">${product?'确认上架':'确认启用'}</button></div>`);
@@ -4240,7 +4887,6 @@ const PRODUCT_UNIT_GROUPS=[
  {name:'次数与活动',units:['次','场','轮','节','课时','门','期','趟']},
  {name:'人员与席位',units:['人','位','人次','席位','账号','团队']},
  {name:'时长',units:['分钟','小时','天','周','月','季度','年']},
- {name:'存储容量',units:['KB','MB','GB','TB','PB']},
  {name:'科研与分析',units:['样本','例','细胞','基因','数据集','项目','任务','报告','图表','文件','页','核时','GPU 时','万 reads','百万 reads']},
  {name:'实物商品',units:['包','盒','袋','瓶','支','册','箱','杯','条','块','卷','米','克','千克','毫升','升']}
 ];
@@ -4255,7 +4901,7 @@ function closeProductUnitMenu(){
 function renderProductUnitOptions(query=''){
  const menu=$('#product-unit-options'),input=$('#product-unit');if(!menu||!input)return;
  const known=new Set(PRODUCT_UNIT_GROUPS.flatMap(g=>g.units));
- const custom=[...new Set(state.config.catalog.map(p=>p.unit).filter(u=>u&&!known.has(u)))];
+ const custom=[...new Set(shopCatalog().map(p=>p.unit).filter(u=>u&&!known.has(u)))];
  const groups=[...(custom.length?[{name:'已使用单位',units:custom}]:[]),...PRODUCT_UNIT_GROUPS];
  const keyword=query.trim().toLowerCase();let index=0;
  menu.innerHTML=groups.map(group=>{
@@ -4334,7 +4980,8 @@ function renderAdminLists(){
  if(!plans||!shop)return;
  const planCount=$('#admin-plan-count'),productCount=$('#admin-product-count');
  if(planCount)planCount.textContent=`${state.config.rechargePlans.filter(p=>p.enabled!==false).length}/${state.config.rechargePlans.length} 条`;
- if(productCount)productCount.textContent=`${state.config.catalog.length} 条`;
+ const shopProducts=state.config.catalog.filter(p=>!isPausedStorageProduct(p));
+ if(productCount)productCount.textContent=`${shopProducts.length} 条`;
 
  const planHeader=`<div class="admin-list-header recharge-header"><span>充值金额(原价)</span><span>云贝</span><span>赠送云贝</span><span>折扣</span><span>实付金额</span><span>获得云贝</span><span>状态 / 操作</span></div>`;
  plans.innerHTML=planHeader+(state.config.rechargePlans.map(p=>{
@@ -4354,7 +5001,7 @@ function renderAdminLists(){
   </article>`;
  }).join('')||'<div class="admin-empty">暂无充值档位，请在上方添加。</div>');
 
- shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝 / 金额</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${state.config.catalog.map(p=>{
+ shop.innerHTML=`<table class="admin-shop-table" aria-label="商城商品列表"><thead><tr><th scope="col">封面</th><th scope="col">商品名称</th><th scope="col">权益分类</th><th scope="col">兑换单位</th><th scope="col">所需云贝 / 金额</th><th scope="col">上架状态</th><th scope="col">操作</th></tr></thead><tbody>${shopProducts.map(p=>{
   const enabled=p.enabled!==false;
   return `<tr data-product-row="${esc(p.id)}" class="${enabled?'':'product-offline'}">
    <td><div class="admin-table-cover">${p.cover?`<img src="${esc(p.cover)}" alt="${esc(p.name)} 封面">`:`${icon(p.icon||'gift')}<span>默认封面</span>`}</div></td>
@@ -4411,15 +5058,15 @@ function refreshProductCategoryOptions(selected){
  const select=$('#product-category');
  if(!select)return;
  const names=[];
- for(const p of catalog){const name=(p.category||'').trim();if(name&&!names.includes(name))names.push(name);}
- for(const rawName of (state.config.customCategories||[])){const name=String(rawName||'').trim();if(name&&!names.includes(name))names.push(name);}
- for(const name of ['存储空间','项目分享'])if(!names.includes(name))names.push(name);
+ for(const p of shopCatalog()){const name=(p.category||'').trim();if(name&&!names.includes(name))names.push(name);}
+ for(const rawName of (state.config.customCategories||[])){const name=String(rawName||'').trim();if(name&&!isPausedStorageCategory(name)&&!names.includes(name))names.push(name);}
+ if(!names.includes('项目分享'))names.push('项目分享');
  select.innerHTML=names.map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');
- if(names.includes(selected))select.value=selected;else select.value=names[0]||'存储空间';
+ if(names.includes(selected))select.value=selected;else select.value=names[0];
 }
 
 function readAdminProductForm(){
- const category=$('#product-category')?.value||'存储空间';
+ const category=$('#product-category')?.value||'项目分享';
  return {
   name:$('#product-name')?.value.trim()||'',
   category,
@@ -4428,7 +5075,7 @@ function readAdminProductForm(){
  };
 }
 
-function resetAdminProductForm(category='存储空间'){
+function resetAdminProductForm(category='项目分享'){
  const set=(id,value)=>{const el=$('#'+id);if(el)el.value=value;};
  set('product-name','');set('product-price','');set('product-unit','');closeProductUnitMenu();updateProductPriceBinding();
  const select=$('#product-category');if(select&&[...select.options].some(o=>o.value===category))select.value=category;const categoryNew=$('#product-category-new');if(categoryNew){categoryNew.hidden=true;categoryNew.value='';}
@@ -4446,7 +5093,7 @@ function resetAdminProductForm(category='存储空间'){
 
 function startEditAdminProduct(id){
  const product=state.config.catalog.find(item=>item.id===id);
- if(!product)return;
+ if(!product||isPausedStorageProduct(product))return;
  editingAdminProductId=id;
  refreshProductCategoryOptions(product.category);
  const set=(id,value)=>{const el=$('#'+id);if(el)el.value=value;};
@@ -4473,7 +5120,8 @@ document.addEventListener('submit',event=>{
   event.preventDefault();
   const name=$('#admin-category-name')?.value.trim()||'';
   if(!name){showAdminAlert('admin-category-alert','请输入分类名称。');return;}
-  const all=[...(state.config.customCategories||[]),...catalog.map(p=>p.category),'存储空间','项目分享'];
+  if(isPausedStorageCategory(name)){showAdminAlert('admin-category-alert','该分类暂不开放。');return;}
+  const all=[...(state.config.customCategories||[]),...shopCatalog().map(p=>p.category),'项目分享'];
   if(all.includes(name)){showAdminAlert('admin-category-alert','该分类已存在。');return;}
   state.config.customCategories=[...(state.config.customCategories||[]),name];
   persist();applyConfig();refreshProductCategoryOptions(name);renderAdmin();renderAll();closeAdminCategoryModal();toast('分类已新增。');
@@ -4491,13 +5139,14 @@ document.addEventListener('submit',event=>{
  if(event.target.id==='admin-product-form'){
   event.preventDefault();
   const d=readAdminProductForm();
+  if(isPausedStorageCategory(d.category)){showAdminAlert('admin-product-alert','请选择其他权益分类。');return;}
   if(!d.name){showAdminAlert('admin-product-alert','请填写权益名称。');return;}
   if(!Number.isSafeInteger(d.price)||d.price<1){showAdminAlert('admin-product-alert','所需云贝需填写大于 0 的整数。');return;}
   $('#product-unit')?.classList.remove('admin-invalid');
   $('#product-unit')?.removeAttribute('aria-invalid');
   if(editingAdminProductId){
    const product=state.config.catalog.find(item=>item.id===editingAdminProductId);
-   if(!product){resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','商品不存在，请重新编辑。');return;}
+   if(!product||isPausedStorageProduct(product)){resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','商品不可编辑，请重新选择。');return;}
    Object.assign(product,{name:d.name,category:d.category,price:d.price,unit:d.unit,cover:adminShopCover,badge:d.category||product.badge||'权益扩展'});
    persist();applyConfig();refreshProductCategoryOptions(d.category);refreshShopCategories();renderAdmin();renderAll();resetAdminProductForm(d.category);showAdminAlert('admin-product-alert','');focusAdminProductRow(product.id);toast('商品已更新。');
    return;
@@ -4525,7 +5174,7 @@ document.addEventListener('click',event=>{
  if(event.target.closest('#confirm-admin-publish')){
   if(!isAdmin()||!pendingAdminPublish)return;
   const {kind,id}=pendingAdminPublish,item=(kind==='product'?state.config.catalog:state.config.rechargePlans).find(row=>row.id===id);
-  if(!item){closeModal();toast('该记录已不存在，请刷新列表。');return;}
+  if(!item||(kind==='product'&&isPausedStorageProduct(item))){closeModal();toast('该记录已不可操作，请刷新列表。','error');return;}
   item.enabled=true;pendingAdminPublish=null;closeModal();persist();applyConfig();renderAll();setTab(kind==='product'?'shop':'recharge');toast(kind==='product'?'商品已上架，用户现在可以兑换。':'充值档位已启用，用户现在可以充值。');return;
  }
  const viewBtn=event.target.closest('[data-admin-view]');
@@ -4540,7 +5189,7 @@ document.addEventListener('click',event=>{
  if(event.target.closest('#admin-shop-cover-button')){$('#admin-shop-cover')?.click();return;}
  const editProduct=event.target.closest('[data-admin-edit-product]');
  if(editProduct){startEditAdminProduct(editProduct.dataset.adminEditProduct);return;}
- if(event.target.closest('#admin-product-cancel')){const currentCategory=state.config.catalog.find(item=>item.id===editingAdminProductId)?.category||'存储空间';resetAdminProductForm(currentCategory);refreshProductCategoryOptions(currentCategory);showAdminAlert('admin-product-alert','');toast('已取消编辑。');return;}
+ if(event.target.closest('#admin-product-cancel')){const currentCategory=state.config.catalog.find(item=>item.id===editingAdminProductId)?.category||'项目分享';resetAdminProductForm(currentCategory);refreshProductCategoryOptions(currentCategory);showAdminAlert('admin-product-alert','');toast('已取消编辑。');return;}
  const deletePlan=event.target.closest('[data-admin-delete-plan]');
  if(deletePlan){
   const id=deletePlan.dataset.adminDeletePlan;
@@ -4550,6 +5199,7 @@ document.addEventListener('click',event=>{
  const deleteProduct=event.target.closest('[data-admin-delete-product]');
  if(deleteProduct){
   const id=deleteProduct.dataset.adminDeleteProduct;
+  if(isPausedStorageProduct(state.config.catalog.find(p=>p.id===id)))return;
   state.config.catalog=state.config.catalog.filter(p=>p.id!==id);
   persist();applyConfig();renderAdmin();renderAll();toast('商品已删除。');return;
  }
@@ -4572,6 +5222,7 @@ document.addEventListener('change',event=>{
  const productSwitch=event.target.closest('[data-admin-product-enabled]');
  if(productSwitch){
   const product=state.config.catalog.find(p=>p.id===productSwitch.dataset.adminProductEnabled);
+  if(isPausedStorageProduct(product))return;
   if(product&&productSwitch.checked){productSwitch.checked=false;confirmAdminPublish('product',product.id);return;}
   if(product){product.enabled=productSwitch.checked;persist();applyConfig();renderAdminLists();renderAll();toast(product.enabled?'商品已上架。':'商品已下架。');}
   return;
@@ -4645,12 +5296,38 @@ function operationsExamples(){
  });
  state.operationsExamples={version:2,recharge,exchange};persist();return state.operationsExamples;
 }
-function operationsRecords(){
+let operationsAppliedPeriod='30',operationsSavedCustom=null;
+function operationsValidateRange(start,end,currentDay){
+ const isDay=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
+ if(!isDay(start)||!isDay(end))return {error:'请选择开始日期和结束日期。',fields:[...(!isDay(start)?['start']:[]),...(!isDay(end)?['end']:[])]};
+ if(start>currentDay||end>currentDay)return {error:'开始日期和结束日期都不能晚于今天。',fields:[...(start>currentDay?['start']:[]),...(end>currentDay?['end']:[])]};
+ if(start>end)return {error:'结束日期不能早于开始日期。',fields:['end']};
+ return {start,end};
+}
+function operationsActiveRange(){
+ const end=today();
+ if(operationsAppliedPeriod==='all')return {start:'',end:''};
+ if(operationsAppliedPeriod==='custom')return operationsSavedCustom;
+ return {start:shiftedDay(end,1-Number(operationsAppliedPeriod)),end};
+}
+function operationsRecordDate(row){
+ if(!row.created)return '';
+ const date=new Date(row.created);
+ return Number.isFinite(date.getTime())?dateKey(date):'';
+}
+function operationsDateInRange(day,range){
+ return !!day&&(!range.start||day>=range.start)&&(!range.end||day<=range.end);
+}
+function operationsRangeCaption(range,records){
+ if(range.start)return '当前统计区间：'+range.start+' 至 '+range.end;
+ const dates=[...records.recharge,...records.exchange].map(operationsRecordDate).filter(Boolean).sort();
+ return dates.length?'当前统计区间：全部时间（'+dates[0]+' 至 '+dates.at(-1)+'）':'当前统计区间：全部时间';
+}
+function operationsRecords(range=operationsActiveRange()){
  const examples=operationsExamples();
  const recharge=[...examples.recharge,...(state.recharges||[]).map(o=>({...o,status:o.status||'paid',user:operationsCurrentUser}))].filter(row=>row.status!=='pending');
  const exchange=[...examples.exchange,...state.orders.map(o=>({...o,status:o.status||'success',user:operationsCurrentUser,category:o.category||productsById[o.productId]?.category||'商品兑换',unit:o.unit||productsById[o.productId]?.unit||'份'}))];
- const period=$('#operations-period')?.value||'30',cutoff=period==='all'?'':shiftedDay(today(),1-Number(period));
- const included=row=>!cutoff||dateKey(new Date(row.created))>=cutoff;
+ const included=row=>operationsDateInRange(operationsRecordDate(row),range);
  return {recharge:recharge.filter(included).sort((a,b)=>Date.parse(b.created)-Date.parse(a.created)),exchange:exchange.filter(included).sort((a,b)=>Date.parse(b.created)-Date.parse(a.created))};
 }
 function operationsStatusDefinitions(){
@@ -4666,7 +5343,11 @@ function operationsStatusMeta(row){
 }
 function renderOperations(){
  const panel=$('#panel-operations');if(!panel||!isAdmin())return;
- const records=operationsRecords(),recharge=records.recharge,exchange=records.exchange;
+ const range=operationsActiveRange(),records=operationsRecords(range),recharge=records.recharge,exchange=records.exchange;
+ const caption=$('#operations-range-current'),captionText=operationsRangeCaption(range,records);
+ if(caption&&caption.textContent!==captionText)caption.textContent=captionText;
+ const operationsDateMax=today();
+ for(const field of operationsCustomForm.querySelectorAll('input[type=date]'))if(field.max!==operationsDateMax)field.max=operationsDateMax;
  const paidRecharge=recharge.filter(row=>(row.status||'paid')==='paid');
  const successExchange=exchange.filter(row=>(row.status||'success')==='success');
  const unique=rows=>new Set(rows.map(row=>row.user.id)).size;
@@ -4698,7 +5379,37 @@ document.addEventListener('click',event=>{
  const page=event.target.closest('[data-operations-page]');
  if(page&&isAdmin()&&!page.disabled){operationsPage=Number(page.dataset.operationsPage);renderOperations();}
 });
-$('#operations-period')?.addEventListener('change',()=>{operationsPage=1;renderOperations();});
+const operationsPeriodControl=$('#operations-period'),operationsCustomForm=$('#operations-custom-range');
+const operationsRangeFields={start:$('#operations-start'),end:$('#operations-end')};
+function operationsRangeFeedback(result={}){
+ const message=$('#operations-range-error');
+ if(message)message.textContent=result.error||'';
+ for(const [key,field] of Object.entries(operationsRangeFields)){
+  if(result.fields?.includes(key))field.setAttribute('aria-invalid','true');else field.removeAttribute('aria-invalid');
+ }
+}
+function operationsApplyPeriod(period){operationsAppliedPeriod=period;operationsPage=1;renderOperations();}
+operationsPeriodControl?.addEventListener('change',()=>{
+ const selected=operationsPeriodControl.value;
+ operationsRangeFeedback();
+ operationsCustomForm.hidden=selected!=='custom';
+ if(selected!=='custom'){operationsApplyPeriod(selected);return;}
+ const current=operationsActiveRange();
+ const end=today(),draft=operationsSavedCustom||(current.start?current:{start:shiftedDay(end,-29),end});
+ operationsRangeFields.start.value=draft.start;
+ operationsRangeFields.end.value=draft.end;
+ operationsRangeFields.start.max=operationsRangeFields.end.max=end;
+});
+operationsCustomForm?.addEventListener('input',()=>operationsRangeFeedback());
+operationsCustomForm?.addEventListener('submit',event=>{
+ event.preventDefault();
+ if(operationsPeriodControl.value!=='custom')return;
+ const result=operationsValidateRange(operationsRangeFields.start.value,operationsRangeFields.end.value,today());
+ operationsRangeFeedback(result);
+ if(result.error){operationsRangeFields[result.fields[0]].focus();return;}
+ operationsSavedCustom=result;
+ operationsApplyPeriod('custom');
+});
 $('#operations-search')?.addEventListener('input',()=>{operationsPage=1;renderOperations();});
 
   </script>
@@ -4807,7 +5518,13 @@ async function shareInviteLink(){try{if(navigator.share){await navigator.share({
 async function copyInvite(){try{if(!navigator.clipboard)throw new Error();await navigator.clipboard.writeText(state.inviteCode);toast('邀请码 '+state.inviteCode+' 已复制。');}catch{const input=document.createElement('textarea');input.value=state.inviteCode;document.body.append(input);input.select();const copied=document.execCommand('copy');input.remove();if(copied)toast('邀请码已复制。');else openModal('你的专属邀请码',`<p class="modal-intro">可选中下方邀请码复制，发给好友在注册时填写。</p><input style="width:100%;padding:14px;font-size:24px;text-align:center" readonly value="${state.inviteCode}" aria-label="可复制的邀请码"><div class="modal-actions"><button class="btn primary" data-action="close">关闭</button></div>`);}}
 function inviteDemo(){openModal('体验好友注册奖励',`<p class="modal-intro">填写邀请码后注册，双方奖励自动到账。</p><div class="detail-line"><span>使用的邀请码</span><strong>${state.inviteCode}</strong></div><form id="invite-demo-form"><div class="field"><label for="invite-friend-key">好友账号</label><input id="invite-friend-key" required pattern="[A-Za-z0-9@._-]{3,60}" maxlength="60" placeholder="例如 friend001"></div><div class="field"><label for="invite-friend-name">平台用户名</label><input id="invite-friend-name" required maxlength="30" placeholder="例如 研究伙伴小林"></div><p class="modal-intro">本次邀请人可得 10 云贝，好友注册成功得 10 云贝。只有未注册过基因云的新账号可以领奖。</p><div class="modal-error" id="modal-error" hidden></div><div class="modal-actions"><button type="button" class="btn" data-action="close">取消</button><button type="submit" class="btn primary">注册成功</button></div></form>`);}
 function confirmExchange(){
- const purchase=activeExchange;if(!purchase)return;if(state.balance<purchase.total){showError('当前云贝不足，请先充值。');return;}$('#confirm-exchange').disabled=true;activeExchange=null;const created=nowIso(),newOrders=[];
+ const purchase=activeExchange;if(!purchase)return;
+ if(!purchase.ids.length||purchase.ids.some(id=>!productsById[id]||isPausedStorageProduct(productsById[id]))){
+  activeExchange=null;
+  const button=$('#confirm-exchange');if(button)button.disabled=true;
+  showError('商品暂不可兑换，本次未扣减云贝。');return;
+ }
+ if(state.balance<purchase.total){showError('当前云贝不足，请先充值。');return;}$('#confirm-exchange').disabled=true;activeExchange=null;const created=nowIso(),newOrders=[];
  for(const id of purchase.ids){const p=productsById[id],latest=state.orders.filter(o=>o.productId===id&&isActive(o)&&p.kind==='duration').reduce((max,o)=>Math.max(max,Date.parse(o.expires)),Date.parse(created)),orderId=uid('YB'),funding=spendPoints(p.price);if(!funding){showError('余额状态已变化，请刷新后重试。');return;}const order={id:orderId,kind:'exchange',productId:id,name:p.name,price:p.price,created,expires:p.kind==='generic'?null:addDays(latest,p.days),unit:p.unit,category:p.category,productIcon:p.icon,funding};state.orders.unshift(order);state.ledger.unshift({id:uid('L'),label:'兑换'+p.name,delta:-p.price,balance:state.balance,created,orderId,source:'exchange',category:p.category,funding});newOrders.push(order);}
  orderStatus='all';orderPage=1;$('#order-search').value='';$$('[data-order-status]').forEach(b=>b.classList.toggle('active',b.dataset.orderStatus==='all'));persist();renderAll();openModal('兑换完成',`<div class="success-icon">${icon('check')}</div><h3 class="success-title">兑换成功，权益已到账</h3><p class="success-desc">${newOrders.map(o=>esc(o.name)).join(' + ')}<br>已使用 ${fmt(purchase.total)} 云贝，剩余 ${fmt(state.balance)} 云贝。</p><div class="modal-links"><button class="btn" data-action="continue-shopping">继续兑换</button><button class="btn" data-tab="recharge">去充值</button><button class="btn" data-tab="invite">邀请好友</button></div><p class="payment-demo">本次为云贝权益兑换，不产生可开票订单。需要发票请在“发票管理”选择充值订单。</p>`);
 }
@@ -4822,10 +5539,11 @@ function invoiceRules(){openModal('充值开票说明',`<div class="rule"><h3>�
 function renderAll(){refreshShopCategories();renderOverview();renderProducts();renderOrders();renderLedger();renderInvoices();renderRecharge();renderInvites();renderDashboard();renderAdmin();renderRole();renderOperations();}
 const pageInfo={
  recharge:['云贝充值','充值、签到和邀请好友，都在这个模块完成。'],
+ profile:['个人中心','查看个人资料和微信绑定状态。'],
  ledger:['云贝明细','查询每一笔收入与支出，清楚掌握账户变动。'],
  dashboard:['云贝看板','按时间查看消耗、充值与奖励，了解绘图与分析投入。'],
  shop:['兑换商城','用云贝兑换科研绘图、SKILL 包与平台高级功能。'],
- 'token':['AI额度兑换','用云贝兑换 newAPI 额度，额度不足自动消耗云贝补差。'],
+ 'token':['云贝兑换 Token','用云贝兑换 Token，使用 AI 时先扣 Token，没用完可以回收。'],
  orders:['我的兑换','查询商品、权益与活动的兑换记录。'],
  'recharge-orders':['充值订单','查询充值订单，按实付金额单笔或合并开票。'],invite:['邀请好友','分享邀请链接，好友注册成功后双方获得云贝。'],
  invoices:['发票管理','管理充值订单发票，按实付金额申请与下载。'],
@@ -4841,18 +5559,20 @@ function syncSidebarNavigation(tab){
  const cloudParent=$('#cloud-nav-parent');if(cloudParent){const active=['recharge','invite','shop','token','ledger','dashboard','orders'].includes(tab);cloudParent.classList.toggle('active',active);if(active)cloudParent.setAttribute('aria-expanded','true');}
  const adminParent=$('#admin-nav-parent');if(adminParent){adminParent.classList.toggle('active',['admin','operations'].includes(tab));if(['admin','operations'].includes(tab))adminParent.setAttribute('aria-expanded','true');}
  const invoiceParent=$('#invoice-nav-parent');if(invoiceParent){invoiceParent.classList.toggle('active',['invoices','recharge-orders'].includes(tab));if(['invoices','recharge-orders'].includes(tab))invoiceParent.setAttribute('aria-expanded','true');}
- $$('.sidebar [data-tab], .mobile-module-nav [data-tab]').forEach(el=>{const navView=tab==='admin'?(adminView==='invoices'?'invoices':'recharge'):null;const match=el.dataset.tab===(tab==='invoices'?'recharge-orders':tab)&&!(tab==='admin'&&el.dataset.adminView&&el.dataset.adminView!==navView);el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+ $$('.sidebar [data-tab], .mobile-module-nav [data-tab]').forEach(el=>{const navView=tab==='admin'?(adminView==='invoices'?'invoices':DEFAULT_ADMIN_VIEW):null;const match=el.dataset.tab===(tab==='invoices'?'recharge-orders':tab)&&!(tab==='admin'&&el.dataset.adminView&&el.dataset.adminView!==navView);el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
 }
 function renderPageHeading(tab){
  const [title,description]=tab==='admin'&&adminView==='invoices'
   ? ['发票管理','查看用户提交的单笔与合并开票申请，跟踪开票进度。']
-  : pageInfo[tab];
+  : tab==='admin'&&adminView==='token'
+    ? ['Token 兑换设置','设置多少云贝能换多少 Token，查看兑换、回收和使用记录。']
+    : pageInfo[tab];
  $('#page-title').textContent=title;
  $('#page-description').textContent=description;
  document.title=title+' · 派森诺基因云';
 }
 function setTab(tab,updateHash=true){
- if(HIDDEN_PAGES.includes(tab)||!Object.hasOwn(pageInfo,tab)||['admin','operations'].includes(tab)&&!isAdmin())tab='recharge';if(isAdmin()&&!['admin','operations'].includes(tab))tab='admin';
+ if(HIDDEN_PAGES.includes(tab)||!Object.hasOwn(pageInfo,tab)||['admin','operations'].includes(tab)&&!isAdmin())tab='recharge';if(isAdmin()&&!['admin','operations','profile'].includes(tab))tab='admin';
  const changed=activeTab!==tab;activeTab=tab;
  $$('.page-panel').forEach(el=>el.hidden=el.id!=='panel-'+tab);
  syncSidebarNavigation(tab);
@@ -4862,6 +5582,7 @@ function setTab(tab,updateHash=true){
  if(updateHash&&location.hash!=='#'+tab)history.pushState(null,'','#'+tab);
  if(changed){window.scrollTo(0,0);if(updateHash)$('#page-title').focus({preventScroll:true});}
  if(['invoices','recharge-orders'].includes(tab))$$('[data-invoice-view]').forEach(el=>el.classList.toggle('active',el.dataset.invoiceView===tab));
+ if(tab==='profile')$('#profile-wechat-status').textContent=state.taskData?.completed?.includes('wechat')?'已绑定':'未绑定';
  if(tab==='dashboard')requestAnimationFrame(renderDashboard);
 }
 const actions={
@@ -4876,7 +5597,7 @@ const actions={
  'export-usage':()=>exportCsv('云贝使用明细.csv',[['变动说明','权益分类','发生时间','消耗云贝','关联单号'],...usageRows().map(r=>[r.label,r.category,displayDate(r.created,true),-r.delta,r.orderId])]),
  contact:()=>openModal('帮助与反馈',`<div class="rule"><h3>充值与云贝到账</h3><p>充值后在云贝充值中查看订单，云贝明细可核对充值、赠送和使用记录。</p></div><div class="rule"><h3>发票申请</h3><p>仅充值实付金额可开票，权益兑换与赠送云贝不可开票。</p></div><div class="modal-actions"><button class="btn primary" data-action="close">了解了</button></div>`),
  workspace:()=>openModal('科研工作台',`<div class="exchange-preview">${icon('chart')}<div><h3>为绘图与分析准备更多可能</h3><p>在云贝中心充值、积累奖励并兑换科研权益。</p></div></div><div class="modal-links"><button class="btn primary" data-tab="recharge">去云贝</button><button class="btn" data-tab="shop">去兑换权益</button><button class="btn" data-tab="invite">邀请好友</button><button class="btn" data-tab="ledger">云贝明细</button></div><div class="modal-actions"><button class="btn primary" data-action="close">返回云贝中心</button></div>`),
- profile:()=>openModal('个人中心',`<div class="exchange-preview">${icon('user')}<div><h3>科研探索者</h3><p>科研工作空间</p></div></div><div class="detail-line"><span>当前云贝</span><strong>${fmt(state.balance)} 云贝</strong></div><div class="detail-line"><span>专属邀请码</span><strong>${state.inviteCode}</strong></div><div class="modal-actions"><button class="btn primary" data-action="close">关闭</button></div>`)
+ profile:()=>setTab('profile')
 };
 document.addEventListener('click',event=>{
  const b=event.target.closest('button');if(!b||b.disabled)return;
@@ -4892,7 +5613,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.ledgerDetail){ledgerDetails(b.dataset.ledgerDetail);return;}
  if(b.dataset.rechargeDetail){rechargeDetails(b.dataset.rechargeDetail);return;}
  if(b.dataset.removePlan){state.config.rechargePlans=state.config.rechargePlans.filter(p=>p.id!==b.dataset.removePlan);renderAdmin();return;}
- if(b.dataset.removeProduct){state.config.catalog=state.config.catalog.filter(p=>p.id!==b.dataset.removeProduct);renderAdmin();return;}
+ if(b.dataset.removeProduct){if(isPausedStorageProduct(state.config.catalog.find(p=>p.id===b.dataset.removeProduct)))return;state.config.catalog=state.config.catalog.filter(p=>p.id!==b.dataset.removeProduct);renderAdmin();return;}
  if(b.dataset.invitePage){invitePage=Number(b.dataset.invitePage);renderInvites();return;}
  if(b.dataset.ledgerPage){ledgerPage=Number(b.dataset.ledgerPage);renderLedger();return;}
  if(b.dataset.exchange){exchange([b.dataset.exchange]);return;}
@@ -4906,7 +5627,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.downloadInvoice){downloadInvoice(b.dataset.downloadInvoice);return;}
  if(b.dataset.invoiceOrder){invoiceDetails(b.dataset.invoiceOrder);return;}
  if(b.dataset.invoiceType){saveInvoiceDraft();invoiceType=b.dataset.invoiceType;invoiceDraft.type=invoiceType;applyInvoiceType();$('#invoice-title').value=invoiceDraft[invoiceType+'Title'];fieldError('invoice-title','');fieldError('invoice-tax','');return;}
- if(b.id==='confirm-exchange'){confirmExchange();return;}if(b.id==='checkin'){checkin();return;}if(b.id==='batch-invoice'){invoiceForm([...selectedInvoices]);return;}
+ if(b.id==='confirm-exchange'){confirmExchange();return;}if(b.id==='checkin'){checkin();return;}if(b.id==='batch-invoice'||b.id==='merge-invoice'){invoiceForm([...selectedInvoices]);return;}
  if(b.dataset.action&&actions[b.dataset.action])actions[b.dataset.action]();
 });
 document.addEventListener('submit',event=>{
@@ -4936,7 +5657,13 @@ document.addEventListener('click',event=>{const cloudParent=event.target.closest
  if(!$('#admin-category-modal').hidden)closeAdminCategoryModal();
  if(!$('#overlay').hidden)closeModal();
  state.role=role;persist();renderRole();
- requestAnimationFrame(()=>{renderAll();if(role==='admin')setTab('admin');else if(['admin','operations'].includes(activeTab))setTab('recharge');});
+ const fromAdminToken=activeTab==='admin'&&adminView==='token';
+ requestAnimationFrame(()=>{
+  if(role==='admin'){adminView=DEFAULT_ADMIN_VIEW;setTab('admin');}
+  else if(fromAdminToken)setTab('token');
+  else if(['admin','operations'].includes(activeTab))setTab('recharge');
+  renderAll();
+ });
 });
 
   </script>
@@ -5096,11 +5823,11 @@ function taskInviteSubmit(){
  if(!name||!account)return fail('请填写平台用户名和账号。');const limit=inviteDailyLimit();if(limit>0&&inviteDailyCount()>=limit)return fail('今日邀请人数已达上限。');const c=ybTaskCfg();const exists=inviteAllRecords().some(r=>String(r.friendKey||'').toLowerCase()===account);if(exists)return fail('该账号已在基因云注册过，只有新注册账号才能获得邀请奖励。');
  const id=uid('INV');state.invites.unshift({id,friendKey:account,name,reward:c.tasks.invite.inviter,friendReward:c.tasks.invite.friend,created:nowIso(),status:'rewarded'});state.taskData.invite.count++;addCredit(c.tasks.invite.inviter,'invite','邀请好友注册 · '+name,id);log('受邀好友：'+name,'好友奖励','云贝',c.tasks.invite.friend,id);persist();closeModal();renderAll();toast('邀请成功，双方云贝已到账。');
 }
-document.addEventListener('click',e=>{const wb=e.target.closest('[data-action="wechat-bind-confirm"]');if(wb){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');return;}const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='wechat-unbind'){closeModal();actions.profile();toast('请在个人中心解绑微信。');return;}if(id==='checkin')return taskCheckin();openTaskModal(id);});
+document.addEventListener('click',e=>{const wb=e.target.closest('[data-action="wechat-bind-confirm"]');if(wb){closeModal();completeTask('wechat',(ybTaskCfg().tasks.wechat?.reward??0),'微信绑定成功');return;}const b=e.target.closest('[data-supply-task]');if(!b||b.disabled)return;e.preventDefault();const id=b.dataset.supplyTask;if(id==='wechat-unbind'){setTab('profile');return;}if(id==='checkin')return taskCheckin();openTaskModal(id);});
 document.addEventListener('submit',e=>{
  if(e.target.id==='task-invite-form'){e.preventDefault();taskInviteSubmit();return;}
  if(e.target.id==='task-profile-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('profile',ybTaskCfg().profile.reward,'个人中心已完善');}return;}
- if(e.target.id==='task-wechat-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('wechat',ybTaskCfg().wechat.reward,'微信绑定成功');}return;}
+ if(e.target.id==='task-wechat-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('wechat',(ybTaskCfg().tasks.wechat?.reward??0),'微信绑定成功');}return;}
  if(e.target.id==='task-avatar-form'){e.preventDefault();if(e.target.reportValidity()){closeModal();completeTask('avatar',ybTaskCfg().avatar.reward,'个人头像已上传');}return;}
 });
 renderInvites=function(){renderTaskCenter();};renderTaskCenter();
@@ -5176,7 +5903,7 @@ window.YunbeiSupply={data:s,config:cfg,defaults,definitions,clone,escape:(value)
  const A=window.YunbeiSupply;if(!A)return;
  const labels={checkin:'签到配置',recharge:'首充配置'};
  const drafts={checkin:A.clone(A.config().checkin),recharge:A.clone(A.config().recharge)};
- const adminModules=[['supply-checkin','签到配置'],['recharge','充值配置'],['tasks','任务配置'],['shop','商城配置'],['token','Token兑换配置']];
+ const adminModules=[['supply-checkin','签到配置'],['recharge','充值配置'],['tasks','任务配置'],['shop','商城配置'],['token','Token 兑换设置']];
  const defs=A.definitions;
  const options=value=>Object.entries(defs).map(([id,d])=>`<option value="${id}" ${id===value?'selected':''}>${d.name}</option>`).join('');
  const input=(name,value,min=0,max=10000)=>`<input name="${name}" type="number" min="${min}" max="${max}" step="1" value="${value}" required>`;
@@ -5389,116 +6116,873 @@ const beforeAdminInvoices=renderAdminLists;renderAdminLists=function(){beforeAdm
 
 </script>
 <script>
-/* ===== AI额度兑换（云贝换Token） ===== */
-(function(){
-const CFG_KEY='ybTokenCfgV2',USER_KEY='ybTokenUserV2';
-try{localStorage.removeItem('ybTokenUserV1');localStorage.removeItem('ybTokenCfgV1');}catch(e){}
-const defCfg={ratio:10};
-const defUser={allocs:[],used:0,calls:[],refunds:[],auto:true};
-function load(k,d){try{const r=localStorage.getItem(k);return r?Object.assign({},d,JSON.parse(r)):Object.assign({},d);}catch(e){return Object.assign({},d);}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-let cfg=load(CFG_KEY,defCfg),user=load(USER_KEY,defUser);
-const allocCoins=()=>user.allocs.reduce((s,a)=>s+a.coins,0);
-const quotaCoins=()=>Math.max(0,allocCoins()-user.used);
-const quotaUsd=()=>quotaCoins()/Math.max(1,cfg.ratio);
-const usd=n=>'$'+(Math.round(n*100)/100).toFixed(2).replace(/\.00$/,'');
-function addLedger(delta,label,orderId){state.ledger.unshift({id:uid('L'),label,delta,balance:state.balance,created:nowIso(),orderId:orderId||'—',source:'exchange',category:'AI额度'});}
-function saveUser(){save(USER_KEY,user);}
-if(!state.tpLedgerFix){state.tpLedgerFix=1;state.earned=state.ledger.filter(r=>r.delta>0).reduce((s,r)=>s+r.delta,0);state.spent=state.ledger.filter(r=>r.delta<0).reduce((s,r)=>s-r.delta,0);if(state.ledger[0]&&Number.isFinite(state.ledger[0].balance))state.balance=state.ledger[0].balance;persist();}
-function renderTokenUser(){
- if(!$('#tp-quota'))return;
- const balEl=$('#tp-balance');if(balEl)balEl.textContent=fmt(state.balance);
- $('#tp-quota').textContent=usd(quotaUsd());
- const inp=$('#tp-budget-input'),rg=$('#tp-budget-range');
- const cur=allocCoins();
- rg.max=Math.max(1000,state.balance);
- rg.value=Math.min(Number(inp.value)||0,rg.max);
- $('#tp-budget-usd').textContent=usd((Number(inp.value)||0)/Math.max(1,cfg.ratio));
- const ins=$('#tp-insufficient');if(ins){const want=Number(inp.value)||0;const lack=Math.max(0,Math.ceil(want-state.balance));ins.hidden=!(want>state.balance);const txt=$('#tp-insufficient-text');if(txt)txt.textContent=lack>0?('还差 '+fmt(lack)+' 云贝，请先充值云贝。'):'请先充值云贝后再分配。';}
- $('#tp-used-text').textContent=cur>0?('已分配 '+fmt(cur)+' 云贝 · 已消耗 '+fmt(user.used)+' 云贝 · 剩余额度 '+usd(quotaUsd())):'尚未分配，分配后调用优先抵扣额度';
- $('#tp-used-bar').style.width=(cur>0?Math.min(100,user.used/cur*100):0)+'%';
- $('#tp-auto').checked=user.auto;
- const rows=[];
- user.allocs.slice().reverse().slice(0,10).forEach(a=>{const kind=a.kind||'allocate',u=(a.usd!=null?a.usd:a.coins/Math.max(1,cfg.ratio));rows.push('<tr><td>'+(kind==='exchange'?'兑换':'分配')+'</td><td>'+(kind==='exchange'?'档位兑换 '+usd(u):'分配 '+usd(u))+'</td><td>'+(kind==='exchange'?('消耗 '+fmt(a.coins)+' 云贝 · 额度已到账'):(fmt(a.coins)+' 云贝转换为额度'))+'</td><td>'+(a.created?displayDate(a.created,true):'—')+'</td></tr>');});
- user.refunds.slice(0,10).forEach(r=>rows.push('<tr><td>回收</td><td>回收未使用额度</td><td>退回 '+fmt(r.coins)+' 云贝至余额</td><td>'+(r.created?displayDate(r.created,true):'—')+'</td></tr>'));
- 
- $('#tp-records').innerHTML=rows.join('')||'<tr><td colspan="4" class="tp-empty">暂无记录</td></tr>';
-}
-function allocate(coins){const f=spendPoints(coins);if(!f)return;user.allocs.push({coins,funding:f,used:0,kind:'allocate',usd:coins/Math.max(1,cfg.ratio),created:nowIso()});addLedger(-coins,'分配云贝至 newAPI 额度','—');persist();saveUser();renderAll();renderTokenUser();}
-function recycle(){
- let refund=0;
- for(let i=user.allocs.length-1;i>=0;i--){const a=user.allocs[i];const free=a.coins-a.used;if(free>0){refund+=free;const f=a.funding,total=a.coins,paidBack=Math.round(f.paid*free/total),rewardBack=free-paidBack;state.wallet.paid+=paidBack;state.wallet.reward+=rewardBack;state.balance+=free;state.spent-=free;addLedger(free,'回收 newAPI 未使用额度','—');a.coins-=free;if(a.coins<=a.used)user.allocs.splice(i,1);}}
- if(refund<=0){toast('没有可回收的未使用额度。','error');return;}
- persist();saveUser();renderAll();renderTokenUser();toast('已回收 '+fmt(refund)+' 云贝，已分配额度已同步扣减。');
-}
-function renderTokenAdmin(){
- const sec=$('#admin-token');if(!sec)return;
- const ago=hours=>new Date(Date.now()-hours*3600000).toISOString();
- const demoRecords=[
-  {user:'林知远',type:'分配',coins:10000,created:ago(2)},
-  {user:'陈可宁',type:'分配',coins:5000,created:ago(5)},
-  {user:'赵书航',type:'回收',coins:-2000,created:ago(9)},
-  {user:'许亦然',type:'分配',coins:8000,created:ago(24)},
-  {user:'顾清和',type:'分配',coins:1500,created:ago(30)},
-  {user:'沈云舒',type:'回收',coins:-3000,created:ago(34)},
-  {user:'陆思齐',type:'分配',coins:20000,created:ago(48)},
-  {user:'苏晚晴',type:'分配',coins:3000,created:ago(72)},
-  {user:'姜叙白',type:'分配',coins:10000,created:ago(96)},
-  {user:'孟疏桐',type:'回收',coins:-1500,created:ago(104)},
-  {user:'程知夏',type:'分配',coins:5000,created:ago(120)},
-  {user:'周念安',type:'分配',coins:1000,created:ago(144)}
- ];
- const userRecords=[
-  ...user.allocs.map(a=>({user:'体验用户',type:'分配',coins:a.coins,created:a.created})),
-  ...user.refunds.map(r=>({user:'体验用户',type:'回收',coins:-r.coins,created:r.created}))
- ];
- const records=[...demoRecords,...userRecords].sort((a,b)=>Date.parse(b.created||0)-Date.parse(a.created||0));
- const totalAllocated=records.filter(r=>r.coins>0).reduce((sum,r)=>sum+r.coins,0);
- const totalRefunded=records.filter(r=>r.coins<0).reduce((sum,r)=>sum-r.coins,0);
- const rows=records.slice(0,30).map(r=>'<tr><td>'+r.user+'</td><td>'+r.type+'</td><td class="num">'+(r.coins>0?'+':'−')+fmt(Math.abs(r.coins))+' 云贝</td><td>'+usd(Math.abs(r.coins)/Math.max(1,cfg.ratio))+'</td><td>'+(r.created?displayDate(r.created,true):'—')+'</td></tr>').join('');
- sec.innerHTML='<div class="tp-card" style="max-width:720px">'
- +'<h3>newAPI 额度配置</h3><p>配置云贝与 newAPI 额度的换算关系，用户端分配与自动补差均按此计算</p>'
- +'<div class="tp-line" style="margin-top:16px"><span style="color:#5a6b78">额度换算</span><input type="number" min="1" step="1" value="'+cfg.ratio+'" data-tp-in="ratio" style="width:120px;padding:8px 10px;border:1px solid var(--line);border-radius:8px"><span>云贝 / $1</span><span class="tp-eq">1 云贝 = <b>'+usd(1/Math.max(1,cfg.ratio))+'</b></span></div><div class="tp-note" style="margin-top:8px">充值换算：1元 = 10云贝 · 额度换算：1元 = $1</div>'
- +'<div class="tp-chips" style="margin-top:14px"><span class="tp-chip">分配示例 · 300 云贝 = '+usd(300/Math.max(1,cfg.ratio))+'</span><span class="tp-chip">补差示例 · 缺 $0.30 = '+fmt(Math.ceil(0.3*cfg.ratio))+' 云贝</span></div>'
- +'<div style="display:flex;justify-content:flex-end;margin-top:18px"><button class="tp-btn primary" data-tp="ta-save">保存并生效</button></div>'
- +'<p class="tp-note">保存后立即同步用户端换算与自动补差</p>'
- +'</div>'
- +'<div class="tp-card" style="margin-top:16px">'
- +'<h3>Token 分配记录</h3><p>管理员可查看用户把云贝分配为 newAPI 额度和回收额度的记录</p>'
- +'<div class="tp-dashboard">'
- +'<div class="tp-kpi kpi-blue"><span>累计分配</span><strong class="num">'+fmt(totalAllocated)+'</strong><small>≈ '+usd(totalAllocated/Math.max(1,cfg.ratio))+' 额度</small></div>'
- +'<div class="tp-kpi kpi-green"><span>累计回收</span><strong class="num">'+fmt(totalRefunded)+'</strong><small>≈ '+usd(totalRefunded/Math.max(1,cfg.ratio))+' 额度</small></div>'
- +'<div class="tp-kpi kpi-gray"><span>当前账户消耗</span><strong class="num">'+fmt(user.used)+'</strong><small>仅统计体验账户记录</small></div>'
- +'<div class="tp-kpi kpi-violet"><span>净分配额度</span><strong>'+usd((totalAllocated-totalRefunded)/Math.max(1,cfg.ratio))+'</strong><small>累计分配减累计回收</small></div>'
- +'</div>'
- +'<div style="overflow-x:auto;margin-top:12px"><table class="tp-table"><thead><tr><th>用户</th><th>操作</th><th>云贝变动</th><th>额度换算</th><th>时间</th></tr></thead><tbody>'+(rows||'<tr><td colspan="5" class="tp-empty">暂无分配记录</td></tr>')+'</tbody></table></div>'
- +'<p class="tp-note">演示记录已预置 12 条；正式接入后按平台用户汇总展示。</p>'
- +'</div>';
-}
-document.addEventListener('click',e=>{
- const b=e.target.closest('[data-tp]');if(!b||b.disabled)return;
- const k=b.dataset.tp;
- if(k==='quick'){const n=b.dataset.n,v=n==='max'?state.balance:Math.min(Number(n),state.balance);$('#tp-budget-input').value=v;$('#tp-budget-input').dispatchEvent(new Event('input',{bubbles:true}));return;}
- if(k==='save-budget'){const v=Math.max(0,Math.round(Number($('#tp-budget-input').value)||0));
-  if(v<=0){toast('请输入大于 0 的云贝数。','error');return;}
-  if(v>state.balance){renderTokenUser();toast('云贝余额不足，请先充值云贝。','error');return;}
-  allocate(v);toast('已分配 '+fmt(v)+' 云贝为 newAPI 额度。');return;}
- if(k==='recycle'){recycle();return;} if(k==='go-recharge'){setTab('recharge');return;}
- if(k==='merge'){if(selectedInvoices.size===0){toast('请先勾选要合并开票的订单。');return;}invoiceForm([...selectedInvoices]);return;}
- if(k==='ta-save'){const r=Math.round(Number(document.querySelector('[data-tp-in="ratio"]').value)||0);if(r<1){toast('额度换算需 ≥ 10 云贝 / $1。');return;}cfg.ratio=r;save(CFG_KEY,cfg);renderTokenAdmin();renderTokenUser();toast('兑换比例已保存，用户端已同步。');return;}
-});
-document.addEventListener('input',e=>{
- const t=e.target;
- if(t.id==='tp-budget-input'||t.id==='tp-budget-range'){const v=Math.max(0,Math.round(Number(t.value)||0));if(t.id==='tp-budget-range')$('#tp-budget-input').value=v;else $('#tp-budget-range').value=v;$('#tp-budget-usd').textContent=usd(v/Math.max(1,cfg.ratio));$('#tp-budget-range').max=Math.max(1000,v,state.balance,allocCoins());return;}
-});
-document.addEventListener('change',e=>{if(e.target.id==='tp-auto'){user.auto=e.target.checked;saveUser();renderTokenUser();toast(user.auto?'已开启额度不足自动补差。':'已关闭自动补差，额度不足时调用将被拒绝。');}});
-const tpPanel=document.getElementById('panel-admin');
-if(tpPanel)tpPanel.insertAdjacentHTML('beforeend','<section id="admin-token" class="growth-section" hidden></section>');
-const tpSetTab=setTab;
-setTab=function(tab,updateHash=true){tpSetTab(tab,updateHash);if(tab==='token')renderTokenUser();if(tab==='admin'&&adminView==='token')renderTokenAdmin();};
-renderTokenUser();renderTokenAdmin();
+(function () {
+  'use strict';
+
+  const maxInteger = BigInt(Number.MAX_SAFE_INTEGER);
+  const validInt = (n) => Number.isSafeInteger(n) && n >= 0;
+  const legacyInt = (n) => validInt(n) ? n : 0;
+
+  function integer(n, label, positive = false) {
+    if (!validInt(n) || (positive && n === 0)) throw new RangeError(`${label} must be a safe ${positive ? 'positive' : 'non-negative'} integer`);
+    return n;
+  }
+
+  function balanceSum(a, b) {
+    return integer(a + b, 'Total Yunbei');
+  }
+
+  function checkedState(state) {
+    if (!state || !Array.isArray(state.lots) || !Array.isArray(state.events) || typeof state.auto !== 'boolean') {
+      throw new TypeError('Invalid AI quota state');
+    }
+  }
+
+  function checkFunding(funding, amount) {
+    const paid = integer(funding?.paid, 'Paid Yunbei');
+    const reward = integer(funding?.reward, 'Reward Yunbei');
+    if (balanceSum(paid, reward) !== amount) throw new RangeError('Funding must equal the Yunbei amount');
+    return {paid, reward};
+  }
+
+  function available(state) {
+    checkedState(state);
+    return state.lots.reduce((sum, lot) => {
+      const amount = integer(lot?.remaining, 'Remaining Yunbei');
+      checkFunding(lot.funding, amount);
+      return balanceSum(sum, amount);
+    }, 0);
+  }
+
+  function checkRates(rates) {
+    const {input, output} = rates ?? {};
+    if (!Number.isFinite(input) || input < 0 || !Number.isFinite(output) || output < 0 || !(input || output)) {
+      throw new RangeError('Input and output rates must be finite and non-negative, with at least one positive rate');
+    }
+    return {input, output};
+  }
+
+  // Use decimal fractions for pricing so a boundary such as 3.2 × 3125 tokens stays exactly one Yunbei.
+  function decimal(value) {
+    const [mantissa, exponent = '0'] = String(value).split('e');
+    const [whole, fraction = ''] = mantissa.split('.');
+    const places = fraction.length - Number(exponent);
+    const digits = BigInt(whole + fraction);
+    return places < 0 ? [digits * 10n ** BigInt(-places), 0] : [digits, places];
+  }
+
+  function quote(inputTokens, outputTokens, rates) {
+    integer(inputTokens, 'Input tokens');
+    integer(outputTokens, 'Output tokens');
+    integer(inputTokens + outputTokens, 'Total tokens', true);
+    const rate = checkRates(rates);
+    const [inRate, inPlaces] = decimal(rate.input);
+    const [outRate, outPlaces] = decimal(rate.output);
+    const places = Math.max(inPlaces, outPlaces);
+    const numerator = BigInt(inputTokens) * inRate * 10n ** BigInt(places - inPlaces)
+      + BigInt(outputTokens) * outRate * 10n ** BigInt(places - outPlaces);
+    const denominator = 10000n * 10n ** BigInt(places);
+    const cost = (numerator + denominator - 1n) / denominator;
+    if (cost > maxInteger) throw new RangeError('AI quote exceeds the supported range');
+    return Number(cost);
+  }
+
+  function eventBase(state, meta) {
+    const {id, created} = meta ?? {};
+    if (typeof id !== 'string' || !id.trim()) throw new TypeError('Transaction ID is required');
+    if (state.events.some((event) => event.id === id)) throw new Error('Transaction ID already exists');
+    if (typeof created !== 'string' || !Number.isFinite(Date.parse(created))) throw new TypeError('Valid transaction time is required');
+    return {id, created};
+  }
+
+  function allocate(state, amount, funding, meta) {
+    integer(amount, 'Allocation amount', true);
+    const sources = checkFunding(funding, amount);
+    balanceSum(available(state), amount);
+    const base = eventBase(state, meta);
+    const event = {...base, type: 'allocate', amount, aiDelta: amount, walletDelta: -amount, status: 'success'};
+    state.lots.push({...base, remaining: amount, funding: sources});
+    state.events.push(event);
+    return event;
+  }
+
+  function refund(state, meta) {
+    const amount = available(state);
+    const funding = {paid: 0, reward: 0};
+    if (!amount) return {amount, funding, event: null};
+    const base = eventBase(state, meta);
+    for (const lot of state.lots) {
+      funding.paid = balanceSum(funding.paid, lot.funding.paid);
+      funding.reward = balanceSum(funding.reward, lot.funding.reward);
+    }
+    checkFunding(funding, amount);
+    const event = {...base, type: 'refund', amount, aiDelta: -amount, walletDelta: amount, status: 'success'};
+    state.lots = [];
+    state.events.push(event);
+    return {amount, funding, event};
+  }
+
+  function planCharge(state, walletBalance, cost) {
+    integer(walletBalance, 'Wallet balance');
+    integer(cost, 'Call cost');
+    const ai = Math.min(available(state), cost);
+    const wallet = cost - ai;
+    if (wallet && !state.auto) return {ok: false, reason: 'auto-off', ai: 0, wallet: 0};
+    if (wallet > walletBalance) return {ok: false, reason: 'insufficient', ai: 0, wallet: 0};
+    return {ok: true, reason: null, ai, wallet};
+  }
+
+  function consume(state, plan, meta) {
+    const remaining = available(state);
+    const base = eventBase(state, meta);
+    const cost = integer(meta?.cost, 'Call cost');
+    if (typeof plan?.ok !== 'boolean') throw new TypeError('A charge plan is required');
+    const ai = integer(plan.ai, 'AI quota charge');
+    const wallet = integer(plan.wallet, 'Wallet charge');
+    const details = {cost, ai, wallet};
+    if (meta.input !== undefined) details.input = integer(meta.input, 'Input tokens');
+    if (meta.output !== undefined) details.output = integer(meta.output, 'Output tokens');
+    if (details.input !== undefined && details.output !== undefined) {
+      integer(details.input + details.output, 'Total tokens', true);
+    }
+    if (meta.model != null) {
+      if (typeof meta.model !== 'string' || !meta.model.trim()) throw new TypeError('Valid model is required');
+      details.model = meta.model;
+    }
+    if (meta.rates != null) {
+      details.rates = checkRates(meta.rates);
+      if (details.input !== undefined && details.output !== undefined && quote(details.input, details.output, details.rates) !== cost) {
+        throw new RangeError('Call cost does not match pricing snapshot');
+      }
+    }
+
+    if (!plan.ok) {
+      if (!cost || ai || wallet || !['auto-off', 'insufficient'].includes(plan.reason)) throw new Error('Invalid rejected charge plan');
+      const event = {...base, ...details, type: 'shortfall', amount: 0, aiDelta: 0, walletDelta: 0, status: 'failed', reason: plan.reason};
+      state.events.push(event);
+      return event;
+    }
+
+    if (ai !== Math.min(remaining, cost) || wallet !== cost - ai || (wallet && !state.auto) || plan.reason != null) {
+      throw new Error('Invalid or stale charge plan');
+    }
+
+    // Work on copies first. Spend rewards before paid balance, in lot order within each source.
+    const next = state.lots.map((lot) => ({...lot, funding: {...lot.funding}}));
+    let toSpend = ai;
+    for (const source of ['reward', 'paid']) {
+      for (const lot of next) {
+        if (!toSpend) break;
+        const part = Math.min(toSpend, lot.funding[source]);
+        lot.funding[source] -= part;
+        lot.remaining -= part;
+        toSpend -= part;
+      }
+    }
+    if (toSpend) throw new Error('Reserved Yunbei changed before settling the charge');
+    const event = {...base, ...details, type: wallet ? 'shortfall' : 'consume', amount: cost, aiDelta: ai ? -ai : 0, walletDelta: wallet ? -wallet : 0, status: 'success'};
+    state.lots = next.filter((lot) => lot.remaining);
+    state.events.push(event);
+    return event;
+  }
+
+  const legacyDate = (value) => typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : '1970-01-01T00:00:00.000Z';
+
+  function create(legacyUser) {
+    const src = legacyUser ?? {};
+    const state = {lots: [], events: [], auto: Object.hasOwn(src, 'auto') && typeof src.auto === 'boolean' ? src.auto : false};
+    const allocations = (Array.isArray(src.allocs) ? src.allocs : []).flatMap((raw, i) => {
+      const amount = legacyInt(raw?.coins);
+      if (!amount) return [];
+      const used = Math.min(amount, legacyInt(raw.used));
+      const paid = Math.min(amount, legacyInt(raw.funding?.paid));
+      const base = {id: `legacy-allocate-${i + 1}`, created: legacyDate(raw.created)};
+      return [{...base, amount, used, funding: {paid, reward: amount - paid}}];
+    });
+    const total = allocations.reduce((sum, lot) => balanceSum(sum, lot.amount), 0);
+    const known = allocations.reduce((sum, lot) => balanceSum(sum, lot.used), 0);
+    // The old available balance used the aggregate. Preserve it, taking per-lot usage into account only once.
+    let pending = Math.min(total, validInt(src.used) ? src.used : known);
+    const taken = allocations.map((lot) => {
+      const used = Math.min(pending, lot.used);
+      pending -= used;
+      return used;
+    });
+    allocations.forEach((lot, i) => {
+      const extra = Math.min(pending, lot.amount - taken[i]);
+      pending -= extra;
+      const used = taken[i] + extra;
+      const remaining = lot.amount - used;
+      const reward = Math.max(0, lot.funding.reward - used);
+      if (remaining) state.lots.push({id: lot.id, created: lot.created, remaining, funding: {paid: remaining - reward, reward}});
+      state.events.push({id: lot.id, created: lot.created, type: 'allocate', amount: lot.amount, aiDelta: lot.amount, walletDelta: -lot.amount, status: 'success'});
+    });
+    if (Array.isArray(src.refunds)) src.refunds.forEach((raw, i) => {
+      const amount = legacyInt(raw?.coins);
+      if (!amount) return;
+      state.events.push({id: `legacy-refund-${i + 1}`, created: legacyDate(raw.created), type: 'refund', amount, aiDelta: -amount, walletDelta: amount, status: 'success'});
+    });
+    state.events.sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
+    return state;
+  }
+
+  globalThis.YunbeiAiEngine = Object.freeze({create, available, quote, planCharge, allocate, refund, consume});
 })();
 </script>
-<script>state.role="user";renderAll();</script>
+<script>
+(function () {
+  'use strict';
+
+  const maxRate = 1_000_000;
+  const maxInteger = BigInt(Number.MAX_SAFE_INTEGER);
+  const sources = ['reward', 'paid'];
+  const emptyFunding = () => ({ paid: 0, reward: 0 });
+
+  function integer(value, label, min = 0, max = Number.MAX_SAFE_INTEGER) {
+    if (!Number.isSafeInteger(value) || value < min || value > max) throw new RangeError(`${label} is out of range`);
+    return value;
+  }
+
+  const sum = (a, b) => integer(a + b, 'Total');
+
+  function normalizeRate(rate) {
+    if (typeof rate === 'number') return { coins: 1, tokens: integer(rate, 'Tokens per Yunbei', 1, maxRate) };
+    return {
+      coins: integer(rate?.coins, 'Yunbei per exchange group', 1, maxRate),
+      tokens: integer(rate?.tokens, 'Tokens per exchange group', 1, maxRate),
+    };
+  }
+
+  const copyRate = rate => typeof rate === 'number' ? rate : normalizeRate(rate);
+  const wholeGroups = (tokens, rate) => (tokens - tokens % rate.tokens) / rate.tokens;
+  const legacyLot = lot => typeof lot.rate === 'number' && lot.tokens != null;
+
+  function fundingTotal(funding) {
+    return sum(integer(funding?.paid, 'Paid Yunbei'), integer(funding?.reward, 'Reward Yunbei'));
+  }
+
+  function validState(state) {
+    if (!state || !Array.isArray(state.lots) || !Array.isArray(state.events) || typeof state.auto !== 'boolean') {
+      throw new TypeError('Invalid Token balance state');
+    }
+  }
+
+  function available(state) {
+    validState(state);
+    return state.lots.reduce((total, lot) => {
+      const ratio = normalizeRate(lot.rate);
+      if (legacyLot(lot)) {
+        return sum(total, sum(integer(lot.tokens.paid, 'Paid Tokens'), integer(lot.tokens.reward, 'Reward Tokens')));
+      }
+      const tokens = integer(lot.remainingTokens, 'Remaining Tokens');
+      if (fundingTotal(lot.funding) !== wholeGroups(tokens, ratio) * ratio.coins) {
+        throw new RangeError('Remaining funding must equal the value of complete exchange groups');
+      }
+      return sum(total, tokens);
+    }, 0);
+  }
+
+  function quote(coins, rate) {
+    integer(coins, 'Yunbei amount', 1);
+    const ratio = normalizeRate(rate);
+    if (coins % ratio.coins) throw new RangeError('Yunbei amount must be a complete exchange group');
+    const tokens = BigInt(coins / ratio.coins) * BigInt(ratio.tokens);
+    if (tokens > maxInteger) throw new RangeError('Token exchange exceeds the supported range');
+    return Number(tokens);
+  }
+
+  function lotTokens(funding, rate) {
+    const tokens = {};
+    for (const source of sources) tokens[source] = funding[source] ? quote(funding[source], rate) : 0;
+    return tokens;
+  }
+
+  function makeLot(base, rate, funding, tokens) {
+    return typeof rate === 'number'
+      ? { ...base, rate, tokens: lotTokens(funding, rate) }
+      : { ...base, rate: normalizeRate(rate), remainingTokens: tokens, funding: { ...funding } };
+  }
+
+  function transaction(state, meta) {
+    const { id, created } = meta ?? {};
+    if (typeof id !== 'string' || !id.trim()) throw new TypeError('Transaction ID is required');
+    if (typeof created !== 'string' || !Number.isFinite(Date.parse(created))) throw new TypeError('Valid transaction date is required');
+    if (state.events.some(event => event.id === id)) throw new Error('Transaction ID already exists');
+    return { id, created };
+  }
+
+  function create(legacy = null, rate = 1000) {
+    normalizeRate(rate);
+    const state = { lots: [], events: [], auto: legacy?.auto === true };
+    if (!legacy) return state;
+    if (Array.isArray(legacy.events)) {
+      state.events = legacy.events.map(event => ({ ...JSON.parse(JSON.stringify(event)), legacy: true }));
+    }
+    if (Array.isArray(legacy.lots)) {
+      for (const [index, lot] of legacy.lots.entries()) {
+        const coins = integer(lot?.remaining, 'Legacy Yunbei');
+        if (fundingTotal(lot.funding) !== coins) throw new RangeError('Legacy funding does not match its amount');
+        if (coins) state.lots.push(makeLot({
+          id: typeof lot.id === 'string' ? lot.id : `legacy-lot-${index + 1}`,
+          created: lot.created,
+        }, rate, lot.funding, quote(coins, rate)));
+      }
+    }
+    available(state);
+    return state;
+  }
+
+  function exchange(state, coins, rate, funding, meta) {
+    const tokens = quote(coins, rate);
+    sum(available(state), tokens);
+    if (fundingTotal(funding) !== coins) throw new RangeError('Funding does not match the exchange amount');
+    const base = transaction(state, meta);
+    const event = { ...base, type: 'allocate', coins, tokens, tokenDelta: tokens, walletDelta: -coins, rate: copyRate(rate), status: 'success' };
+    state.lots.push(makeLot(base, rate, funding, tokens));
+    state.events.push(event);
+    return event;
+  }
+
+  const cloneLots = state => state.lots.map(lot => legacyLot(lot) ? { ...lot, tokens: { ...lot.tokens } }
+    : { ...lot, rate: copyRate(lot.rate), funding: { ...lot.funding } });
+  const liveLots = lots => lots.filter(lot => legacyLot(lot) ? lot.tokens.paid || lot.tokens.reward : lot.remainingTokens);
+
+  function returnable(state) {
+    available(state);
+    const lots = cloneLots(state), funding = emptyFunding(), rates = new Map();
+    let tokens = 0;
+    const addRate = (rate) => {
+      const ratio = normalizeRate(rate), key = `${ratio.coins}:${ratio.tokens}`;
+      if (!rates.has(key) || typeof rate !== 'number') rates.set(key, copyRate(rate));
+    };
+    for (const lot of lots) {
+      if (legacyLot(lot)) {
+        for (const source of sources) {
+          const remainder = lot.tokens[source] % lot.rate;
+          const remove = lot.tokens[source] - remainder;
+          if (!remove) continue;
+          funding[source] = sum(funding[source], remove / lot.rate);
+          tokens = sum(tokens, remove);
+          lot.tokens[source] = remainder;
+          addRate(lot.rate);
+        }
+      } else {
+        const ratio = normalizeRate(lot.rate);
+        const remainder = lot.remainingTokens % ratio.tokens;
+        const remove = lot.remainingTokens - remainder;
+        if (!remove) continue;
+        for (const source of sources) funding[source] = sum(funding[source], lot.funding[source]);
+        tokens = sum(tokens, remove);
+        lot.remainingTokens = remainder;
+        lot.funding = emptyFunding();
+        addRate(lot.rate);
+      }
+    }
+    return { coins: fundingTotal(funding), tokens, funding, rates, lots };
+  }
+
+  function refundQuote(state) {
+    const { coins, tokens, funding } = returnable(state);
+    return { coins, tokens, funding };
+  }
+
+  function refund(state, meta) {
+    const { coins, tokens, funding, rates, lots } = returnable(state);
+    if (!coins) return { coins, tokens, funding, event: null };
+    const base = transaction(state, meta);
+    const event = { ...base, type: 'refund', coins, tokens, tokenDelta: -tokens, walletDelta: coins, status: 'success' };
+    if (rates.size === 1) event.rate = rates.values().next().value;
+    state.lots = liveLots(lots);
+    state.events.push(event);
+    return { coins, tokens, funding, event };
+  }
+
+  function consumeLots(lots, tokens) {
+    let missing = tokens;
+    for (const source of sources) {
+      for (const lot of lots) {
+        if (!missing) return 0;
+        if (legacyLot(lot)) {
+          const deduct = Math.min(missing, lot.tokens[source]);
+          lot.tokens[source] -= deduct;
+          missing -= deduct;
+          continue;
+        }
+        if (source === 'reward' && !lot.funding.reward && lot.funding.paid) continue;
+        const ratio = normalizeRate(lot.rate);
+        let ready = lot.remainingTokens;
+        if (source === 'reward' && lot.funding.paid) {
+          // Keep paid funds intact unless earlier rewards cannot fund another complete group.
+          const remainder = ready % ratio.tokens;
+          const rewardGroups = (lot.funding.reward - lot.funding.reward % ratio.coins) / ratio.coins;
+          ready = remainder + rewardGroups * ratio.tokens;
+        }
+        const deduct = Math.min(missing, ready), groupsBefore = wholeGroups(lot.remainingTokens, ratio);
+        lot.remainingTokens -= deduct;
+        const debit = (groupsBefore - wholeGroups(lot.remainingTokens, ratio)) * ratio.coins;
+        const rewards = Math.min(debit, lot.funding.reward);
+        lot.funding.reward -= rewards;
+        lot.funding.paid -= debit - rewards;
+        missing -= deduct;
+      }
+    }
+    return missing;
+  }
+
+  function settle(state, request, meta) {
+    const before = available(state), base = transaction(state, meta);
+    const { input, output, rate, wallet } = request ?? {};
+    const tokens = integer(sum(integer(input, 'Input Tokens'), integer(output, 'Output Tokens')), 'Token usage', 1);
+    const ratio = normalizeRate(rate);
+    const walletBalance = fundingTotal(wallet);
+    const missing = Math.max(0, tokens - before);
+    const details = { ...base, type: missing ? 'shortfall' : 'consume', tokens, input, output, rate: copyRate(rate) };
+    if (typeof meta.model === 'string' && meta.model.trim()) details.model = meta.model;
+    const fail = reason => {
+      const event = { ...details, tokenDelta: 0, walletDelta: 0, status: 'failed', reason };
+      state.events.push(event);
+      return { funding: emptyFunding(), event };
+    };
+
+    let coins = 0, autoTokens = 0, funding = emptyFunding();
+    if (missing) {
+      if (!state.auto) return fail('auto-off');
+      const groups = BigInt(wholeGroups(missing, ratio)) + (missing % ratio.tokens ? 1n : 0n);
+      const required = groups * BigInt(ratio.coins);
+      if (required > BigInt(walletBalance)) return fail('insufficient');
+      if (groups * BigInt(ratio.tokens) > maxInteger) return fail('overflow');
+      coins = Number(required);
+      autoTokens = quote(coins, rate);
+      const reward = Math.min(wallet.reward, coins);
+      funding = { paid: coins - reward, reward };
+    }
+
+    // Finish existing Token balance before spending any automatically exchanged Tokens.
+    const lots = cloneLots(state);
+    if (consumeLots(lots, tokens) !== missing) throw new Error('Unexpected Token balance change');
+    if (autoTokens) {
+      const automatic = [makeLot(base, rate, funding, autoTokens)];
+      if (consumeLots(automatic, missing)) throw new Error('Automatic Token exchange did not cover usage');
+      lots.push(...automatic);
+    }
+    const event = {
+      ...details,
+      tokenDelta: autoTokens - tokens,
+      walletDelta: coins ? -coins : 0,
+      status: 'success',
+    };
+    if (autoTokens) event.autoTokens = autoTokens;
+    state.lots = liveLots(lots);
+    state.events.push(event);
+    return { funding, event };
+  }
+
+  globalThis.YunbeiTokenEngine = Object.freeze({ create, available, normalizeRate, quote, exchange, refundQuote, refund, settle, maxRate });
+})();
+</script>
+<script>
+(function () {
+  const engine = globalThis.YunbeiTokenEngine;
+  const defaultRate = Object.freeze({ coins: 1, tokens: 1000 });
+  const quickGroups = { 100: 1, 300: 3, 500: 5 };
+  const labels = { allocate: '兑换 Token', refund: '回收 Token', consume: '使用 Token', shortfall: '自动兑换' };
+  let rechargeDraft = null;
+  const id = name => document.getElementById(name);
+  const set = (name, value) => { const el = id(name); if (el) el.textContent = value; };
+  const show = (name, visible) => { const el = id(name); if (el) el.hidden = !visible; };
+  const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[c]);
+  const amountText = amount => fmt(amount) + ' 云贝';
+  const tokenText = amount => fmt(amount) + ' Token';
+  const numberField = name => {
+    const el = id(name);
+    return el && el.value.trim() !== '' ? Number(el.value) : NaN;
+  };
+  const legacy = () => {
+    try {
+      const previous = JSON.parse(localStorage.getItem('ybTokenUserV2'));
+      return previous ? { ...previous, auto: false } : null;
+    }
+    catch { return null; }
+  };
+  function quota() {
+    if (!state.tokenExchange) {
+      const previous = state.aiQuota ?? globalThis.YunbeiAiEngine.create(legacy());
+      state.tokenExchange = engine.create(previous, defaultRate.tokens);
+    }
+    return state.tokenExchange;
+  }
+  function rate() {
+    try { return engine.normalizeRate(state.tokenExchangeRate ?? defaultRate); }
+    catch { return defaultRate; }
+  }
+  const sameRate = (left, right) => left.coins === right.coins && left.tokens === right.tokens;
+  const fullAmount = (amount, ratio) => amount - (amount % ratio.coins);
+  const presetAmount = (preset, ratio) => ratio.coins === 1 ? Number(preset) : ratio.coins * (quickGroups[preset] ?? 1);
+  function message(side, value, error = false) {
+    const el = id('aiq-' + side + '-message');
+    if (!el) return;
+    el.classList.toggle('is-error', error);
+    el.classList.toggle('is-success', !error);
+    el.hidden = !value;
+    el.textContent = value;
+  }
+  function walletFunding(amount) {
+    if (!Number.isSafeInteger(amount) || amount < 0 ||
+        !Number.isSafeInteger(state.balance) || amount > state.balance) return null;
+    const { paid, reward } = state.wallet;
+    if (![paid, reward].every(n => Number.isSafeInteger(n) && n >= 0)) return null;
+    const rewardPart = Math.min(amount, reward);
+    return amount - rewardPart <= paid ? { reward: rewardPart, paid: amount - rewardPart } : null;
+  }
+  const metadata = extras => ({ id: uid('AI'), created: nowIso(), ...extras });
+  function draftBalance() {
+    const q = quota();
+    return { ...q, lots: q.lots.slice(), events: q.events.slice() };
+  }
+  function commit(next, event, funding, description) {
+    const previous = { tokenExchange: state.tokenExchange, wallet: state.wallet, balance: state.balance, ledger: state.ledger };
+    const direction = Math.sign(event?.walletDelta ?? 0);
+    if (direction) {
+      const wallet = { reward: state.wallet.reward + direction * funding.reward, paid: state.wallet.paid + direction * funding.paid };
+      const balance = state.balance + event.walletDelta;
+      if (![wallet.reward, wallet.paid, balance].every(n => Number.isSafeInteger(n) && n >= 0) ||
+          funding.reward + funding.paid !== Math.abs(event.walletDelta) || balance !== wallet.reward + wallet.paid) {
+        throw new Error('Wallet balance changed before saving');
+      }
+      state.wallet = wallet;
+      state.balance = balance;
+      state.ledger = [{ id: uid('L'), label: description, delta: event.walletDelta, balance,
+        created: event.created, orderId: event.id, source: 'exchange', category: 'Token 兑换' }, ...state.ledger];
+    }
+    state.tokenExchange = next;
+    if (persist() !== false) return true;
+    Object.assign(state, previous);
+    return false;
+  }
+  function totals(events) {
+    const usage = events.filter(e => e.status === 'success' && ['consume', 'shortfall'].includes(e.type));
+    return {
+      used: usage.reduce((sum, e) => sum + (e.tokens ?? ((e.input ?? 0) + (e.output ?? 0))), 0),
+      wallet: usage.reduce((sum, e) => sum + (e.legacy ? 0 : Math.max(0, -e.walletDelta)), 0),
+    };
+  }
+  function records(side, events) {
+    const rows = id('aiq-' + side + '-rows');
+    if (!rows) return;
+    const filter = id('aiq-' + side + '-filter')?.querySelector('input:checked')?.value ?? 'all';
+    const matches = (event) => filter === 'all' || filter === event.type ||
+      (filter === 'consume' && event.type === 'shortfall');
+    const sorted = events.slice().reverse().sort((a, b) => (b.created ?? '').localeCompare(a.created ?? ''));
+    const visible = sorted.filter(matches);
+    const movement = (value, format) => {
+      if (!value) return '<span class="aiq-movement">—</span>';
+      const cls = value > 0 ? ' is-credit' : ' is-debit';
+      return '<span class="aiq-movement' + cls + '">' + (value > 0 ? '+' : '−') + escape(format(Math.abs(value))) + '</span>';
+    };
+    rows.innerHTML = visible.map(e => {
+      const failed = e.status === 'failed';
+      const usage = ['consume', 'shortfall'].includes(e.type);
+      let description;
+      if (e.legacy) {
+        description = ({ allocate: '旧版分配云贝额度', refund: '旧版回收云贝额度', consume: '旧版用量记录', shortfall: '旧版结算记录' })[e.type] ?? '旧版记录';
+      } else if (usage) {
+        description = '输入 ' + fmt(e.input ?? 0) + ' / 输出 ' + fmt(e.output ?? 0) + ' Token';
+        if (failed) description += ' · ' + ({ 'auto-off': '未开启自动兑换', insufficient: '钱包云贝不足', overflow: '用量超出可兑换范围' })[e.reason] + '，未扣款';
+        else if (e.autoTokens) description += ' · 自动兑换 ' + tokenText(e.autoTokens);
+      } else if (e.type === 'allocate') {
+        description = amountText(e.coins) + ' 兑换 ' + tokenText(e.tokens);
+      } else {
+        description = '退回钱包 ' + amountText(e.coins) + '（按原兑换比例）';
+      }
+      const status = side === 'admin' ? '<td><span class="aiq-badge' + (failed ? ' is-failed' : ' is-success') + '">' +
+        (failed ? '未扣款' : '已完成') + '</span></td>' : '';
+      const when = e.created ? displayDate(e.created, true) : '—';
+      const type = e.legacy ? '旧版记录' : labels[e.type];
+      return '<tr><td>' + escape(failed ? '调用未结算' : (type ?? '其他')) +
+        '</td><td>' + movement(e.tokenDelta, tokenText) + '</td><td>' + movement(e.walletDelta, amountText) +
+        '</td><td>' + escape(description) + '</td>' + status +
+        '<td class="aiq-record-time">' + escape(when) + '</td></tr>';
+    }).join('') || '<tr><td colspan="' + (side === 'admin' ? 6 : 5) + '" class="aiq-empty">' +
+      (filter === 'all' ? '暂无兑换、回收或使用记录。' : '没有符合当前筛选的记录。') + '</td></tr>';
+  }
+  function renderAllocation() {
+    const field = id('aiq-amount'), slider = id('aiq-amount-slider'), amount = numberField('aiq-amount');
+    const raw = field?.value ?? '', ratio = rate(), wallet = state.balance;
+    const max = fullAmount(wallet, ratio);
+    const ready = Number.isSafeInteger(amount) && amount > 0;
+    const wholeGroup = ready && amount % ratio.coins === 0;
+    const shortage = wholeGroup && amount > wallet;
+    const needsRecharge = shortage || max === 0;
+    let tokens = 0;
+    if (wholeGroup && !shortage) {
+      try {
+        const result = engine.quote(amount, ratio);
+        if (Number.isSafeInteger(result + engine.available(quota()))) tokens = result;
+      } catch { /* Keep the input editable so the user can reduce their amount. */ }
+    }
+    const oversized = wholeGroup && !shortage && !tokens;
+    const groupHint = '每 ' + amountText(ratio.coins) + ' 为一组，请输入整组金额。';
+    if (tokens) set('aiq-allocation-preview', '可兑换 ' + tokenText(tokens));
+    else set('aiq-allocation-preview', oversized ? '兑换数量过大，请减少云贝。' : ready && !wholeGroup ? groupHint :
+      raw ? '请输入大于 0 的整数云贝。' : ratio.coins > 1 ? groupHint : '输入云贝后显示可兑换的 Token');
+    if (needsRecharge) {
+      const missing = shortage ? amount - wallet : ratio.coins - wallet;
+      set('aiq-shortage', '钱包可用 ' + amountText(wallet) + '，还差 ' + amountText(missing) +
+        (shortage ? '。' : '可兑换一组。'));
+    }
+    show('aiq-allocation-preview', !needsRecharge);
+    show('aiq-allocation-error', needsRecharge);
+    if (field) {
+      field.min = String(ratio.coins);
+      field.step = String(ratio.coins);
+      field.setAttribute('aria-invalid', String(needsRecharge || oversized || (!!raw && !wholeGroup)));
+      field.setAttribute('aria-describedby', needsRecharge ? 'aiq-shortage' : 'aiq-allocation-preview');
+      field.setAttribute('aria-errormessage', needsRecharge ? 'aiq-shortage' : 'aiq-allocation-preview');
+    }
+    if (slider) {
+      slider.step = String(ratio.coins);
+      slider.max = String(max);
+      slider.value = String(ready ? Math.min(fullAmount(amount, ratio), max) : 0);
+      const progress = max > 0 ? Number(slider.value) / max * 100 : 0;
+      slider.style.setProperty('--aiq-range-progress', progress + '%');
+      slider.disabled = max === 0;
+      slider.setAttribute('aria-valuetext', amountText(Number(slider.value)));
+      set('aiq-slider-max', '最多可兑换 ' + amountText(max));
+    }
+    for (const preset of Object.keys(quickGroups)) {
+      const value = presetAmount(preset, ratio), quick = id('aiq-quick-' + preset);
+      if (quick) {
+        quick.textContent = fmt(value);
+        quick.setAttribute('aria-label', '使用 ' + amountText(value) + ' 兑换');
+      }
+    }
+    set('aiq-quick-max', max === wallet ? '全部余额' : '最多可兑');
+    const maxButton = id('aiq-quick-max');
+    if (maxButton) maxButton.disabled = max === 0;
+    const allocation = document.querySelector('[data-aiq-action="allocate"]');
+    if (allocation) {
+      allocation.hidden = needsRecharge;
+      allocation.disabled = !tokens || needsRecharge;
+    }
+    const reduce = document.querySelector('[data-aiq-use-available]');
+    if (reduce) reduce.hidden = !shortage || max === 0;
+  }
+  function changeAmount(value) {
+    const field = id('aiq-amount');
+    if (field) field.value = value;
+    message('user', '');
+    renderAllocation();
+  }
+  function renderRechargeReturn() {
+    const visible = rechargeDraft !== null && !isAdmin() && ['recharge', 'recharge-orders'].includes(activeTab);
+    show('aiq-recharge-return', visible);
+    if (!visible) return;
+    const ratio = rate(), amount = Number(rechargeDraft);
+    const target = Number.isSafeInteger(amount) && amount >= ratio.coins && amount % ratio.coins === 0 ? amount : ratio.coins;
+    const shortage = Math.max(0, target - state.balance);
+    set('aiq-recharge-return-note', shortage > 0 ? '已保留兑换金额，目前还差 ' + amountText(shortage) + '。' :
+      '余额已足够，可返回使用 ' + amountText(target) + ' 兑换 Token。');
+  }
+  function render() {
+    const q = quota(), left = engine.available(q), total = totals(q.events);
+    set('aiq-wallet', fmt(state.balance));
+    set('aiq-available', fmt(left));
+    set('aiq-used', fmt(total.used));
+    set('aiq-admin-available', fmt(left));
+    set('aiq-admin-used', fmt(total.used));
+    set('aiq-admin-shortfall', fmt(total.wallet));
+    set('aiq-auto-note', q.auto ? '已开启：优先使用 Token 余额；不足时按当前比例整组兑换，多兑的 Token 留在余额里。' :
+      '已关闭：Token 不足时，不会从钱包扣云贝。');
+    const auto = id('aiq-auto');
+    if (auto) auto.checked = q.auto;
+    const refund = document.querySelector('[data-aiq-action="refund"]');
+    const reclaim = engine.refundQuote(q);
+    if (refund) refund.disabled = reclaim.coins === 0;
+    show('aiq-refund-preview', left > 0);
+    set('aiq-refund-preview', reclaim.coins ? '现在可退回 ' + amountText(reclaim.coins) +
+      (reclaim.tokens < left ? '，不足原兑换一组的 Token 会保留。' : '。') :
+      '剩余 Token 不足原兑换一组，会保留在余额里。');
+    renderPrice();
+    renderAllocation();
+    records('user', q.events);
+    records('admin', q.events);
+  }
+  const readPriceDraft = () => ({ coins: numberField('aiq-rate-coins'), tokens: numberField('aiq-rate-input') });
+  function renderPrice() {
+    const current = rate(), dirty = !sameRate(readPriceDraft(), current);
+    set('aiq-user-rate-coins', fmt(current.coins));
+    set('aiq-user-rate', fmt(current.tokens));
+    set('aiq-rate-current-coins', fmt(current.coins));
+    set('aiq-rate-current-input', fmt(current.tokens));
+    const exampleCoins = current.coins * 2;
+    set('aiq-rate-example-coins', fmt(exampleCoins));
+    set('aiq-rate-example-total', fmt(engine.quote(exampleCoins, current)));
+    const note = id('aiq-rate-draft-note');
+    if (note) {
+      const text = dirty ? '未保存前，仍按当前比例兑换。' : '新比例只影响之后的兑换，回收按原比例。';
+      if (note.textContent !== text) note.textContent = text;
+      note.classList.toggle('is-dirty', dirty);
+    }
+    const save = document.querySelector('[data-aiq-action="save-rate"]');
+    const reset = document.querySelector('[data-aiq-action="reset-rate"]');
+    if (save) save.disabled = !dirty;
+    if (reset) reset.hidden = !dirty;
+    show('aiq-rate-edit-pending', dirty);
+  }
+  function syncRateForm() {
+    const current = rate(), coins = id('aiq-rate-coins'), tokens = id('aiq-rate-input');
+    if (coins) coins.value = String(current.coins);
+    if (tokens) tokens.value = String(current.tokens);
+  }
+  function resetRate() {
+    if (!isAdmin()) return;
+    syncRateForm();
+    message('admin', '');
+    renderPrice();
+    id('aiq-rate-coins')?.focus();
+  }
+  function update() { renderAll(); render(); }
+  function storageError() { message('user', '浏览器没能保存，余额保持不变。', true); }
+  function allocate() {
+    if (isAdmin()) return;
+    const amount = numberField('aiq-amount'), funding = walletFunding(amount), ratio = rate();
+    if (!funding || amount <= 0) return message('user', '请输入钱包余额内的整数云贝。', true);
+    if (amount % ratio.coins) return message('user', '兑换金额必须是 ' + amountText(ratio.coins) + ' 的整数倍。', true);
+    const next = draftBalance(), event = engine.exchange(next, amount, ratio, funding, metadata());
+    if (!commit(next, event, funding, '云贝兑换 Token')) return storageError();
+    id('aiq-amount').value = '';
+    message('user', '已用 ' + amountText(amount) + ' 兑换 ' + tokenText(event.tokens) + '，已到账。');
+    update();
+  }
+  function refund() {
+    if (isAdmin()) return;
+    const next = draftBalance(), returned = engine.refund(next, metadata());
+    if (!returned.coins) return message('user', '暂无可整组回收的 Token。', true);
+    if (!commit(next, returned.event, returned.funding, '回收未用 Token')) return storageError();
+    message('user', '已回收 ' + tokenText(returned.tokens) + '，' + amountText(returned.coins) + ' 已退回钱包。');
+    update();
+  }
+  // Entry point for local settlement checks; the preview does not call a live AI service.
+  function settleUsage({ input, output, model } = {}) {
+    if (isAdmin()) return null;
+    const next = draftBalance();
+    const { event, funding } = engine.settle(next, { input, output, rate: rate(), wallet: state.wallet }, metadata({ model }));
+    if (!commit(next, event, funding, 'Token 不足自动兑换')) return null;
+    update();
+    return { ...event };
+  }
+  function saveRate() {
+    if (!isAdmin()) return;
+    let draft;
+    try { draft = engine.normalizeRate(readPriceDraft()); }
+    catch { return message('admin', '云贝和 Token 数量都要填写 1 到 1,000,000 之间的整数。', true); }
+    if (sameRate(draft, rate())) return;
+    const previous = state.tokenExchangeRate;
+    state.tokenExchangeRate = draft;
+    if (persist() === false) {
+      if (previous === undefined) delete state.tokenExchangeRate;
+      else state.tokenExchangeRate = previous;
+      return message('admin', '浏览器未能保存，当前比例保持不变。', true);
+    }
+    syncRateForm();
+    renderPrice();
+    message('admin', '兑换比例已保存。');
+  }
+  document.addEventListener('click', e => {
+    const button = e.target.closest('[data-aiq-action]');
+    if (!button || button.disabled) return;
+    const key = button.dataset.aiqAction;
+    try {
+      if (key === 'quick') {
+        const ratio = rate();
+        const requested = button.dataset.amount === 'all' ? fullAmount(state.balance, ratio) : presetAmount(button.dataset.amount, ratio);
+        changeAmount(requested > 0 ? String(requested) : '');
+        if (button.hasAttribute?.('data-aiq-use-available')) id('aiq-amount')?.focus();
+      } else if (key === 'allocate') allocate();
+      else if (key === 'refund') refund();
+      else if (key === 'recharge') {
+        rechargeDraft = id('aiq-amount')?.value ?? '';
+        message('user', '');
+        setTab('recharge');
+      } else if (key === 'return-ai') {
+        const draft = rechargeDraft;
+        rechargeDraft = null;
+        if (draft !== null) changeAmount(draft);
+        setTab('token');
+        id('aiq-amount')?.focus();
+      } else if (key === 'save-rate') saveRate();
+      else if (key === 'reset-rate') resetRate();
+    } catch {
+      message(['save-rate', 'reset-rate'].includes(key) ? 'admin' : 'user', '这次操作未完成，请检查输入后再试。', true);
+    }
+  });
+  document.addEventListener('input', e => {
+    if (e.target.id === 'aiq-amount') {
+      message('user', '');
+      renderAllocation();
+    }
+    if (e.target.id === 'aiq-amount-slider') changeAmount(Number(e.target.value) > 0 ? e.target.value : '');
+    if (e.target.id === 'aiq-rate-input' || e.target.id === 'aiq-rate-coins') {
+      message('admin', '');
+      renderPrice();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.id !== 'aiq-amount' || e.key !== 'Enter') return;
+    e.preventDefault();
+    const confirm = document.querySelector('[data-aiq-action="allocate"]');
+    if (confirm && !confirm.disabled && !confirm.hidden) confirm.click();
+    else if (!id('aiq-allocation-error')?.hidden) document.querySelector('[data-aiq-action="recharge"]')?.focus();
+  });
+  document.addEventListener('change', e => {
+    if (e.target.id === 'aiq-auto') {
+      if (isAdmin()) return;
+      const next = draftBalance();
+      next.auto = e.target.checked;
+      if (!commit(next)) {
+        e.target.checked = quota().auto;
+        return message('user', '未能保存自动兑换设置，请重试。', true);
+      }
+      message('user', next.auto ? '已开启自动兑换。' : '已关闭自动兑换。');
+      update();
+    }
+    if (e.target.type === 'radio' && e.target.checked) {
+      if (e.target.name === 'aiq-user-record-type') records('user', quota().events);
+      if (e.target.name === 'aiq-admin-record-type') records('admin', quota().events);
+    }
+  });
+  const beforeRender = renderAll;
+  renderAll = function (...args) {
+    const result = beforeRender(...args);
+    if (activeTab === 'token') render();
+    renderRechargeReturn();
+    return result;
+  };
+  const beforeAdminSync = syncAdminView;
+  syncAdminView = function (...args) {
+    const result = beforeAdminSync(...args);
+    if (activeTab === 'admin' && isAdmin() && adminView === 'token') render();
+    return result;
+  };
+  const beforeTab = setTab;
+  setTab = function (...args) {
+    const result = beforeTab(...args);
+    if (activeTab === 'token') {
+      rechargeDraft = null;
+      render();
+    }
+    if (activeTab === 'admin') syncAdminView();
+    renderRechargeReturn();
+    return result;
+  };
+  syncRateForm();
+  render();
+  renderRechargeReturn();
+  globalThis.YunbeiTokenPreview = Object.freeze({ settleUsage });
+})();
+</script>
+<script>state.role="user";renderAll();setTab(location.hash.slice(1)||"recharge",false);</script>
 </body>
 </html>
