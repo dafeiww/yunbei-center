@@ -1786,7 +1786,6 @@ body .sidebar .module-nav-item.active>.icon, body .sidebar .admin-nav.active>.ic
 body.is-admin .footer { display:none !important; }
 
 /* 管理端非充值区域主色改为蓝色 */
-body.is-admin:not(.admin-recharge-active) .admin-tabs button.active { color:#1890ff !important; box-shadow:0 1px 5px #1890ff14 !important; }
 body.is-admin:not(.admin-recharge-active) .growth-activity-switch input:checked+.growth-toggle { background:#1890ff !important; }
 body.is-admin:not(.admin-recharge-active) .growth-activity-switch input:focus-visible+.growth-toggle { outline-color:#9ed0ff !important; }
 body.is-admin:not(.admin-recharge-active) .growth-activity-switch small { color:#4096ff !important; }
@@ -2074,6 +2073,235 @@ body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
   #admin-invoices .admin-invoice-empty td { text-align: center; padding-block: 44px; }
 }
 </style>
+<style id="yunbei-ui-refresh">
+/* Match the GenesCloud sidebar and platform bar. */
+:root {
+  --yb-sidebar-width: 224px;
+  --yb-platform-height: 68px;
+  --yb-nav-bg: #404a56;
+  --yb-nav-edge: #56616d;
+  --yb-nav-active: #1b8fff;
+  --yb-ink: #18263a;
+  --yb-muted: #56667a;
+  --yb-line: #dfe6ee;
+  --yb-blue: #245bbb;
+}
+
+body > .topbar {
+  background: var(--yb-nav-bg);
+  border-bottom-color: var(--yb-nav-edge);
+}
+
+#yunbei-sidebar {
+  position: fixed;
+  inset: var(--yb-platform-height) auto 0 0;
+  display: flex !important;
+  width: var(--yb-sidebar-width) !important;
+  padding: 14px 0 0 !important;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-right: 0 !important;
+  background: var(--yb-nav-bg) !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yb-nav-edge) transparent;
+}
+
+body > #yunbei-sidebar + .main {
+  margin-left: var(--yb-sidebar-width) !important;
+  background: #f5f7fb;
+}
+
+#yunbei-sidebar .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0 !important;
+}
+#yunbei-sidebar [hidden] { display: none !important; }
+
+#yunbei-sidebar .module-navigation { display: flex; flex-direction: column; gap: 0; padding: 0 !important; }
+#yunbei-sidebar .module-nav-divider { height: 1px; margin: 4px 0; background: #35404c; }
+body.is-admin #yunbei-sidebar .module-nav-divider { display: none; }
+#yunbei-sidebar .module-subnav {
+  gap: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+#yunbei-sidebar .module-nav-parent[aria-expanded='false'] + .module-subnav { display: none !important; }
+#yunbei-sidebar .module-nav-parent[aria-expanded='true'] + .module-subnav {
+  display: flex !important;
+  max-height: none !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#yunbei-sidebar .module-nav-parent,
+#yunbei-sidebar .module-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100% !important;
+  height: 48px;
+  min-height: 48px !important;
+  margin: 0;
+  padding: 0 20px !important;
+  gap: 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 550 !important;
+  line-height: 1.25;
+  text-align: left;
+}
+
+#yunbei-sidebar .module-nav-parent {
+  height: 42px;
+  min-height: 42px !important;
+  padding: 0 19px 0 12px !important;
+  gap: 10px !important;
+  font-weight: 650 !important;
+}
+#yunbei-sidebar .module-nav-parent::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin: 0 2px 3px auto;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  transition: transform .15s ease;
+}
+#yunbei-sidebar .module-nav-parent[aria-expanded='true']::after { margin-bottom: -3px; transform: rotate(225deg); }
+#yunbei-sidebar .module-nav-item { padding-left: 49px !important; }
+#yunbei-sidebar .module-nav-item > span { display: inline !important; white-space: nowrap; }
+#yunbei-sidebar .module-nav-item > .icon { display: none; }
+#yunbei-sidebar .module-nav-parent > .icon {
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: currentColor !important;
+  opacity: 1;
+}
+#yunbei-sidebar .module-nav-parent:hover,
+#yunbei-sidebar .module-nav-item:hover { background: #4a5562 !important; }
+#yunbei-sidebar .module-nav-item.active {
+  background: var(--yb-nav-active) !important;
+  color: #fff !important;
+  font-weight: 650 !important;
+}
+#yunbei-sidebar button:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+
+#yunbei-sidebar .sidebar-note {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 8px;
+  margin-top: auto;
+  padding: 14px 18px;
+  border-top: 1px solid var(--yb-nav-edge);
+  color: #d1d8e1;
+  font-size: 11px;
+}
+#yunbei-sidebar .sidebar-note .icon { flex: none; width: 15px; height: 15px; }
+
+/* Shared page chrome. Warm colors still identify cloud coin amounts. */
+#yunbei-sidebar + .main .page-head { gap: 16px; margin-bottom: 23px; flex-wrap: wrap; }
+#yunbei-sidebar + .main .page-heading-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-left: auto;
+}
+#yunbei-sidebar + .main .page-head h1 {
+  color: var(--yb-ink);
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.22;
+}
+#yunbei-sidebar + .main .page-head p { color: var(--yb-muted); margin-top: 8px; font-size: 13px; line-height: 1.6; }
+#yunbei-sidebar + .main .page-balance { border-color: var(--yb-line); border-radius: 10px; box-shadow: none; }
+#yunbei-sidebar + .main .role-switcher-label { color: var(--yb-muted); }
+#yunbei-sidebar + .main .role-switcher-options { gap: 2px; padding: 3px; background: #e9eff6; border-color: var(--yb-line); }
+#yunbei-sidebar + .main .role-switcher-options button { color: var(--yb-muted); }
+#yunbei-sidebar + .main .role-switcher-options button.active { color: var(--yb-blue); border-color: #d7e1ee; background: #fff; }
+#yunbei-sidebar + .main .page-panel .surface,
+#yunbei-sidebar + .main .page-panel .list-card {
+  border-color: var(--yb-line);
+  border-radius: 13px;
+  box-shadow: 0 1px 2px #18263a08;
+}
+
+/* Billing pages: aligned tabs, filters and actions; keep results readable. */
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .tabs {
+  gap: 22px;
+  margin-bottom: 16px;
+  background: transparent;
+  border-bottom-color: var(--yb-line);
+}
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .tab { color: var(--yb-muted); min-height: 44px; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .tab.active { color: var(--yb-blue); }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .tab.active::after { background: var(--yb-blue); }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-tools { gap: 10px; margin-bottom: 16px; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .categories { gap: 4px; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .category {
+  min-height: 36px;
+  padding: 0 9px;
+  border-radius: 7px;
+  color: var(--yb-muted);
+}
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .category.active {
+  color: var(--yb-blue);
+  border-color: #d5e3f8;
+  background: #eaf2ff;
+}
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .search input {
+  min-height: 36px;
+  border-color: var(--yb-line);
+  border-radius: 8px;
+}
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-head { padding: 14px 18px; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-head h2 { color: var(--yb-ink); }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) th { color: #4a5c72; background: #f3f6fa; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) tbody tr:hover { background: #f6f9fe; }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .order-check { accent-color: var(--yb-blue); }
+#yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .merge-summary { color: var(--yb-muted); }
+
+@media (max-width: 1020px) { :root { --yb-sidebar-width: 184px; } }
+
+@media (max-width: 800px) {
+  :root { --yb-platform-height: 60px; }
+  #yunbei-sidebar {
+    position: relative;
+    inset: auto;
+    width: 100% !important;
+    margin-top: var(--yb-platform-height);
+    padding: 0 !important;
+    overflow: visible;
+  }
+  body > #yunbei-sidebar + .main { margin-left: 0 !important; padding-top: 0 !important; }
+  #yunbei-sidebar .module-nav-parent[aria-expanded='true'] + .module-subnav {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  #yunbei-sidebar .module-nav-parent { height: 36px; min-height: 36px !important; }
+  #yunbei-sidebar .module-nav-divider { margin: 1px 0; }
+  #yunbei-sidebar .sidebar-note { display: none; }
+  #yunbei-sidebar .module-nav-item { justify-content: center; min-height: 42px !important; height: 42px; padding: 0 3px !important; gap: 5px !important; font-size: 12px !important; }
+  #yunbei-sidebar + .main .page-heading-controls { justify-content: flex-start; margin-left: 0; }
+  #yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-tools .search { flex: 1 1 100%; }
+  #yunbei-sidebar + .main :is(#panel-recharge-orders, #panel-invoices) .list-tools .search input { width: 100%; }
+}
+</style>
 </head>
 <body>
   <svg class="symbols" aria-hidden="true"><defs>
@@ -2116,42 +2344,38 @@ body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
     <nav class="platform-nav" aria-label="产品导航"><button class="platform-item" data-action="workspace">云分析</button><button class="platform-item current" data-tab="shop" aria-current="page">云图汇<svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg></button><button class="platform-item" data-action="help">云学院</button></nav>
     <div class="top-actions"><button class="top-coin" data-tab="recharge" aria-label="我的云贝"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>我的云贝</span></button><button class="top-link feedback-link" data-action="contact" aria-label="问题反馈"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg>问题反馈</button><button class="top-link top-signin" data-action="earn"><span class="signin-badge" aria-hidden="true">签</span>签到</button><button class="top-link project-link" data-action="workspace"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>项目中心</button><button class="profile-button" data-action="profile" aria-label="个人中心"><span class="avatar mini-avatar"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg></span></button></div>
   </header>
-  <aside class="sidebar" aria-label="主导航">
+  <aside class="sidebar" id="yunbei-sidebar" aria-label="主导航">
     <nav class="nav" aria-label="账户导航">
       <div class="module-navigation" id="cloud-navigation" aria-label="云贝中心功能">
-        <button class="module-nav-parent" id="cloud-nav-parent" data-cloud-parent aria-expanded="true" title="云贝中心"><svg class="icon"><use href="#i-coin"></use></svg><span>云贝中心</span></button>
+        <button type="button" class="module-nav-parent" id="cloud-nav-parent" data-cloud-parent aria-expanded="true" aria-controls="cloud-subnav" title="云贝中心"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝中心</span></button>
         <div class="module-subnav" id="cloud-subnav">
-          <button class="module-nav-item" data-tab="recharge" id="tab-recharge" title="云贝充值"><svg class="icon"><use href="#i-coin"></use></svg><span>云贝充值</span></button>
-          <button class="module-nav-item" data-tab="invite" id="tab-invite" title="云贝任务"><svg class="icon"><use href="#i-users"></use></svg><span>云贝任务</span></button>
-          <button class="module-nav-item" data-tab="shop" id="tab-shop" title="兑换商城"><svg class="icon"><use href="#i-gift"></use></svg><span>兑换商城</span></button><button class="module-nav-item" data-tab="token" id="tab-token" title="AI额度兑换"><svg class="icon"><use href="#i-chart"></use></svg><span>AI额度兑换</span></button>
-          <button class="module-nav-item" data-tab="ledger" id="tab-ledger" title="云贝明细"><svg class="icon"><use href="#i-layers"></use></svg><span>云贝明细</span></button>
+          <button type="button" class="module-nav-item" data-tab="recharge" id="tab-recharge" title="云贝充值"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝充值</span></button>
+          <button type="button" class="module-nav-item" data-tab="invite" id="tab-invite" title="云贝任务"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg><span>云贝任务</span></button>
+          <button type="button" class="module-nav-item" data-tab="shop" id="tab-shop" title="兑换商城"><svg class="icon" aria-hidden="true"><use href="#i-gift"></use></svg><span>兑换商城</span></button><button type="button" class="module-nav-item" data-tab="token" id="tab-token" title="AI额度兑换"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>AI额度兑换</span></button>
+          <button type="button" class="module-nav-item" data-tab="ledger" id="tab-ledger" title="云贝明细"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg><span>云贝明细</span></button>
         </div>
       </div>
       <div class="module-nav-divider"></div>
       <div class="module-navigation admin-module-navigation" id="admin-navigation" hidden>
-        <button class="module-nav-parent" id="admin-nav-parent" data-admin-parent aria-expanded="true" title="管理员"><svg class="icon"><use href="#i-sort"></use></svg><span>管理员</span></button>
+        <button type="button" class="module-nav-parent" id="admin-nav-parent" data-admin-parent aria-expanded="true" aria-controls="admin-subnav" title="管理员"><svg class="icon" aria-hidden="true"><use href="#i-sort"></use></svg><span>管理员</span></button>
         <div class="module-subnav" id="admin-subnav">
-          <button class="module-nav-item" data-tab="admin" data-admin-view="recharge" id="tab-admin" title="云贝配置"><svg class="icon"><use href="#i-coin"></use></svg><span>云贝配置</span></button>
-          <button class="module-nav-item" data-tab="admin" data-admin-view="invoices" id="tab-admin-invoices" title="发票管理"><svg class="icon"><use href="#i-file"></use></svg><span>发票管理</span></button>
-          <button class="module-nav-item" data-tab="operations" id="tab-operations" title="运营统计"><svg class="icon"><use href="#i-chart"></use></svg><span>运营统计</span></button>
+          <button type="button" class="module-nav-item" data-tab="admin" data-admin-view="recharge" id="tab-admin" title="云贝配置"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>云贝配置</span></button>
+          <button type="button" class="module-nav-item" data-tab="admin" data-admin-view="invoices" id="tab-admin-invoices" title="发票管理"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg><span>发票管理</span></button>
+          <button type="button" class="module-nav-item" data-tab="operations" id="tab-operations" title="运营统计"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg><span>运营统计</span></button>
         </div>
       </div>
       <div class="module-navigation" id="invoice-navigation">
-        <button class="module-nav-parent" id="invoice-nav-parent" data-invoice-parent aria-expanded="true" title="发票管理"><svg class="icon"><use href="#i-file"></use></svg><span>发票管理</span></button>
-        <div class="module-subnav">
-          <button class="module-nav-item" data-tab="recharge-orders" id="tab-invoice-recharge-orders" title="充值订单"><svg class="icon"><use href="#i-coin"></use></svg><span>充值订单</span></button>
+        <button type="button" class="module-nav-parent" id="invoice-nav-parent" data-invoice-parent aria-expanded="true" aria-controls="invoice-subnav" title="发票管理"><svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg><span>发票管理</span></button>
+        <div class="module-subnav" id="invoice-subnav">
+          <button type="button" class="module-nav-item" data-tab="recharge-orders" id="tab-invoice-recharge-orders" title="充值订单"><svg class="icon" aria-hidden="true"><use href="#i-coin"></use></svg><span>充值订单</span></button>
         </div>
       </div>
     </nav>
-    <div class="sidebar-note"><svg class="icon"><use href="#i-shield"></use></svg><span>每一笔云贝，都有迹可循</span></div>
+    <div class="sidebar-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>每一笔云贝，都有迹可循</span></div>
   </aside>
   <main class="main">
     <div class="content">
-      <div class="page-context-bar">
-        <nav class="page-breadcrumb" aria-label="当前位置"><span>云贝中心</span><svg class="icon" id="breadcrumb-divider" hidden><use href="#i-chevron"></use></svg><span id="breadcrumb-current" hidden>账户概览</span></nav>
-        <div class="role-switcher" role="group" aria-label="项目角色"><span class="role-switcher-label">项目角色</span><div class="role-switcher-options"><button type="button" data-set-role="admin" aria-pressed="false">管理员</button><button type="button" class="active" data-set-role="user" aria-pressed="true">用户</button></div></div>
-      </div>
-      <div class="page-head"><div><h1 id="page-title" tabindex="-1">云贝总览</h1><p id="page-description">管理你的云贝，开启更多绘图与分析可能。</p></div><div class="page-head-actions"><button class="page-balance" data-tab="ledger" id="page-balance"><svg class="icon"><use href="#i-coin"></use></svg><span>可用云贝</span><strong class="num" id="page-balance-value">3,000</strong></button><button class="subtle-btn" data-action="rules"><svg class="icon"><use href="#i-help"></use></svg>使用规则</button></div></div>
+      <div class="page-head"><div><h1 id="page-title" tabindex="-1">云贝总览</h1><p id="page-description">管理你的云贝，开启更多绘图与分析可能。</p></div><div class="page-heading-controls"><div class="role-switcher" role="group" aria-label="项目角色"><span class="role-switcher-label">项目角色</span><div class="role-switcher-options"><button type="button" data-set-role="admin" aria-pressed="false">管理员</button><button type="button" class="active" data-set-role="user" aria-pressed="true">用户</button></div></div><div class="page-head-actions"><button class="page-balance" data-tab="ledger" id="page-balance"><svg class="icon"><use href="#i-coin"></use></svg><span>可用云贝</span><strong class="num" id="page-balance-value">3,000</strong></button><button class="subtle-btn" data-action="rules"><svg class="icon"><use href="#i-help"></use></svg>使用规则</button></div></div></div>
       <section class="page-panel" id="panel-dashboard" role="region" aria-labelledby="page-title" hidden>
  <div class="section-heading"><span class="period-filter-label">统计周期</span><div class="period-switch" aria-label="统计周期"><button data-period="7">最近一周</button><button data-period="30" class="active">最近一月</button><button data-period="90">最近三月</button><button data-period="custom">自定义</button></div></div>
  <div class="date-range" id="dashboard-custom-range" hidden><label>开始日期<input type="date" id="dashboard-start"></label><span>至</span><label>结束日期<input type="date" id="dashboard-end"></label><button class="btn" data-action="apply-period">查询</button><span id="dashboard-range-error" role="alert"></span></div>
@@ -2214,16 +2438,6 @@ body:not(.recharge-tab-active) .task-admin-card button[data-task-delete]:hover {
 .tp-btn:disabled{opacity:.45;cursor:not-allowed}
 .tp-btn.ghost:hover{color:#3e5564}.tp-actions{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}.tp-switch{display:flex;align-items:center;gap:6px;font-size:13px;color:#4a5761;cursor:pointer}.tp-switch input[type="checkbox"]{width:16px;height:16px;accent-color:#3d8bfd}.tp-progress{height:6px;background:#eef2f4;border-radius:3px;margin-top:14px;overflow:hidden}.tp-progress i{display:block;height:100%;background:linear-gradient(90deg,#ed923e,#de6b28);border-radius:3px}.tp-used{color:#8b98a3;font-size:11px;margin-top:6px}.tp-tiers{display:flex;flex-direction:column;gap:10px;margin-top:12px}.tp-tier{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #eef2f4;border-radius:10px;padding:10px 14px}.tp-tier>div{display:flex;flex-direction:column;gap:2px}.tp-tier-usd{font-weight:700;font-size:16px}.tp-tier-coins{color:#7b8791;font-size:12px}.tp-note{color:#8b98a3;font-size:12px}table.tp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}table.tp-table th{text-align:left;color:#8d9aa6;font-size:11px;font-weight:500;padding:9px 10px;border-bottom:1px solid #e6ebef;white-space:nowrap}table.tp-table td{padding:10px;border-bottom:1px solid #f0f4f6}.tp-empty{color:#9ca6ad;text-align:center;padding:16px}@media(max-width:960px){.tp-summary{grid-template-columns:1fr 1fr}.tp-cols{grid-template-columns:1fr}}
 
-/* 侧边栏扁平样式终版 */
-body .sidebar{padding-left:0!important;padding-right:0!important;border-right:0!important}
-body .sidebar .module-navigation{padding-left:0!important;padding-right:0!important}
-body .sidebar .module-nav-divider{margin-left:0!important;margin-right:0!important}
-body .sidebar .module-subnav{margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;border-left:0!important}
-body .sidebar .module-nav-parent,body .sidebar .module-nav-item,body .sidebar .admin-nav{width:100%!important}
-body .sidebar .module-nav-parent{padding-left:18px!important;padding-right:18px!important}
-body .sidebar .module-nav-item,body .sidebar .admin-nav{padding-left:38px!important;padding-right:18px!important}
-body .sidebar .module-nav-parent.active{background:transparent!important;box-shadow:none!important}
-body .sidebar .module-nav-item.active,body .sidebar .admin-nav.active{background:#1890ff!important;box-shadow:none!important}
 </style>
 <div class="tp-wrap">
  <div class="tp-summary">
@@ -4613,7 +4827,7 @@ const pageInfo={
  shop:['兑换商城','用云贝兑换科研绘图、SKILL 包与平台高级功能。'],
  'token':['AI额度兑换','用云贝兑换 newAPI 额度，额度不足自动消耗云贝补差。'],
  orders:['我的兑换','查询商品、权益与活动的兑换记录。'],
- 'recharge-orders':['发票管理','查询充值订单，按实付金额单笔或合并开票。'],invite:['邀请好友','分享邀请链接，好友注册成功后双方获得云贝。'],
+ 'recharge-orders':['充值订单','查询充值订单，按实付金额单笔或合并开票。'],invite:['邀请好友','分享邀请链接，好友注册成功后双方获得云贝。'],
  invoices:['发票管理','管理充值订单发票，按实付金额申请与下载。'],
  admin:['云贝配置','管理充值档位、商城商品、签到、首充与邀请奖励。'],
  operations:['运营统计','查看平台用户的充值与兑换情况，掌握人数、订单与金额。']
@@ -4627,7 +4841,7 @@ function syncSidebarNavigation(tab){
  const cloudParent=$('#cloud-nav-parent');if(cloudParent){const active=['recharge','invite','shop','token','ledger','dashboard','orders'].includes(tab);cloudParent.classList.toggle('active',active);if(active)cloudParent.setAttribute('aria-expanded','true');}
  const adminParent=$('#admin-nav-parent');if(adminParent){adminParent.classList.toggle('active',['admin','operations'].includes(tab));if(['admin','operations'].includes(tab))adminParent.setAttribute('aria-expanded','true');}
  const invoiceParent=$('#invoice-nav-parent');if(invoiceParent){invoiceParent.classList.toggle('active',['invoices','recharge-orders'].includes(tab));if(['invoices','recharge-orders'].includes(tab))invoiceParent.setAttribute('aria-expanded','true');}
- $$('.sidebar [data-tab], .mobile-module-nav [data-tab]').forEach(el=>{const navView=tab==='admin'?(adminView==='invoices'?'invoices':'recharge'):null;const match=el.dataset.tab===tab&&!(tab==='admin'&&el.dataset.adminView&&el.dataset.adminView!==navView);el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+ $$('.sidebar [data-tab], .mobile-module-nav [data-tab]').forEach(el=>{const navView=tab==='admin'?(adminView==='invoices'?'invoices':'recharge'):null;const match=el.dataset.tab===(tab==='invoices'?'recharge-orders':tab)&&!(tab==='admin'&&el.dataset.adminView&&el.dataset.adminView!==navView);el.classList.toggle('active',match);if(match)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
 }
 function renderPageHeading(tab){
  const [title,description]=tab==='admin'&&adminView==='invoices'
@@ -4635,7 +4849,6 @@ function renderPageHeading(tab){
   : pageInfo[tab];
  $('#page-title').textContent=title;
  $('#page-description').textContent=description;
- $('#breadcrumb-current').textContent=title;
  document.title=title+' · 派森诺基因云';
 }
 function setTab(tab,updateHash=true){
@@ -4645,7 +4858,6 @@ function setTab(tab,updateHash=true){
  syncSidebarNavigation(tab);
  document.body.classList.toggle('recharge-tab-active',tab==='recharge');
  renderPageHeading(tab);
- $('#breadcrumb-current').hidden=tab==='home';$('#breadcrumb-divider').hidden=tab==='home';
  $('#page-balance').hidden=false;
  if(updateHash&&location.hash!=='#'+tab)history.pushState(null,'','#'+tab);
  if(changed){window.scrollTo(0,0);if(updateHash)$('#page-title').focus({preventScroll:true});}
